@@ -5,14 +5,14 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Fragment;
 
-import java.io.File;
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity implements ComunicaTest {
+public class TestActivity extends AppCompatActivity implements TrialInterface {
+    //todo implement timing of tests
+
     private final static String TAG = "TestActivity";
     private final String outputJsonFname = "nombre_aqui.json";
 
@@ -171,8 +171,8 @@ public class TestActivity extends AppCompatActivity implements ComunicaTest {
     }
 
     private Fragment nextTestNewFragment(Test t) {
-        Bundle datos = new Bundle();
-        datos.putSerializable("test", t);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("test", t);
 
         String testID = t.getTestID();
         int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
@@ -195,7 +195,7 @@ public class TestActivity extends AppCompatActivity implements ComunicaTest {
                 break;
         }
 
-        test_fragment.setArguments(datos);
+        test_fragment.setArguments(bundle);
 
         return test_fragment;
     }
@@ -210,8 +210,6 @@ public class TestActivity extends AppCompatActivity implements ComunicaTest {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // Habria que evaluar que tipo de test es para ver que fragmento utilizar.
-        //todo revisar estructura del statement
         if (test!=null && isScoreDuringTests && isTestScored==0) {
             scoreTest();
             isTestScored = 1;

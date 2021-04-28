@@ -32,7 +32,6 @@ public class ResultsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ResultsFragment newInstance(String param1, String param2) {
         ResultsFragment fragment = new ResultsFragment();
         /*Bundle args = new Bundle();
@@ -71,7 +70,7 @@ public class ResultsFragment extends Fragment {
         testsListAdapter.setTests(tests);
 
         nextButton = view.findViewById(R.id.finishedButton);
-        nextButton.setOnClickListener(v -> ((ComunicaTest) activity).endTrial());
+        nextButton.setOnClickListener(v -> ((TrialInterface) activity).endTrial());
 
         TrialInfo trialInfo = tests.getTrialInfo();
 

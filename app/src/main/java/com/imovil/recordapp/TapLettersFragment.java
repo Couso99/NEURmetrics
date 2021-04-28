@@ -78,7 +78,7 @@ public class TapLettersFragment extends Fragment {
         }
 
         outputFilename = test.getName() + "_screenshot.jpeg";
-        fileName = ((ComunicaTest) activity).getFilePath(outputFilename);
+        fileName = ((TrialInterface) activity).getFilePath(outputFilename);
 
         finishedButton = view.findViewById(R.id.finishedButton);
         finishedButton.setOnClickListener(new View.OnClickListener() {
@@ -98,11 +98,11 @@ public class TapLettersFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ((ComunicaTest) activity).uploadFile(fileName, "image/*");
+                ((TrialInterface) activity).uploadFile(fileName, "image/*");
 
                 test.setScore(score);
                 test.setOutputFilename(outputFilename);
-                ((ComunicaTest) activity).nextTest();
+                ((TrialInterface) activity).nextTest();
             }
         });
 

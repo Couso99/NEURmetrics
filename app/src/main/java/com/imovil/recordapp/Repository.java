@@ -76,7 +76,7 @@ public class Repository {
     }
 
     public void downloadImage(String fileName){
-        File file = new File(context.getExternalCacheDir() + File.separator + fileName);
+        File file = new File(FOLDER_PATH + fileName);
         if (file.exists()) {
             return;
         }
@@ -153,7 +153,7 @@ public class Repository {
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String fileName) {
         try {
-            File file = new File(context.getExternalCacheDir() + File.separator + fileName);
+            File file = new File(FOLDER_PATH + fileName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try {
@@ -196,7 +196,7 @@ public class Repository {
         Gson gson =  new GsonBuilder().setPrettyPrinting().create();
         String jsonElement = gson.toJson(tests, Tests.class);
 
-        File file = new File(context.getExternalCacheDir() + File.separator + fileName);
+        File file = new File(FOLDER_PATH + fileName);
 
         FileOutputStream stream = null;
         try {

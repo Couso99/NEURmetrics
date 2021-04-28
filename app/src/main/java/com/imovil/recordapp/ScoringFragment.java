@@ -88,7 +88,7 @@ public class ScoringFragment extends Fragment {
             else if (maxScore==0) test.setScore(0);
 
             test.setExpandedScore(expandedScore);
-            ((ComunicaTest) activity).nextTest();
+            ((TrialInterface) activity).nextTest();
         });
 
         LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCheckboxes);
@@ -156,14 +156,14 @@ public class ScoringFragment extends Fragment {
 
         if((fname = test.getFilename()) != null) {
             isFilename = true;
-            file = new File(((ComunicaTest)activity).getFilePath(fname));
+            file = new File(((TrialInterface)activity).getFilePath(fname));
             if (!file.exists())
             isDownloadFile = true;
         }
 
         if(isTrialScored && (outputfname = test.getOutputFilename()) != null) {
             isOutputFilename = true;
-            outputFile = new File(((ComunicaTest)activity).getFilePath(outputfname));
+            outputFile = new File(((TrialInterface)activity).getFilePath(outputfname));
             if (!outputFile.exists()) isDownloadOutputFile = true;
         }
 
@@ -203,7 +203,7 @@ public class ScoringFragment extends Fragment {
             case 0:
                 //imageView = new PlayableImageView(estaActividad, null, test.getFilename(), test.getOutputFilename());
                 //imageView.setLayoutParams(layoutParams);
-                imageView.setImageURI(Uri.fromFile(new File(((ComunicaTest)activity).getFilePath(test.getFilename()))));
+                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getFilename()))));
                 imageView.setAudio(test.getOutputFilename());
                 break;
             case 2:
@@ -211,7 +211,7 @@ public class ScoringFragment extends Fragment {
                     checkBoxList.get(0).setChecked(true);
             case 1:
                 //imageView = new ImageView(estaActividad);
-                imageView.setImageURI(Uri.fromFile(new File(((ComunicaTest)activity).getFilePath(test.getOutputFilename()))));
+                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getOutputFilename()))));
                 //imageView.setLayoutParams(layoutParams);
                 break;
         }

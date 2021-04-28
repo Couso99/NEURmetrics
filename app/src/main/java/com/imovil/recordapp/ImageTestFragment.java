@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
 
@@ -32,7 +31,6 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ImageTestFragment newInstance(String param1, String param2) {
         ImageTestFragment fragment = new ImageTestFragment();
         //Bundle args = new Bundle();
@@ -101,7 +99,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
 
 
         outputFilename = test.getName() + "_audio.3gp";
-        fileName = ((ComunicaTest)activity).getFilePath(outputFilename);
+        fileName = ((TrialInterface)activity).getFilePath(outputFilename);
 
         recordButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
@@ -114,12 +112,12 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         int id = v.getId();
         switch (id) {
             case R.id.recordButton:
-                if (isRecording) ((ComunicaTest) activity).stopRecording();
-                else ((ComunicaTest) activity).startRecording(fileName, recording_time_ms);
+                if (isRecording) ((TrialInterface) activity).stopRecording();
+                else ((TrialInterface) activity).startRecording(fileName, recording_time_ms);
                 break;
             case R.id.nextButton:
-                ((ComunicaTest) activity).uploadFile(fileName, "audio/*");
-                ((ComunicaTest) activity).nextTest();
+                ((TrialInterface) activity).uploadFile(fileName, "audio/*");
+                ((TrialInterface) activity).nextTest();
                 break;
         }
     }

@@ -66,7 +66,7 @@ public class DrawingFragment extends Fragment {
             test = (Test) getArguments().getSerializable("test");
             if (test.getFilename() != null) {
                 String fname = test.getFilename();
-                    File file = new File(((ComunicaTest)activity).getFilePath(fname));
+                    File file = new File(((TrialInterface)activity).getFilePath(fname));
                     if (file.exists()) {
                         drawingArea.setImageURI(Uri.fromFile(file));
                     } else {
@@ -102,7 +102,7 @@ public class DrawingFragment extends Fragment {
         }
 
         outputFilename = test.getName() + "_draw.jpeg";
-        fileName = ((ComunicaTest) activity).getFilePath(outputFilename);
+        fileName = ((TrialInterface) activity).getFilePath(outputFilename);
         //.getExternalCacheDir().getAbsolutePath();
 
         finishedButton = view.findViewById(R.id.finishedButton);
@@ -116,9 +116,9 @@ public class DrawingFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ((ComunicaTest) activity).uploadFile(fileName, "image/*");
+            ((TrialInterface) activity).uploadFile(fileName, "image/*");
             test.setOutputFilename(outputFilename);
-            ((ComunicaTest) activity).nextTest();
+            ((TrialInterface) activity).nextTest();
         });
 
         return view;

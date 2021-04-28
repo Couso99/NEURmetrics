@@ -13,7 +13,9 @@ public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
 
     private static boolean isRecording=false;
     private static boolean isPlaying = false, isTimeSpecified=false;
-    private static int amplitude = 0, time_counter = 0, time_ms = 0,SILENCE_TIME_MS = 3000;
+    private static int amplitude = 0;
+    private static int time_counter = 0, time_ms = 0;
+    private static final int SILENCE_TIME_MS = 3000;
 
     private static MediaPlayer player = null;
     private static MediaRecorder mediaRecorder = null;
@@ -106,7 +108,6 @@ public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
             isRecording = false;
             return;
         }
-        isRecording=false;
     }
 
     @Override

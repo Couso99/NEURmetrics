@@ -1,6 +1,6 @@
 package com.imovil.recordapp;
 
-public interface ComunicaTest {
+public interface TrialInterface {
     String getFilePath(String fname);
 
     void nextTest();
