@@ -32,12 +32,11 @@ public class ResultsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ResultsFragment newInstance(String param1, String param2) {
+    public static ResultsFragment newInstance(Tests tests) {
         ResultsFragment fragment = new ResultsFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
+        Bundle args = new Bundle();
+        args.putSerializable("tests", tests);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -45,8 +44,7 @@ public class ResultsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            tests = (Tests) getArguments().getSerializable("tests");
         }
     }
 
@@ -55,10 +53,6 @@ public class ResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_results, container, false);
-
-        if (getArguments() != null) {
-            tests = (Tests) getArguments().getSerializable("tests");
-        }
 
         activity = getActivity();
 

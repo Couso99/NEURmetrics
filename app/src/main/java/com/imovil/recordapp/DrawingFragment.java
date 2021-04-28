@@ -31,12 +31,11 @@ public class DrawingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DrawingFragment newInstance(String param1, String param2) {
+    public static DrawingFragment newInstance(Test test) {
         DrawingFragment fragment = new DrawingFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
+        Bundle args = new Bundle();
+        args.putSerializable("test", test);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -44,8 +43,7 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            test = (Test) getArguments().getSerializable("test");
         }
     }
 
@@ -62,44 +60,36 @@ public class DrawingFragment extends Fragment {
         drawingArea.initTrailDrawer();
         //drawingArea.setImageURI(Uri.fromFile(new File(getContext().getExternalCacheDir()+ File.separator+"fondo_app2.jpg")));
 
-        if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
-            if (test.getParametersNumber() != 0) {
-                String fname = test.getParameters().get(0);
-                    File file = new File(((TrialInterface)activity).getFilePath(fname));
-                    if (file.exists()) {
-                        drawingArea.setImageURI(Uri.fromFile(file));
-                    } else {
-                        Thread thread = new Thread() {
-                            @Override
-                            public void run() {
-                                try {
-                                    while (true) {
-                                        sleep(200);
-                                        if (file.exists()) {
-                                            activity.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    drawingArea.setImageURI(Uri.fromFile(file));
-                                                }
-                                            });
-                                            break;
-                                        }
+        if (test.getParametersNumber() != 0) {
+            String fname = test.getParameters().get(0);
+                File file = new File(((TrialInterface)activity).getFilePath(fname));
+                if (file.exists()) {
+                    drawingArea.setImageURI(Uri.fromFile(file));
+                } else {
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                while (true) {
+                                    sleep(200);
+                                    if (file.exists()) {
+                                        activity.runOnUiThread(() -> drawingArea.setImageURI(Uri.fromFile(file)));
+                                        break;
                                     }
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
                                 }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                        };
+                        }
+                    };
 
-                        thread.start();
-                    }
+                    thread.start();
                 }
+            }
 
-            String comment;
-            if ((comment = test.getTitle()) != null)
-                commentTextView.setText(comment);
-        }
+        String title;
+        if ((title = test.getTitle()) != null)
+            commentTextView.setText(title);
 
         outputFilename = test.getName() + "_draw.jpeg";
         fileName = ((TrialInterface) activity).getFilePath(outputFilename);

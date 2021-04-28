@@ -31,12 +31,11 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         // Required empty public constructor
     }
 
-    public static ImageTestFragment newInstance(String param1, String param2) {
+    public static ImageTestFragment newInstance(Test test) {
         ImageTestFragment fragment = new ImageTestFragment();
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putSerializable("test", test);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -65,7 +64,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
             test = (Test) getArguments().getSerializable("test");
             if (test.getParameters().get(0) != null) {
                 String fname = test.getParameters().get(0);
-                File file = new File(activity.getExternalCacheDir() + File.separator + fname);
+                File file = new File(((TrialInterface)activity).getFilePath(fname));
                 if (file.exists()) {
                     imageView.setImageURI(Uri.fromFile(file));
                 }
@@ -77,12 +76,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
                                 while(true) {
                                     sleep(200);
                                     if (file.exists()) {
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                imageView.setImageURI(Uri.fromFile(file));
-                                            }
-                                        });
+                                        activity.runOnUiThread(() -> imageView.setImageURI(Uri.fromFile(file)));
                                         break;
                                     }
                                 }

@@ -31,8 +31,16 @@ public class TapLettersFragment extends Fragment {
     private Button finishedButton;
     private List<TextView> tappableTextViews = new ArrayList<>();
 
-    public static TapLettersFragment newInstance() {
-        return new TapLettersFragment();
+    public TapLettersFragment() {
+
+    }
+
+    public static TapLettersFragment newInstance(Test test) {
+        TapLettersFragment fragment = new TapLettersFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("test", test);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

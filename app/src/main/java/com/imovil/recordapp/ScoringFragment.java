@@ -40,12 +40,12 @@ public class ScoringFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ScoringFragment newInstance(String param1, String param2) {
+    public static ScoringFragment newInstance(Test test, boolean isTrialScored) {
         ScoringFragment fragment = new ScoringFragment();
-        /*Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
+        Bundle args = new Bundle();
+        args.putSerializable("test", test);
+        args.putBoolean("isTrialScored", isTrialScored);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -53,8 +53,9 @@ public class ScoringFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            test = (Test) getArguments().getSerializable("test");
+            isTrialScored = (boolean) getArguments().getBoolean("isTrialScored");
+            maxScore = test.getMaxScore();
         }
     }
 
@@ -63,12 +64,6 @@ public class ScoringFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scoring, container, false);
-
-        if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
-            isTrialScored = (boolean) getArguments().getBoolean("isTrialScored");
-            maxScore = test.getMaxScore();
-        }
 
         activity = getActivity();
 
@@ -200,12 +195,6 @@ public class ScoringFragment extends Fragment {
         //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
 
         switch (test.getTestType()) {
-            case 0:
-                //imageView = new PlayableImageView(estaActividad, null, test.getFilename(), test.getOutputFilename());
-                //imageView.setLayoutParams(layoutParams);
-                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
-                imageView.setAudio(test.getOutputFilename());
-                break;
             case 2:
                 if (test.getScore()==1)
                     checkBoxList.get(0).setChecked(true);
@@ -213,6 +202,12 @@ public class ScoringFragment extends Fragment {
                 //imageView = new ImageView(estaActividad);
                 imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getOutputFilename()))));
                 //imageView.setLayoutParams(layoutParams);
+                break;
+            case 3:
+                //imageView = new PlayableImageView(estaActividad, null, test.getFilename(), test.getOutputFilename());
+                //imageView.setLayoutParams(layoutParams);
+                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
+                imageView.setAudio(test.getOutputFilename());
                 break;
         }
         //relativeLayout.addView(imageView);

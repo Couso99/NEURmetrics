@@ -75,7 +75,7 @@ public class Repository {
         enqueueWriteResponseBody(call, fileName);
     }
 
-    public void downloadImage(String fileName){
+    public void downloadFile(String fileName){
         File file = new File(FOLDER_PATH + fileName);
         if (file.exists()) {
             return;

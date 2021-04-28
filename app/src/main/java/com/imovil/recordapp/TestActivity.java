@@ -164,38 +164,53 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         boolean isTrialScored = tests.getTrialInfo().isTrialScored();
 
         for (Test test : tests.getTests()) {
-            if (test.getParametersNumber() != 0) repository.downloadImage(test.getParameters().get(0));
-            if (isTrialScored && test.getOutputFilename() != null)
-                repository.downloadUserMadeFile(test.getOutputFilename());
+            if (test.getParametersNumber() != 0) {
+                List<String> parameters_type = test.getParametersType();
+                List<String> parameters = test.getParameters();
+
+                for (int i=0; i<test.getParametersNumber(); i++)
+                    if (parameters_type.get(i).equals("filename"))
+                        repository.downloadFile(parameters.get(0));
+            }
+            if (isTrialScored)
+                if (test.getOutputFilename() != null)
+                    repository.downloadUserMadeFile(test.getOutputFilename());
+            if (test.isContainsTests())
+                for (Test child_test: test.getTestPieces()) {
+                    if (child_test.getParametersNumber() != 0) {
+                        List<String> parameters_type = child_test.getParametersType();
+                        List<String> parameters = child_test.getParameters();
+
+                        for (int i=0; i<child_test.getParametersNumber(); i++)
+                            if (parameters_type.get(i).equals("filename"))
+                                repository.downloadFile(parameters.get(0));
+                    }
+
+                    if (isTrialScored)
+                        if (child_test.getOutputFilename() != null)
+                            repository.downloadUserMadeFile(child_test.getOutputFilename());
+                }
         }
     }
 
     private Fragment nextTestNewFragment(Test t) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("test", t);
-
-        //String testID = t.getTestID();
-        //int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
-
         Fragment test_fragment;
 
         switch (t.getTestType()) {//testType) {
-            case 0:
-                test_fragment = new ImageTestFragment();
-                observer = (RecorderObserver) test_fragment;
-                break;
             case 1:
-                test_fragment = new DrawingFragment();
+                test_fragment = DrawingFragment.newInstance(t);
                 break;
             case 2:
-                test_fragment = new TapLettersFragment();
+                test_fragment = TapLettersFragment.newInstance(t);
+                break;
+            case 3:
+                test_fragment = ImageTestFragment.newInstance(t);
+                observer = (RecorderObserver) test_fragment;
                 break;
             default:
-                test_fragment = new ImageTestFragment();
+                test_fragment = ImageTestFragment.newInstance(t);
                 break;
         }
-
-        test_fragment.setArguments(bundle);
 
         return test_fragment;
     }
@@ -252,12 +267,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("test", isRunTestPiece ? test_piece : test);
-        bundle.putBoolean("isTrialScored", isTrialScored);
-
-        Fragment test_fragment = new ScoringFragment();
-        test_fragment.setArguments(bundle);
+        Fragment test_fragment = ScoringFragment.newInstance(isRunTestPiece ? test_piece : test, isTrialScored);
 
         fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
         fragmentTransaction.commit();
@@ -268,11 +278,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("tests", tests);
-
-        Fragment test_fragment = new ResultsFragment();
-        test_fragment.setArguments(bundle);
+        Fragment test_fragment = ResultsFragment.newInstance(tests);
 
         fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
         fragmentTransaction.commit();

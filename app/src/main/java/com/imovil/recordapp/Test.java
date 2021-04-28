@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Test implements Serializable {
 
+    @SerializedName("isContainsTests")
+    @Expose
+    private boolean isContainsTests;
     @SerializedName("testPieces")
     @Expose
     private List<Test> testPieces;
@@ -53,6 +56,14 @@ public class Test implements Serializable {
     @SerializedName("outputFilename")
     @Expose
     private String outputFilename;
+
+    public boolean isContainsTests() {
+        return isContainsTests;
+    }
+
+    public void setContainsTests(boolean containsTests) {
+        isContainsTests = containsTests;
+    }
 
     public List<Test> getTestPieces() {
         return testPieces;
