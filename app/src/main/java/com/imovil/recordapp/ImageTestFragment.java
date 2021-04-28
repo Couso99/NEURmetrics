@@ -63,8 +63,8 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
 
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable("test");
-            if (test.getFilename() != null) {
-                String fname = test.getFilename();
+            if (test.getParameters().get(0) != null) {
+                String fname = test.getParameters().get(0);
                 File file = new File(activity.getExternalCacheDir() + File.separator + fname);
                 if (file.exists()) {
                     imageView.setImageURI(Uri.fromFile(file));

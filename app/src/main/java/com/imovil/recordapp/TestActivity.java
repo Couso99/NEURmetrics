@@ -164,7 +164,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         boolean isTrialScored = tests.getTrialInfo().isTrialScored();
 
         for (Test test : tests.getTests()) {
-            if (test.getFilename() != null) repository.downloadImage(test.getFilename());
+            if (test.getParametersNumber() != 0) repository.downloadImage(test.getParameters().get(0));
             if (isTrialScored && test.getOutputFilename() != null)
                 repository.downloadUserMadeFile(test.getOutputFilename());
         }
@@ -174,12 +174,12 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         Bundle bundle = new Bundle();
         bundle.putSerializable("test", t);
 
-        String testID = t.getTestID();
-        int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
+        //String testID = t.getTestID();
+        //int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
 
         Fragment test_fragment;
 
-        switch (testType) {
+        switch (t.getTestType()) {//testType) {
             case 0:
                 test_fragment = new ImageTestFragment();
                 observer = (RecorderObserver) test_fragment;

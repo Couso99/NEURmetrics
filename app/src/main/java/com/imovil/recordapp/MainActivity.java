@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int i = 0;
         for (Test test : tests_list) {
-            Log.d(TAG, String.valueOf(i) + ": " + test.getName() + "\t" + test.getFilename());
+            Log.d(TAG, String.valueOf(i) + ": " + test.getName() + "\t" + ((test.getParametersNumber()!=0)?test.getParameters().get(0):""));
             i++;
         }
 

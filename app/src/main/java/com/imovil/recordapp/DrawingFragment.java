@@ -64,8 +64,8 @@ public class DrawingFragment extends Fragment {
 
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable("test");
-            if (test.getFilename() != null) {
-                String fname = test.getFilename();
+            if (test.getParametersNumber() != 0) {
+                String fname = test.getParameters().get(0);
                     File file = new File(((TrialInterface)activity).getFilePath(fname));
                     if (file.exists()) {
                         drawingArea.setImageURI(Uri.fromFile(file));
@@ -97,7 +97,7 @@ public class DrawingFragment extends Fragment {
                 }
 
             String comment;
-            if ((comment = test.getComment()) != null)
+            if ((comment = test.getTitle()) != null)
                 commentTextView.setText(comment);
         }
 

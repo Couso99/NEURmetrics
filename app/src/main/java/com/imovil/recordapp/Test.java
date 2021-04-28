@@ -14,18 +14,30 @@ public class Test implements Serializable {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("testType")
+    @Expose
+    private int testType;
     @SerializedName("testID")
     @Expose
     private String testID;
-    @SerializedName("comment")
+    @SerializedName("title")
     @Expose
-    private String comment;
-    @SerializedName("filename")
+    private String title;
+    @SerializedName("h1")
     @Expose
-    private String filename;
-    @SerializedName("textArray")
+    private String h1;
+    @SerializedName("h2")
     @Expose
-    private List<String> textArray;
+    private String h2;
+    @SerializedName("parametersNumber")
+    @Expose
+    private int parametersNumber;
+    @SerializedName("parametersType")
+    @Expose
+    private List<String> parametersType=null;
+    @SerializedName("parameters")
+    @Expose
+    private List<String> parameters=null;
     @SerializedName("score")
     @Expose
     private int score;
@@ -35,9 +47,9 @@ public class Test implements Serializable {
     @SerializedName("maxScore")
     @Expose
     private int maxScore;
-    @SerializedName("scoreComments")
+    @SerializedName("scoreOptions")
     @Expose
-    private List<String> scoreComments=null;
+    private List<String> scoreOptions=null;
     @SerializedName("outputFilename")
     @Expose
     private String outputFilename;
@@ -58,6 +70,14 @@ public class Test implements Serializable {
         this.name = name;
     }
 
+    public int getTestType() {
+        return testType;
+    }
+
+    public void setTestType(int testType) {
+        this.testType = testType;
+    }
+
     public String getTestID() {
         return testID;
     }
@@ -66,28 +86,52 @@ public class Test implements Serializable {
         this.testID = testID;
     }
 
-    public String getComment() {
-        return comment;
+    public String getTitle() {
+        return title;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getH1() {
+        return h1;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setH1(String h1) {
+        this.h1 = h1;
     }
 
-    public List<String> getTextArray() {
-        return textArray;
+    public String getH2() {
+        return h2;
     }
 
-    public void setTextArray(List<String> textArray) {
-        this.textArray = textArray;
+    public void setH2(String h2) {
+        this.h2 = h2;
+    }
+
+    public int getParametersNumber() {
+        return parametersNumber;
+    }
+
+    public void setParametersNumber(int parametersNumber) {
+        this.parametersNumber = parametersNumber;
+    }
+
+    public List<String> getParametersType() {
+        return parametersType;
+    }
+
+    public void setParametersType(List<String> parametersType) {
+        this.parametersType = parametersType;
+    }
+
+    public List<String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<String> parameters) {
+        this.parameters = parameters;
     }
 
     public int getScore() {
@@ -114,12 +158,12 @@ public class Test implements Serializable {
         this.maxScore = maxScore;
     }
 
-    public List<String> getScoreComments() {
-        return scoreComments;
+    public List<String> getScoreOptions() {
+        return scoreOptions;
     }
 
-    public void setScoreComments(List<String> scoreComments) {
-        this.scoreComments = scoreComments;
+    public void setScoreOptions(List<String> scoreOptions) {
+        this.scoreOptions = scoreOptions;
     }
 
     public String getOutputFilename() {

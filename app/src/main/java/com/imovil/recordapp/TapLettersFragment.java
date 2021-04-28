@@ -54,7 +54,7 @@ public class TapLettersFragment extends Fragment {
 
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable("test");
-            textArray = test.getTextArray();
+            textArray = test.getParameters();
         }
 
         LinearLayout linearLayoutVertical = view.findViewById(R.id.linearLayoutTapLetters);

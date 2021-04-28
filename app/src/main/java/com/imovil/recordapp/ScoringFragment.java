@@ -92,7 +92,7 @@ public class ScoringFragment extends Fragment {
         });
 
         LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCheckboxes);
-        List<String> scoreComments = test.getScoreComments();
+        List<String> scoreComments = test.getScoreOptions();
         String comment;
 
         List<Integer> expandedScore;
@@ -154,7 +154,7 @@ public class ScoringFragment extends Fragment {
         String fname, outputfname;
         boolean isDownloadFile=false, isDownloadOutputFile=false;
 
-        if((fname = test.getFilename()) != null) {
+        if(test.getParametersNumber()!=0 && test.getParametersType().get(0).equals("filename") && (fname = test.getParameters().get(0)) != null) {
             isFilename = true;
             file = new File(((TrialInterface)activity).getFilePath(fname));
             if (!file.exists())
@@ -195,15 +195,15 @@ public class ScoringFragment extends Fragment {
     }
 
     private void loadImageView() {
-        String testID = test.getTestID();
-        int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
+        //String testID = test.getTestID();
+        //int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
         //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
 
-        switch (testType) {
+        switch (test.getTestType()) {
             case 0:
                 //imageView = new PlayableImageView(estaActividad, null, test.getFilename(), test.getOutputFilename());
                 //imageView.setLayoutParams(layoutParams);
-                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getFilename()))));
+                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
                 imageView.setAudio(test.getOutputFilename());
                 break;
             case 2:
