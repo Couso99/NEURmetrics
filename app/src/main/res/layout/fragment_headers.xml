@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".HeadersFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

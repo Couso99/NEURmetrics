@@ -56,7 +56,7 @@ public class TapLettersFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.tap_letters_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_tap_letters, container, false);
 
         activity = getActivity();
 

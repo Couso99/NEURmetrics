@@ -59,6 +59,12 @@ public class Test implements Serializable {
     @SerializedName("outputFilename")
     @Expose
     private String outputFilename;
+    @SerializedName("startTestTimeOffset")
+    @Expose
+    private long startTestTimeOffset;
+    @SerializedName("stopTestTimeOffset")
+    @Expose
+    private long stopTestTimeOffset;
 
     public boolean isContainsTests() {
         return isContainsTests;
@@ -194,5 +200,21 @@ public class Test implements Serializable {
 
     public void setOutputFilename(String outputFilename) {
         this.outputFilename = outputFilename;
+    }
+
+    public long getStartTestTimeOffset() {
+        return startTestTimeOffset;
+    }
+
+    public void setStartTestTimeOffset(long startTestTimeOffset) {
+        this.startTestTimeOffset = startTestTimeOffset;
+    }
+
+    public long getStopTestTimeOffset() {
+        return stopTestTimeOffset;
+    }
+
+    public void setStopTestTimeOffset(long stopTestTimeOffset) {
+        this.stopTestTimeOffset = stopTestTimeOffset;
     }
 }

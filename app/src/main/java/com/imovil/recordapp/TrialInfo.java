@@ -22,6 +22,9 @@ public class TrialInfo implements Serializable {
     @SerializedName("isTrialScored")
     @Expose
     private boolean isTrialScored;
+    @SerializedName("startTime")
+    @Expose
+    private long startTime;
 
     public String getTrialID() {
         return trialID;
@@ -61,5 +64,13 @@ public class TrialInfo implements Serializable {
 
     public void setTrialScored(boolean trialScored) {
         isTrialScored = trialScored;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 }

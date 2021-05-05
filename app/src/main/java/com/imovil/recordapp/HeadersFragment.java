@@ -16,13 +16,11 @@ import android.widget.TextView;
  */
 public class HeadersFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_TITLE = "title";
     private static final String ARG_H1 = "h1";
     private static final String ARG_H2 = "h2";
 
-    // TODO: Rename and change types of parameters
     private String title;
     private String h1;
     private String h2;
@@ -41,7 +39,6 @@ public class HeadersFragment extends Fragment {
      * @param h2 Header 2.
      * @return A new instance of fragment HeadersFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static HeadersFragment newInstance(String title, String h1, String h2) {
         HeadersFragment fragment = new HeadersFragment();
         Bundle args = new Bundle();

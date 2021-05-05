@@ -32,6 +32,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     private RecorderPlayer recorder;
     private RecorderObserver observer;
 
+    //private TrialTimer timer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,9 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         setContentView(R.layout.activity_test);
 
         recorder = new RecorderPlayer();
+
+        TrialTimer.init_timer();
+
         repository = new Repository(this);
 
         Bundle b = getIntent().getExtras();
@@ -48,6 +53,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         trialInfo = tests.getTrialInfo();
         if (!(isTrialScored = trialInfo.isTrialScored()))
             isTrialScored = false;
+
+        trialInfo.setStartTime(TrialTimer.getStartTime());
 
         startDownloadingTests(tests);
         nextTest();
@@ -111,7 +118,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                 try {
                     while(true) {
                         sleep(200);
-                        if (!recorder.getIsRecording()) {
+                        if (!recorder.isRecording()) {
                             TestActivity.this.runOnUiThread(() -> observer.onIsRecordingChanged(0));
                             break;
                         }
@@ -239,6 +246,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             if (isLastTest == 0) {
                 Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test);
                 update_headers(isRunTestPiece ? test_piece : test);
+                (isRunTestPiece ? test_piece : test).setStartTestTimeOffset(TrialTimer.getElapsedTime());
 
                 fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
                 fragmentTransaction.commit();
@@ -265,6 +273,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         if(isTrialScored) {
             stopPlaying();
             isLastTest = updateTest();
+        } else {
+            (isRunTestPiece ? test_piece : test).setStopTestTimeOffset(TrialTimer.getElapsedTime());
         }
 
         FragmentManager fragmentManager = getFragmentManager();

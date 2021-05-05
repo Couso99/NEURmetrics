@@ -56,7 +56,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
 
         recordButton = view.findViewById(R.id.recordButton);
         imageView = view.findViewById(R.id.imageView);
-        nextButton = view.findViewById(R.id.nextButton);
+        nextButton = view.findViewById(R.id.finishedButton);
 
         activity = getActivity();
 
@@ -109,7 +109,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
                 if (isRecording) ((TrialInterface) activity).stopRecording();
                 else ((TrialInterface) activity).startRecording(fileName, recording_time_ms);
                 break;
-            case R.id.nextButton:
+            case R.id.finishedButton:
                 ((TrialInterface) activity).uploadFile(fileName, "audio/*");
                 ((TrialInterface) activity).nextTest();
                 break;

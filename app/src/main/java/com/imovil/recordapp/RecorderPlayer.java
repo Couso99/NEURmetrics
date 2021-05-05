@@ -23,7 +23,7 @@ public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
 
     public RecorderPlayer() {}
 
-    public boolean getIsRecording() {
+    public boolean isRecording() {
         return isRecording;
     }
 

@@ -3,4 +3,5 @@
     <string name="finishedButton">Acabado</string>
     <string name="beginTrialButton">Empezar Prueba</string>
     <string name="stopButton">Parar</string>
+    <string name="nextButton">Siguiente</string>
 </resources>
