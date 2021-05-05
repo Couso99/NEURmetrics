@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +31,18 @@ public class ScoringFragment extends Fragment {
     PlayableImageView imageView = null;
     RelativeLayout relativeLayout;
 
+    ElegantNumberButton elegantNumberButton = null;
+
     private Test test;
     private int maxScore;
-    List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
+    List<CheckBox> checkBoxList = new ArrayList<>();
+    List<Integer> scoreWeights = new ArrayList<>();
+
+    int elegantNumber;
 
     boolean isFilename=false, isOutputFilename=false;
     boolean isTrialScored = false;
+    boolean isScoreWeights = false;
 
     public ScoringFragment() {
         // Required empty public constructor
@@ -56,6 +64,9 @@ public class ScoringFragment extends Fragment {
             test = (Test) getArguments().getSerializable("test");
             isTrialScored = (boolean) getArguments().getBoolean("isTrialScored");
             maxScore = test.getMaxScore();
+            scoreWeights = test.getScoreWeights();
+            if (scoreWeights != null)
+                isScoreWeights = true;
         }
     }
 
@@ -71,23 +82,27 @@ public class ScoringFragment extends Fragment {
         nextButton.setOnClickListener(v -> {
             int activeCheckBoxes=0;
             List<Integer> expandedScore = new ArrayList<>();
-                for (int i = 0; i < checkBoxList.size(); i++) {
-                    if (checkBoxList.get(i).isChecked()) {
-                        activeCheckBoxes++;
-                        expandedScore.add(1);
-                    } else
-                        expandedScore.add(0);
-                }
+            for (int i = 0; i < checkBoxList.size(); i++) {
+                if (checkBoxList.get(i).isChecked()) {
+                    activeCheckBoxes+=(isScoreWeights ? scoreWeights.get(i) : 1);
+                    expandedScore.add(isScoreWeights ? scoreWeights.get(i) : 1);
+                } else
+                    expandedScore.add(0);
+            }
 
-            if (maxScore>0) test.setScore(activeCheckBoxes);
-            else if (maxScore==0) test.setScore(0);
+            if (maxScore!=0) test.setScore(activeCheckBoxes);
+            else test.setScore(0);
+
+            if (elegantNumberButton != null) {
+                    test.setScore(elegantNumber);
+            }
 
             test.setExpandedScore(expandedScore);
             ((TrialInterface) activity).nextTest();
         });
 
         LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCheckboxes);
-        List<String> scoreComments = test.getScoreOptions();
+        List<String> scoreOptions = test.getScoreOptions();
         String comment;
 
         List<Integer> expandedScore;
@@ -95,34 +110,34 @@ public class ScoringFragment extends Fragment {
         if ((expandedScore = test.getExpandedScore()) != null && isTrialScored)
             isExpandedScore=true;
 
-        for (int j = 0; j < maxScore; j++) {
-            CheckBox btnTag = new CheckBox(activity);
-            if (isExpandedScore) btnTag.setChecked(expandedScore.get(j)!=0);
-            btnTag.setLayoutParams(new LinearLayout.LayoutParams
-                    (LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT));
-            btnTag.setTextSize(32);
+        if (maxScore>=0) {
+            for (int j = 0; j < maxScore && ((scoreOptions == null) || (j < scoreOptions.size())); j++) {
+                CheckBox btnTag = new CheckBox(activity);
+                if (isExpandedScore) btnTag.setChecked(expandedScore.get(j) != 0);
+                btnTag.setLayoutParams(new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT));
+                btnTag.setTextSize(32);
 
-            if (scoreComments != null)
-            {
-                if (scoreComments.size() > j && (comment = scoreComments.get(j)) != null)
-                    btnTag.setText(comment);
+                if (scoreOptions != null) {
+                    if (scoreOptions.size() > j && (comment = scoreOptions.get(j)) != null)
+                        btnTag.setText(comment);
+                } else {
+                    if (maxScore == 1)
+                        btnTag.setText("Realizado correctamente");//"Button " + (j + 1 + (i * 4 )));
+                    else btnTag.setText("");
+                }
+                btnTag.setId(j + 1);
+                checkBoxList.add(btnTag);
+                linearLayout.addView(btnTag);
             }
-            else {
-                if (maxScore == 1)
-                    btnTag.setText("Realizado correctamente");//"Button " + (j + 1 + (i * 4 )));
-                else btnTag.setText("");
-            }
-            btnTag.setId(j + 1);
-            checkBoxList.add(btnTag);
-            linearLayout.addView(btnTag);
         }
 
-        if (maxScore==0) {
-            if (scoreComments != null) {
-                for (int i=0;i<scoreComments.size();i++) {
+        else if (maxScore==0) {
+            if (scoreOptions != null) {
+                for (int i=0;i<scoreOptions.size();i++) {
                     CheckBox btnTag = new CheckBox(activity);
-                    btnTag.setText(scoreComments.get(i));
+                    btnTag.setText(scoreOptions.get(i));
                     btnTag.setLayoutParams(new LinearLayout.LayoutParams
                             (LinearLayout.LayoutParams.WRAP_CONTENT,
                                     LinearLayout.LayoutParams.MATCH_PARENT));
@@ -135,6 +150,29 @@ public class ScoringFragment extends Fragment {
                 textView.setText("No hay puntuación para este test");
                 textView.setTextSize(32);
                 linearLayout.addView(textView);
+            }
+        }
+
+        else if (maxScore==-1) {
+            if (scoreOptions != null) {
+                for (int i = 0; i < scoreOptions.size(); i++) {
+                    CheckBox btnTag = new CheckBox(activity);
+                    btnTag.setText(scoreOptions.get(i));
+                    btnTag.setLayoutParams(new LinearLayout.LayoutParams
+                            (LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.MATCH_PARENT));
+                    btnTag.setTextSize(32);
+                    checkBoxList.add(btnTag);
+                    linearLayout.addView(btnTag);
+                }
+            } else {
+                elegantNumberButton = new ElegantNumberButton(activity);
+                elegantNumberButton.setLayoutParams(new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT));
+                elegantNumberButton.setOnValueChangeListener((view1, oldValue, newValue) -> elegantNumber = newValue);
+
+                linearLayout.addView(elegantNumberButton);
             }
         }
 

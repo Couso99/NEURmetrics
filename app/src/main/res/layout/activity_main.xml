@@ -21,7 +21,7 @@
         android:id="@+id/recordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Empezar Prueba"
+        android:text="@string/beginTrialButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,7 @@
         android:id="@+id/stopButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="parar"
+        android:text="@string/stopButton"
         app:layout_constraintBottom_toBottomOf="@+id/recordButton"
         app:layout_constraintStart_toEndOf="@+id/recordButton"
         app:layout_constraintTop_toTopOf="@+id/recordButton" />

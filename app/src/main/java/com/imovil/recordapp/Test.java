@@ -53,6 +53,9 @@ public class Test implements Serializable {
     @SerializedName("scoreOptions")
     @Expose
     private List<String> scoreOptions=null;
+    @SerializedName("scoreWeights")
+    @Expose
+    private List<Integer> scoreWeights=null;
     @SerializedName("outputFilename")
     @Expose
     private String outputFilename;
@@ -175,6 +178,14 @@ public class Test implements Serializable {
 
     public void setScoreOptions(List<String> scoreOptions) {
         this.scoreOptions = scoreOptions;
+    }
+
+    public List<Integer> getScoreWeights() {
+        return scoreWeights;
+    }
+
+    public void setScoreWeights(List<Integer> scoreWeights) {
+        this.scoreWeights = scoreWeights;
     }
 
     public String getOutputFilename() {

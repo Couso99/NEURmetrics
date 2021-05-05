@@ -28,6 +28,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     boolean isTrialScored = false;
     boolean isRunTestPiece = false;
 
+    //todo mover recorder a ImageTestFragment y a cualquiera que lo utilice??
     private RecorderPlayer recorder;
     private RecorderObserver observer;
 
@@ -53,8 +54,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -81,8 +82,9 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         if (test_index < tests_list.size()) {
             test = tests_list.get(test_index);
             test_index++;
-            test_pieces_list = test.getTestPieces();
-            if (test_pieces_list!= null) {
+
+            if (test.isContainsTests()) {
+                test_pieces_list = test.getTestPieces();
                 isRunTestPiece = true;
                 test_pieces_index = 0;
                 return updateTest();
@@ -236,6 +238,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
             if (isLastTest == 0) {
                 Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test);
+                update_headers(isRunTestPiece ? test_piece : test);
 
                 fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
                 fragmentTransaction.commit();
@@ -268,6 +271,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         Fragment test_fragment = ScoringFragment.newInstance(isRunTestPiece ? test_piece : test, isTrialScored);
+        update_headers(isRunTestPiece ? test_piece : test);
 
         fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
         fragmentTransaction.commit();
@@ -304,5 +308,15 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         };
 
         thread.start();
+    }
+
+    public void update_headers(Test test) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        Fragment headers_fragment = HeadersFragment.newInstance(test.getTitle(), test.getH1(), test.getH2());
+
+        fragmentTransaction.replace(R.id.headersLayout, headers_fragment);
+        fragmentTransaction.commit();
     }
 }

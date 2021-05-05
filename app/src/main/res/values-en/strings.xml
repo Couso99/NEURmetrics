@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RecordApp</string>
+    <string name="finishedButton">Finished</string>
+    <string name="beginTrialButton">Begin Trial</string>
+    <string name="stopButton">Stop</string>
+</resources>

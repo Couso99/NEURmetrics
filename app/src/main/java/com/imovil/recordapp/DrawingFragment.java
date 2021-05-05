@@ -1,6 +1,9 @@
 package com.imovil.recordapp;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -8,6 +11,7 @@ import android.os.Bundle;
 
 import android.app.Fragment;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +59,9 @@ public class DrawingFragment extends Fragment {
 
         activity = getActivity();
 
-        commentTextView = view.findViewById(R.id.commentTextView);
+        //init_headers();
+
+        //commentTextView = view.findViewById(R.id.commentTextView);
         drawingArea = (DrawingArea) view.findViewById(R.id.drawing_area2);
         drawingArea.initTrailDrawer();
         //drawingArea.setImageURI(Uri.fromFile(new File(getContext().getExternalCacheDir()+ File.separator+"fondo_app2.jpg")));
@@ -87,9 +93,9 @@ public class DrawingFragment extends Fragment {
                 }
             }
 
-        String title;
-        if ((title = test.getTitle()) != null)
-            commentTextView.setText(title);
+        //String title;
+        //if ((title = test.getTitle()) != null)
+            //commentTextView.setText(title);
 
         outputFilename = test.getName() + "_draw.jpeg";
         fileName = ((TrialInterface) activity).getFilePath(outputFilename);
@@ -115,10 +121,12 @@ public class DrawingFragment extends Fragment {
     }
 
     public Bitmap screenShot(View view) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
-                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(),
+                view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
         return bitmap;
     }
+
+
 }
