@@ -19,6 +19,8 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class ResultsFragment extends Fragment {
+    private static final String ARG_TESTS = "tests";
+
     Activity activity;
     TestsListAdapter testsListAdapter;
 
@@ -35,7 +37,7 @@ public class ResultsFragment extends Fragment {
     public static ResultsFragment newInstance(Tests tests) {
         ResultsFragment fragment = new ResultsFragment();
         Bundle args = new Bundle();
-        args.putSerializable("tests", tests);
+        args.putSerializable(ARG_TESTS, tests);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +46,7 @@ public class ResultsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            tests = (Tests) getArguments().getSerializable("tests");
+            tests = (Tests) getArguments().getSerializable(ARG_TESTS);
         }
     }
 

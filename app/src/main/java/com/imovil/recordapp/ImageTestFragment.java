@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import java.io.File;
 
 public class ImageTestFragment extends Fragment implements View.OnClickListener, RecorderObserver{
+    private static final String ARG_TEST = "test";
+
     Activity activity;
 
     private Test test;
@@ -34,7 +36,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
     public static ImageTestFragment newInstance(Test test) {
         ImageTestFragment fragment = new ImageTestFragment();
         Bundle args = new Bundle();
-        args.putSerializable("test", test);
+        args.putSerializable(ARG_TEST, test);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +63,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         activity = getActivity();
 
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
+            test = (Test) getArguments().getSerializable(ARG_TEST);
             if (test.getParameters().get(0) != null) {
                 String fname = test.getParameters().get(0);
                 File file = new File(((TrialInterface)activity).getFilePath(fname));

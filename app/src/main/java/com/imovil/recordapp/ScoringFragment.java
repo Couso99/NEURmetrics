@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoringFragment extends Fragment {
+    private static final String ARG_TEST = "test";
+    private static final String ARG_ISTRIALSCORED = "isTrialScored";
+
     Activity activity;
 
     File file = null, outputFile=null;
@@ -51,8 +54,8 @@ public class ScoringFragment extends Fragment {
     public static ScoringFragment newInstance(Test test, boolean isTrialScored) {
         ScoringFragment fragment = new ScoringFragment();
         Bundle args = new Bundle();
-        args.putSerializable("test", test);
-        args.putBoolean("isTrialScored", isTrialScored);
+        args.putSerializable(ARG_TEST, test);
+        args.putBoolean(ARG_ISTRIALSCORED, isTrialScored);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,8 +64,8 @@ public class ScoringFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
-            isTrialScored = (boolean) getArguments().getBoolean("isTrialScored");
+            test = (Test) getArguments().getSerializable(ARG_TEST);
+            isTrialScored = (boolean) getArguments().getBoolean(ARG_ISTRIALSCORED);
             maxScore = test.getMaxScore();
             scoreWeights = test.getScoreWeights();
             if (scoreWeights != null)
@@ -124,7 +127,7 @@ public class ScoringFragment extends Fragment {
                         btnTag.setText(comment);
                 } else {
                     if (maxScore == 1)
-                        btnTag.setText("Realizado correctamente");//"Button " + (j + 1 + (i * 4 )));
+                        btnTag.setText(R.string.successScore);//"Button " + (j + 1 + (i * 4 )));
                     else btnTag.setText("");
                 }
                 btnTag.setId(j + 1);
@@ -133,7 +136,7 @@ public class ScoringFragment extends Fragment {
             }
         }
 
-        else if (maxScore==0) {
+        /*else if (maxScore==0) {
             if (scoreOptions != null) {
                 for (int i=0;i<scoreOptions.size();i++) {
                     CheckBox btnTag = new CheckBox(activity);
@@ -151,7 +154,7 @@ public class ScoringFragment extends Fragment {
                 textView.setTextSize(32);
                 linearLayout.addView(textView);
             }
-        }
+        }*/
 
         else if (maxScore==-1) {
             if (scoreOptions != null) {
@@ -237,12 +240,12 @@ public class ScoringFragment extends Fragment {
                 if (test.getScore()==1)
                     checkBoxList.get(0).setChecked(true);
             case 1:
-                //imageView = new ImageView(estaActividad);
+                //imageView = new ImageView(activity);
                 imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getOutputFilename()))));
                 //imageView.setLayoutParams(layoutParams);
                 break;
             case 3:
-                //imageView = new PlayableImageView(estaActividad, null, test.getFilename(), test.getOutputFilename());
+                //imageView = new PlayableImageView(activity, null, test.getFilename(), test.getOutputFilename());
                 //imageView.setLayoutParams(layoutParams);
                 imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
                 imageView.setAudio(test.getOutputFilename());

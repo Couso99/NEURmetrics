@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class DrawingFragment extends Fragment {
+    private static final String ARG_TEST = "test";
+
     Activity activity;
 
     private Test test;
@@ -38,7 +40,7 @@ public class DrawingFragment extends Fragment {
     public static DrawingFragment newInstance(Test test) {
         DrawingFragment fragment = new DrawingFragment();
         Bundle args = new Bundle();
-        args.putSerializable("test", test);
+        args.putSerializable(ARG_TEST, test);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +49,7 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
+            test = (Test) getArguments().getSerializable(ARG_TEST);
         }
     }
 

@@ -153,14 +153,14 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
                 for (Test test_piece : test_p){
                     testScore += test_piece.getScore();
-                    testMaxScore += test_piece.getMaxScore();
+                    if (test_piece.getMaxScore()>0) testMaxScore += test_piece.getMaxScore();
                 }
                 test.setScore(testScore);
                 test.setMaxScore(testMaxScore);
             }
 
             totalScore += test.getScore();
-            totalMaxScore += test.getMaxScore();
+            if (test.getMaxScore()>0) totalMaxScore += test.getMaxScore();
         }
 
         trialInfo.setTotalScore(totalScore);

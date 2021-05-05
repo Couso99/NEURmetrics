@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TapLettersFragment extends Fragment {
+    private static final String ARG_TEST = "test";
+
     private Activity activity;
 
     private Test test;
@@ -38,7 +40,7 @@ public class TapLettersFragment extends Fragment {
     public static TapLettersFragment newInstance(Test test) {
         TapLettersFragment fragment = new TapLettersFragment();
         Bundle args = new Bundle();
-        args.putSerializable("test", test);
+        args.putSerializable(ARG_TEST, test);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,8 +49,7 @@ public class TapLettersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            test = (Test) getArguments().getSerializable(ARG_TEST);
         }
     }
 
