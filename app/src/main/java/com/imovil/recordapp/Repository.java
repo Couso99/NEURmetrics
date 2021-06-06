@@ -52,7 +52,7 @@ public class Repository {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 if (response.isSuccessful()) {
-                    ((RepositoryObserver) context).onJsonDownloaded(response.body());
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
                 } else {
                     Log.d(TAG, "server contact failed");
                 }
@@ -61,6 +61,104 @@ public class Repository {
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
                 Log.e(TAG, "error");
+            }
+        });
+    }
+
+    public void downloadTrialsList() {
+        Call<JsonElement> call = webService.downloadTrialsList();
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIALS_INFO);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void downloadUsers() {
+        Call<JsonElement> call = webService.downloadUsers();
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.USERS_LIST);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void downloadTrialsListFromUserID(String userID) {
+        Call<JsonElement> call = webService.downloadTrialsListFromUserID(userID);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.USER_TRIALS_INFO);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void downloadTrialFromTrialID(String trialID) {
+        Call<JsonElement> call = webService.downloadTrialFromTrialID(trialID);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public  void downloadUserTrial(String userID, long startTime) {
+        Call<JsonElement> call = webService.downloadUserTrial(userID, startTime);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
             }
         });
     }
@@ -192,9 +290,9 @@ public class Repository {
         }
     }
 
-    public void writeJsonToDisk(Tests tests, String fileName) {
+    public void writeJsonToDisk(Trial trial, String fileName) {
         Gson gson =  new GsonBuilder().setPrettyPrinting().create();
-        String jsonElement = gson.toJson(tests, Tests.class);
+        String jsonElement = gson.toJson(trial, Trial.class);
 
         File file = new File(FOLDER_PATH + fileName);
 

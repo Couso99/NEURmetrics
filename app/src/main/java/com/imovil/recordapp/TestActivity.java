@@ -16,11 +16,13 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     private final static String TAG = "TestActivity";
     private final String outputJsonFname = "nombre_aqui.json";
 
+    public final static String ARG_TRIAL = "trial";
+
     Repository repository;
 
     Test test, test_piece;
     List<Test> tests_list, test_pieces_list;
-    Tests tests;
+    Trial trial;
     TrialInfo trialInfo;
     int test_index=0, isLastTest = 0, isTestScored=0;
     int test_pieces_index=0;
@@ -47,16 +49,16 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         repository = new Repository(this);
 
         Bundle b = getIntent().getExtras();
-        tests = (Tests) b.getSerializable("tests");
-        tests_list = tests.getTests();
+        trial = (Trial) b.getSerializable(ARG_TRIAL);
+        tests_list = trial.getTests();
 
-        trialInfo = tests.getTrialInfo();
+        trialInfo = trial.getTrialInfo();
         if (!(isTrialScored = trialInfo.isTrialScored()))
             isTrialScored = false;
 
         trialInfo.setStartTime(TrialTimer.getStartTime());
 
-        startDownloadingTests(tests);
+        startDownloadingTests(trial);
         nextTest();
     }
 
@@ -141,12 +143,12 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         repository.uploadGeneral(fileName, mediaType);
     }
 
-    private void prepareJson(Tests tests) {
+    private void prepareJson(Trial trial) {
         int totalScore=0, totalMaxScore=0;
         int testScore, testMaxScore;
         List<Test> test_p;
 
-        for (Test test : tests.getTests()) {
+        for (Test test : trial.getTests()) {
             if ((test_p = test.getTestPieces())!= null){
                 testScore = 0;
                 testMaxScore=0;
@@ -169,10 +171,10 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                 trialInfo.setTrialScored(true);
     }
 
-    private void startDownloadingTests(Tests tests) {
-        boolean isTrialScored = tests.getTrialInfo().isTrialScored();
+    private void startDownloadingTests(Trial trial) {
+        boolean isTrialScored = trial.getTrialInfo().isTrialScored();
 
-        for (Test test : tests.getTests()) {
+        for (Test test : trial.getTests()) {
             if (test.getParametersNumber() != 0) {
                 List<String> parameters_type = test.getParametersType();
                 List<String> parameters = test.getParameters();
@@ -261,8 +263,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         }
         if (isLastTest != 0){
             String fname = outputJsonFname;
-            prepareJson(tests);
-            repository.writeJsonToDisk(tests, fname);
+            prepareJson(trial);
+            repository.writeJsonToDisk(trial, fname);
             repository.uploadJson(repository.getFilePath(fname));
             if (isScoreDuringTests || isTrialScored) testsResult();
         }
@@ -292,7 +294,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Fragment test_fragment = ResultsFragment.newInstance(tests);
+        Fragment test_fragment = ResultsFragment.newInstance(trial);
 
         fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
         fragmentTransaction.commit();

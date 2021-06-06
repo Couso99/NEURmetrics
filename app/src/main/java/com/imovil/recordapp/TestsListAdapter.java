@@ -10,7 +10,7 @@ import com.imovil.recordapp.databinding.SimpleListItemBinding;
 
 public class TestsListAdapter extends RecyclerView.Adapter <TestsHolder> {
 
-    private Tests mTests;
+    private Trial mTrial;
     SimpleListItemBinding binding;
 
     @NonNull
@@ -22,22 +22,22 @@ public class TestsListAdapter extends RecyclerView.Adapter <TestsHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TestsHolder holder, int position) {
-        if (mTests!=null)
-            holder.bind(mTests.getTests().get(position));
+        if (mTrial !=null)
+            holder.bind(mTrial.getTests().get(position));
         else
             holder.bind(null);
     }
 
     @Override
     public int getItemCount() {
-        if (mTests!=null)
-            return mTests.getTests().size();
+        if (mTrial !=null)
+            return mTrial.getTests().size();
         else
             return 0;
     }
 
-    public void setTests(Tests mTests) {
-        this.mTests = mTests;
+    public void setTests(Trial mTrial) {
+        this.mTrial = mTrial;
         notifyDataSetChanged();
     }
 

@@ -56,6 +56,31 @@ public class WebService {//implements RestService{
         return call;
     }
 
+    public Call<JsonElement> downloadTrialsList() {
+        Call<JsonElement> call = downloadService.downloadTrialsInfo();
+        return call;
+    }
+
+    public Call<JsonElement> downloadUsers() {
+        Call<JsonElement> call = downloadService.downloadUsers();
+        return call;
+    }
+
+    public Call<JsonElement> downloadTrialsListFromUserID(String userID) {
+        Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
+        return call;
+    }
+
+    public Call<JsonElement> downloadTrialFromTrialID(String trialID) {
+        Call<JsonElement> call = downloadService.downloadTrialFromTrialID(trialID);
+        return call;
+    }
+
+    public Call<JsonElement> downloadUserTrial(String userID, long startTime) {
+        Call<JsonElement> call = downloadService.downloadUserTrial(userID, startTime);
+        return call;
+    }
+
     /*public Call<ResponseBody> downloadUserMadeFile(String fileName) {
         Call<ResponseBody> call = downloadService.downloadUserMadeFile(fileName);
 

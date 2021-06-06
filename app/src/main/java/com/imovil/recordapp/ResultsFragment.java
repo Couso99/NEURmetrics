@@ -28,16 +28,16 @@ public class ResultsFragment extends Fragment {
     private Button nextButton;
     private TextView trialView;
 
-    private Tests tests;
+    private Trial trial;
 
     public ResultsFragment() {
         // Required empty public constructor
     }
 
-    public static ResultsFragment newInstance(Tests tests) {
+    public static ResultsFragment newInstance(Trial trial) {
         ResultsFragment fragment = new ResultsFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TESTS, tests);
+        args.putSerializable(ARG_TESTS, trial);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +46,7 @@ public class ResultsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            tests = (Tests) getArguments().getSerializable(ARG_TESTS);
+            trial = (Trial) getArguments().getSerializable(ARG_TESTS);
         }
     }
 
@@ -63,12 +63,12 @@ public class ResultsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(testsListAdapter);
 
-        testsListAdapter.setTests(tests);
+        testsListAdapter.setTests(trial);
 
         nextButton = view.findViewById(R.id.finishedButton);
         nextButton.setOnClickListener(v -> ((TrialInterface) activity).endTrial());
 
-        TrialInfo trialInfo = tests.getTrialInfo();
+        TrialInfo trialInfo = trial.getTrialInfo();
 
         trialView = view.findViewById(R.id.trialScoreTextView);
         trialView.setText("Total score:\t"+ trialInfo.getTotalScore() + " /"+trialInfo.getTotalMaxScore());

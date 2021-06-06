@@ -43,6 +43,28 @@ public interface RestService {
             @Part MultipartBody.Part file
     );
 
+    @GET("get-trials")
+    Call<JsonElement> downloadTrialsInfo();
+
+    @GET("get-users")
+    Call<JsonElement> downloadUsers();
+
+    @GET("get-user-trials/{userID}")
+    Call<JsonElement> downloadTrialsInfoFromUserID(
+            @Path("userID") String userID
+    );
+
+    @GET("get-trial/{trialID}")
+    Call<JsonElement> downloadTrialFromTrialID(
+            @Path("trialID") String trialID
+    );
+
+    @GET("get-user-trial/{userID}/{start_time}")
+    Call<JsonElement> downloadUserTrial(
+            @Path("userID") String userID,
+            @Path("start_time") long start_time
+    );
+
     /*@Multipart
     @POST("upload-general")
     Call<ResponseBody> uploadGeneral(

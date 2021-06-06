@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 import java.util.List;
@@ -72,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.stopButton:
                 //downloadJson(jsonFname);
+                enterSearchMode();
                 break;
         }
     }
@@ -104,12 +104,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }*/
 
+    public void enterSearchMode() {
+
+        Intent intent = new Intent(MainActivity.this, ExplorerMenu.class);
+
+        startActivity(intent);
+
+    }
+
     public void init_tests() {
         Gson gson =  new Gson();
-        Tests tests = gson.fromJson(jsonElement, Tests.class);
-        Log.d(TAG, String.valueOf(tests));
+        Trial trial = gson.fromJson(jsonElement, Trial.class);
+        Log.d(TAG, String.valueOf(trial));
 
-        List<Test> tests_list = tests.getTests();
+        List<Test> tests_list = trial.getTests();
 
         int i = 0;
         for (Test test : tests_list) {
@@ -119,16 +127,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = new Intent(MainActivity.this, TestActivity.class);
 
-        intent.putExtra("tests", tests);
+        intent.putExtra(TestActivity.ARG_TRIAL, trial);
         startActivity(intent);
     }
 
     @Override
-    public void onJsonDownloaded(JsonElement jsonElement) {
+    public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
         Log.d(TAG, "server contacted and has file");
         this.jsonElement = jsonElement;
 
         Log.d(TAG, "file download was a success? " + this.jsonElement);
-        init_tests();
+        if (jsonCode==0)
+            init_tests();
     }
 }

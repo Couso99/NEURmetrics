@@ -5,4 +5,22 @@
     <string name="stopButton">Parar</string>
     <string name="nextButton">Siguiente</string>
     <string name="successScore">Realizado correctamente</string>
+    <string name="getTrialsListButton">Realizar prueba</string>
+    <string name="getUsersListButton">Revisar pruebas</string>
+    <string name="title_activity_settings">Ajustes</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="server_ip_title">IP del servidor</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

@@ -5,8 +5,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
-    //todo make bsae_url dynamic
-    private static final String BASE_URL = "http://192.168.0.245:5000";//"http://raspberrypi.lan:5000/";
+    //todo make base_url dynamic
+    private static final String BASE_URL = "http://192.168.0.21:5000";//"http://raspberrypi.lan:5000/";
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
