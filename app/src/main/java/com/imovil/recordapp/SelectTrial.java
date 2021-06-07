@@ -2,7 +2,6 @@ package com.imovil.recordapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -22,12 +21,15 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
     private static final String TAG = "SelectTrial";
 
     public static final String ARG_TRIALS = "trials_info";
-    public static final String ARG_USER_TRIAL = "isUserTrial";
+    public static final String ARG_IS_USER_TRIAL = "isUserTrial";
+    public static final String ARG_USER_ID = "userID";
 
     Repository repository;
 
     RecyclerView.Adapter trialsListAdapter;
     JsonElement jsonElement;
+
+    String userID;
 
     private RecyclerView recyclerView;
     private Trials trials;
@@ -43,7 +45,8 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
         Intent intent = getIntent();
 
         trials = (Trials) intent.getSerializableExtra(ARG_TRIALS);
-        isUserTrial = intent.getBooleanExtra(ARG_USER_TRIAL,false);
+        isUserTrial = intent.getBooleanExtra(ARG_IS_USER_TRIAL,false);
+        userID = intent.getStringExtra(ARG_USER_ID);
 
         if (isUserTrial) {
             trialsListAdapter = new UserTrialsListAdapter();
@@ -101,6 +104,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
         Gson gson = new Gson();
         List<Trial> trial_list = gson.fromJson(this.jsonElement, new TypeToken<List<Trial>>() {}.getType());
         Trial trial = trial_list.get(0);
+        trial.getTrialInfo().setUserID(userID);
         Log.d(TAG, String.valueOf(trial));
 
         Intent intent = new Intent(SelectTrial.this, TestActivity.class);

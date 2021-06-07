@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class ExplorerMenu extends AppCompatActivity implements View.OnClickListener, RepositoryObserver {
@@ -23,7 +22,7 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
     Repository repository;
     Button getTrialsButton, getUsersButton, settingsButton;
     JsonElement jsonElementTrials, jsonElementUsers;
-    boolean isDoTrial = false;
+    boolean isNewTrial = false;
 
 
     @Override
@@ -52,11 +51,11 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
             case R.id.getTrialsButton:
                 //repository.downloadTrialsList();
                 repository.downloadUsers();
-                isDoTrial = true;
+                isNewTrial = true;
                 break;
             case R.id.getUsersButton:
                 repository.downloadUsers();
-                isDoTrial = false;
+                isNewTrial = false;
                 break;
             case R.id.settingsButton:
                 Intent intent = new Intent(ExplorerMenu.this, Settings.class);
@@ -68,35 +67,21 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
         switch (jsonCode) {
-            case RepositoryObserver.TRIALS_INFO:
+            /*case RepositoryObserver.TRIALS_INFO:
                 this.jsonElementTrials = jsonElement;
                 launchSelectTrial();
-                break;
+                break;*/
 
             case RepositoryObserver.USERS_LIST:
                 this.jsonElementUsers = jsonElement;
-                if (isDoTrial) launchSelectTrial();
-                else launchSelectUser();
+                launchSelectUser(isNewTrial);
                 break;
 
         }
         Log.d(TAG, String.valueOf(jsonElement));
     }
 
-    // todo juntar en la misma clase SelectUser y SelectOrCreateUser
-    private void launchSelectTrial() {
-        Gson gson =  new Gson();
-        List<User> users_list = gson.fromJson(this.jsonElementUsers, new TypeToken<List<User>>() {}.getType());
-        Users users = new Users(users_list);
-        Log.d(TAG, String.valueOf(users));
-
-        Intent intent = new Intent(ExplorerMenu.this, SelectOrCreateUser.class);
-
-        intent.putExtra(SelectUser.ARG_USERS, users);
-        startActivity(intent);
-    }
-
-    private void launchSelectUser() {
+    private void launchSelectUser(boolean isNewTrial) {
         Gson gson =  new Gson();
         List<User> users_list = gson.fromJson(this.jsonElementUsers, new TypeToken<List<User>>() {}.getType());
         Users users = new Users(users_list);
@@ -105,6 +90,7 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(ExplorerMenu.this, SelectUser.class);
 
         intent.putExtra(SelectUser.ARG_USERS, users);
+        intent.putExtra(SelectUser.ARG_IS_NEW_TRIAL, isNewTrial);
         startActivity(intent);
 
     }

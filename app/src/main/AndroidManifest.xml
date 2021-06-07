@@ -32,7 +32,6 @@
         <activity android:name=".TestActivity" />
         <activity android:name=".ExplorerMenu" />
         <activity android:name=".SelectUser" />
-        <activity android:name=".SelectOrCreateUser" />
     </application>
 
 </manifest>

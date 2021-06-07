@@ -10,16 +10,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class SelectUser extends AppCompatActivity implements RepositoryObserver {
     private static final String TAG = "SelectUser";
     public static final String ARG_USERS = "users";
+    public static final String ARG_IS_NEW_TRIAL = "isNewTrial";
 
     Repository repository;
     UsersListAdapter usersListAdapter;
@@ -27,19 +28,33 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
     JsonElement jsonElement;
 
     private RecyclerView recyclerView;
+    private FloatingActionButton mAddFab;
+
     private Users users;
 
+    private boolean isNewTrial;
+
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_trial);
+        setContentView(R.layout.activity_select_user);
 
         repository = new Repository(this);
 
         Intent intent = getIntent();
 
+        isNewTrial = intent.getBooleanExtra(ARG_IS_NEW_TRIAL, false);
         users = (Users) intent.getSerializableExtra(ARG_USERS);
+
+
+            mAddFab = findViewById(R.id.floatingActionButton);
+        if (isNewTrial) {
+            mAddFab.show();
+            mAddFab.setOnClickListener(v -> addUser());
+        }
+        else mAddFab.hide();
 
         usersListAdapter = new UsersListAdapter();
         recyclerView = findViewById(R.id.recyclerView);
@@ -52,13 +67,18 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick, pos: "+position);
                 v.setBackgroundColor(Color.BLUE);
-                String userID = users.getUsers().get(position).getUserID();
-                repository.downloadTrialsListFromUserID(userID);
+                userID = users.getUsers().get(position).getUserID();
+                if (isNewTrial) repository.downloadTrialsList();
+                else repository.downloadTrialsListFromUserID(userID);
             }
         });
     }
 
-    public void launchSelectTrial() {
+    private void addUser() {
+
+    }
+
+    public void launchSelectTrial(boolean isNewTrial) {
         Gson gson =  new Gson();
         List<Trial> trials_info_list = gson.fromJson(this.jsonElement, new TypeToken<List<Trial>>() {}.getType());
         Trials trials_info = new Trials(trials_info_list);
@@ -67,15 +87,22 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
         Intent intent = new Intent(SelectUser.this, SelectTrial.class);
 
         intent.putExtra(SelectTrial.ARG_TRIALS, trials_info);
-        intent.putExtra(SelectTrial.ARG_USER_TRIAL, true);
+        intent.putExtra(SelectTrial.ARG_IS_USER_TRIAL, !isNewTrial);
+        intent.putExtra(SelectTrial.ARG_USER_ID, userID);
         startActivity(intent);
     }
 
     @Override
     public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
-        if (jsonCode==RepositoryObserver.USER_TRIALS_INFO) {
-            this.jsonElement = jsonElement;
-            launchSelectTrial();
+        switch (jsonCode) {
+            case RepositoryObserver.USER_TRIALS_INFO:
+                //this.jsonElement = jsonElement;
+                //launchSelectTrial(isNewTrial);
+                //break;
+            case RepositoryObserver.TRIALS_INFO:
+                this.jsonElement = jsonElement;
+                launchSelectTrial(isNewTrial);
+                break;
         }
     }
 }
