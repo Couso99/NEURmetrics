@@ -17,6 +17,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     private final String outputJsonFname = "nombre_aqui.json";
 
     public final static String ARG_TRIAL = "trial";
+    public static final String ARG_TEST = "test";
+    public static final String ARG_TRIAL_INFO = "trialInfo";
 
     Repository repository;
 
@@ -204,22 +206,22 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         }
     }
 
-    private Fragment nextTestNewFragment(Test t) {
+    private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
         Fragment test_fragment;
 
         switch (t.getTestType()) {//testType) {
             case 1:
-                test_fragment = DrawingFragment.newInstance(t);
+                test_fragment = DrawingFragment.newInstance(t, trialInfo);
                 break;
             case 2:
-                test_fragment = TapLettersFragment.newInstance(t);
+                test_fragment = TapLettersFragment.newInstance(t, trialInfo);
                 break;
             case 3:
-                test_fragment = ImageTestFragment.newInstance(t);
+                test_fragment = ImageTestFragment.newInstance(t, trialInfo);
                 observer = (RecorderObserver) test_fragment;
                 break;
             default:
-                test_fragment = ImageTestFragment.newInstance(t);
+                test_fragment = ImageTestFragment.newInstance(t, trialInfo);
                 break;
         }
 
@@ -246,7 +248,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             isLastTest = updateTest();
 
             if (isLastTest == 0) {
-                Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test);
+                Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test, trialInfo);
                 update_headers(isRunTestPiece ? test_piece : test);
                 (isRunTestPiece ? test_piece : test).setStartTestTimeOffset(TrialTimer.getElapsedTime());
 
@@ -264,8 +266,10 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         if (isLastTest != 0){
             String fname = outputJsonFname;
             prepareJson(trial);
-            repository.writeJsonToDisk(trial, fname);
-            repository.uploadJson(repository.getFilePath(fname));
+
+            repository.uploadUserTrial(trial);
+            //repository.writeJsonToDisk(trial, fname);
+            //repository.uploadJson(repository.getFilePath(fname));
             if (isScoreDuringTests || isTrialScored) testsResult();
         }
     }

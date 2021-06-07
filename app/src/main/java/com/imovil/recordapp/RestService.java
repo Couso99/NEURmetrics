@@ -43,6 +43,13 @@ public interface RestService {
             @Part MultipartBody.Part file
     );
 
+    @Multipart
+    @POST("/upload-user-trial")
+    Call<ResponseBody> uploadUserTrial(
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part file
+    );
+
     @GET("get-trials")
     Call<JsonElement> downloadTrialsInfo();
 

@@ -229,6 +229,40 @@ public class Repository {
         });
     }
 
+    public void uploadUserTrial(Trial trial) {
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(trial,Trial.class);
+        uploadUserTrial(jsonElement);
+    }
+
+    public void uploadUserTrial(JsonElement jsonElement) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(jsonElement));
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
+
+        // add another part within the multipart request
+        String descriptionString = "hello, this is description speaking";
+        RequestBody description =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, descriptionString);
+
+        Call<ResponseBody> call = webService.uploadUserTrial(description, body);
+
+        // finally, execute the request
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+                isOutputJsonUploaded = true;
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
     private void enqueueWriteResponseBody(Call<ResponseBody> call, String fileName) {
         call.enqueue(new Callback<ResponseBody>() {
             @Override

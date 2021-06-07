@@ -24,6 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
 
 public class WebService {//implements RestService{
     private final static String TAG = "WebService";
@@ -78,6 +79,11 @@ public class WebService {//implements RestService{
 
     public Call<JsonElement> downloadUserTrial(String userID, long startTime) {
         Call<JsonElement> call = downloadService.downloadUserTrial(userID, startTime);
+        return call;
+    }
+
+    public Call<ResponseBody> uploadUserTrial(RequestBody description, MultipartBody.Part body) {
+        Call<ResponseBody> call = downloadService.uploadUserTrial(description, body);
         return call;
     }
 
