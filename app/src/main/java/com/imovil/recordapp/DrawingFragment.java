@@ -22,11 +22,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class DrawingFragment extends Fragment {
-    private static final String ARG_TEST = "test";
-
     Activity activity;
 
     private Test test;
+    private TrialInfo trialInfo;
     private DrawingArea drawingArea;
     private Button finishedButton;
     private TextView commentTextView;
@@ -37,10 +36,11 @@ public class DrawingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DrawingFragment newInstance(Test test) {
+    public static DrawingFragment newInstance(Test test, TrialInfo trialInfo) {
         DrawingFragment fragment = new DrawingFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +49,8 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(ARG_TEST);
+            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
+            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
         }
     }
 
@@ -99,7 +100,7 @@ public class DrawingFragment extends Fragment {
         //if ((title = test.getTitle()) != null)
             //commentTextView.setText(title);
 
-        outputFilename = test.getName() + "_draw.jpeg";
+        outputFilename = test.getName() +'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+ "_draw.jpeg";
         fileName = ((TrialInterface) activity).getFilePath(outputFilename);
         //.getExternalCacheDir().getAbsolutePath();
 

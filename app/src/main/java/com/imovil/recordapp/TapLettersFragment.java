@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TapLettersFragment extends Fragment {
-    private static final String ARG_TEST = "test";
-
     private Activity activity;
 
     private Test test;
+    private TrialInfo trialInfo;
     private List<String> textArray;
     private String fileName, outputFilename;
     private Button finishedButton;
@@ -37,10 +36,11 @@ public class TapLettersFragment extends Fragment {
 
     }
 
-    public static TapLettersFragment newInstance(Test test) {
+    public static TapLettersFragment newInstance(Test test, TrialInfo trialInfo) {
         TapLettersFragment fragment = new TapLettersFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +49,7 @@ public class TapLettersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(ARG_TEST);
+            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
         }
     }
 
@@ -62,7 +62,8 @@ public class TapLettersFragment extends Fragment {
         activity = getActivity();
 
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable("test");
+            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
             textArray = test.getParameters();
         }
 
@@ -86,7 +87,7 @@ public class TapLettersFragment extends Fragment {
             linearLayout.addView(textView);
         }
 
-        outputFilename = test.getName() + "_screenshot.jpeg";
+        outputFilename = test.getName()+'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+ "_screenshot.jpeg";
         fileName = ((TrialInterface) activity).getFilePath(outputFilename);
 
         finishedButton = view.findViewById(R.id.finishedButton);

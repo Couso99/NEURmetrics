@@ -16,11 +16,10 @@ import android.widget.ImageView;
 import java.io.File;
 
 public class ImageTestFragment extends Fragment implements View.OnClickListener, RecorderObserver{
-    private static final String ARG_TEST = "test";
-
     Activity activity;
 
     private Test test;
+    private TrialInfo trialInfo;
     private Button recordButton, nextButton;
     private ImageView imageView;
     private int recording_time_ms = 0;
@@ -33,10 +32,11 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         // Required empty public constructor
     }
 
-    public static ImageTestFragment newInstance(Test test) {
+    public static ImageTestFragment newInstance(Test test, TrialInfo trialInfo) {
         ImageTestFragment fragment = new ImageTestFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TEST, test);
+        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +63,8 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         activity = getActivity();
 
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(ARG_TEST);
+            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
             if (test.getParameters().get(0) != null) {
                 String fname = test.getParameters().get(0);
                 File file = new File(((TrialInterface)activity).getFilePath(fname));
@@ -94,7 +95,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         }
 
 
-        outputFilename = test.getName() + "_audio.3gp";
+        outputFilename = test.getName()+'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+"_audio.3gp";
         fileName = ((TrialInterface)activity).getFilePath(outputFilename);
 
         recordButton.setOnClickListener(this);
