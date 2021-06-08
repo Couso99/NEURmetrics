@@ -44,6 +44,13 @@ public interface RestService {
     );
 
     @Multipart
+    @POST("/update-user-trial")
+    Call<ResponseBody> updateUserTrial(
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part file
+    );
+
+    @Multipart
     @POST("/upload-user-trial")
     Call<ResponseBody> uploadUserTrial(
             @Part("description") RequestBody description,

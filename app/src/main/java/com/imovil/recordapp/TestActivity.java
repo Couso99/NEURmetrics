@@ -46,8 +46,6 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
         recorder = new RecorderPlayer();
 
-        TrialTimer.init_timer();
-
         repository = new Repository(this);
 
         Bundle b = getIntent().getExtras();
@@ -55,10 +53,11 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         tests_list = trial.getTests();
 
         trialInfo = trial.getTrialInfo();
-        if (!(isTrialScored = trialInfo.isTrialScored()))
+        if (!(isTrialScored = trialInfo.isTrialScored())) {
             isTrialScored = false;
-
-        trialInfo.setStartTime(TrialTimer.getStartTime());
+            TrialTimer.init_timer();
+            trialInfo.setStartTime(TrialTimer.getStartTime());
+        }
 
         startDownloadingTests(trial);
         nextTest();
@@ -267,7 +266,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             String fname = outputJsonFname;
             prepareJson(trial);
 
-            repository.uploadUserTrial(trial);
+            if(isTrialScored) {repository.updateUserTrial(trial);}
+            else {repository.uploadUserTrial(trial);}
             //repository.writeJsonToDisk(trial, fname);
             //repository.uploadJson(repository.getFilePath(fname));
             if (isScoreDuringTests || isTrialScored) testsResult();

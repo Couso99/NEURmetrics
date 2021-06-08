@@ -82,6 +82,11 @@ public class WebService {//implements RestService{
         return call;
     }
 
+    public Call<ResponseBody> updateUserTrial(RequestBody description, MultipartBody.Part body) {
+        Call<ResponseBody> call = downloadService.updateUserTrial(description, body);
+        return call;
+    }
+
     public Call<ResponseBody> uploadUserTrial(RequestBody description, MultipartBody.Part body) {
         Call<ResponseBody> call = downloadService.uploadUserTrial(description, body);
         return call;

@@ -229,6 +229,40 @@ public class Repository {
         });
     }
 
+    public void updateUserTrial(Trial trial) {
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(trial,Trial.class);
+        updateUserTrial(jsonElement);
+    }
+
+    public void updateUserTrial(JsonElement jsonElement) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(jsonElement));
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
+
+        // add another part within the multipart request
+        String descriptionString = "hello, this is description speaking";
+        RequestBody description =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, descriptionString);
+
+        Call<ResponseBody> call = webService.updateUserTrial(description, body);
+
+        // finally, execute the request
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+                isOutputJsonUploaded = true;
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
     public void uploadUserTrial(Trial trial) {
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(trial,Trial.class);
