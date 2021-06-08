@@ -9,6 +9,9 @@
     <string name="getUsersListButton">Revisar pruebas</string>
     <string name="title_activity_settings">Ajustes</string>
 
+    <!-- Errors  -->
+    <string name="error_no_trial_found">No se encontró la prueba seleccionada</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -23,4 +26,6 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="beginAppButton">Comenzar</string>
+    <string name="made_by">Hecho por: Pablo Couso</string>
 </resources>

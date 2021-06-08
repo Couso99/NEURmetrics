@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -38,6 +40,11 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_select_trial);
 
         repository = new Repository(this);
@@ -55,7 +62,22 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
                 @Override
                 public void onItemClick(int position, View v) {
                     Log.d(TAG, "onItemClick, pos: "+position);
-                    v.setBackgroundColor(Color.BLUE);
+
+                    v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
+
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(200);
+                                runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    thread.start();
 
                     TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String userID = trialInfo.getUserID();
@@ -74,7 +96,21 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
                 public void onItemClick(int position, View v) {
 
                     Log.d(TAG, "onItemClick, pos: "+position);
-                    v.setBackgroundColor(Color.BLUE);
+                    v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
+
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(200);
+                                runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+
+                    thread.start();
 
                     TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String trialID = trialInfo.getTrialID();
@@ -103,13 +139,19 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
     private void launchTrial() {
         Gson gson = new Gson();
         List<Trial> trial_list = gson.fromJson(this.jsonElement, new TypeToken<List<Trial>>() {}.getType());
-        Trial trial = trial_list.get(0);
-        trial.getTrialInfo().setUserID(userID);
-        Log.d(TAG, String.valueOf(trial));
+        if (trial_list.size()>0)
+        {
+            Trial trial = trial_list.get(0);
+            trial.getTrialInfo().setUserID(userID);
+            Log.d(TAG, String.valueOf(trial));
 
-        Intent intent = new Intent(SelectTrial.this, TestActivity.class);
+            Intent intent = new Intent(SelectTrial.this, TestActivity.class);
 
-        intent.putExtra(TestActivity.ARG_TRIAL, trial);
-        startActivity(intent);
+            intent.putExtra(TestActivity.ARG_TRIAL, trial);
+            startActivity(intent);
+        }
+        else {
+            Toast.makeText(getApplicationContext(),R.string.error_no_trial_found,Toast.LENGTH_SHORT).show();
+        }
     }
 }
