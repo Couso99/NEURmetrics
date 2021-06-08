@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ScoringFragment extends Fragment {
     private static final String ARG_TEST = "test";
-    private static final String ARG_ISTRIALSCORED = "isTrialScored";
+    private static final String ARG_IS_TRIAL_SCORED = "isTrialScored";
 
     Activity activity;
 
@@ -31,7 +31,7 @@ public class ScoringFragment extends Fragment {
 
     private Button nextButton;
     //todo solucionar la gochada esta
-    PlayableImageView imageView = null;
+    ImageView imageView = null;
     RelativeLayout relativeLayout;
 
     ElegantNumberButton elegantNumberButton = null;
@@ -55,7 +55,7 @@ public class ScoringFragment extends Fragment {
         ScoringFragment fragment = new ScoringFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_TEST, test);
-        args.putBoolean(ARG_ISTRIALSCORED, isTrialScored);
+        args.putBoolean(ARG_IS_TRIAL_SCORED, isTrialScored);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class ScoringFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable(ARG_TEST);
-            isTrialScored = (boolean) getArguments().getBoolean(ARG_ISTRIALSCORED);
+            isTrialScored = (boolean) getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
             maxScore = test.getMaxScore();
             scoreWeights = test.getScoreWeights();
             if (scoreWeights != null)
@@ -183,7 +183,14 @@ public class ScoringFragment extends Fragment {
         //= null;
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
 
-        imageView = new PlayableImageView(activity, null);
+        switch (test.getTestType()) {
+            case 1:
+            case 2:
+                imageView = new ImageView(activity,null);
+                break;
+            case 3:
+                imageView = new PlayableImageView(activity, null);
+        }
         imageView.setLayoutParams(layoutParams);
 
         relativeLayout.addView(imageView);
@@ -248,7 +255,7 @@ public class ScoringFragment extends Fragment {
                 //imageView = new PlayableImageView(activity, null, test.getFilename(), test.getOutputFilename());
                 //imageView.setLayoutParams(layoutParams);
                 imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
-                imageView.setAudio(test.getOutputFilename());
+                ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
                 break;
         }
         //relativeLayout.addView(imageView);

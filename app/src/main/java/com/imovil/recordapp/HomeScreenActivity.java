@@ -20,7 +20,7 @@ import com.google.gson.JsonElement;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, RepositoryObserver{
+public class HomeScreenActivity extends AppCompatActivity implements View.OnClickListener, RepositoryObserver{
     private static final String LOG_TAG = "AUDIO_RECORDER";
     private final static String TAG = "WebService";
     private final String jsonFname = "try.json";
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home_screen);
 
         askPermission.launch(Manifest.permission.RECORD_AUDIO);
         askPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void enterSearchMode() {
 
-        Intent intent = new Intent(MainActivity.this, ExplorerMenu.class);
+        Intent intent = new Intent(HomeScreenActivity.this, ExplorerMenu.class);
 
         startActivity(intent);
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             i++;
         }
 
-        Intent intent = new Intent(MainActivity.this, TestActivity.class);
+        Intent intent = new Intent(HomeScreenActivity.this, TestActivity.class);
 
         intent.putExtra(TestActivity.ARG_TRIAL, trial);
         startActivity(intent);

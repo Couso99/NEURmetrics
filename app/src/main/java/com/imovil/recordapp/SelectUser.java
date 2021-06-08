@@ -2,9 +2,12 @@ package com.imovil.recordapp;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +42,11 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_select_user);
 
         repository = new Repository(this);
@@ -66,7 +74,21 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick, pos: "+position);
-                v.setBackgroundColor(Color.BLUE);
+                v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            sleep(200);
+                            runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                thread.start();
+
                 userID = users.getUsers().get(position).getUserID();
                 if (isNewTrial) repository.downloadTrialsList();
                 else repository.downloadTrialsListFromUserID(userID);

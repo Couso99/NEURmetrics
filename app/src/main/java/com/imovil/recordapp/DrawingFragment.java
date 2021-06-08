@@ -1,9 +1,6 @@
 package com.imovil.recordapp;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
@@ -11,7 +8,6 @@ import android.os.Bundle;
 
 import android.app.Fragment;
 
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +61,7 @@ public class DrawingFragment extends Fragment {
         //init_headers();
 
         //commentTextView = view.findViewById(R.id.commentTextView);
-        drawingArea = (DrawingArea) view.findViewById(R.id.drawing_area2);
+        drawingArea = (DrawingArea) view.findViewById(R.id.drawing_area);
         drawingArea.initTrailDrawer();
         //drawingArea.setImageURI(Uri.fromFile(new File(getContext().getExternalCacheDir()+ File.separator+"fondo_app2.jpg")));
 
@@ -74,6 +70,7 @@ public class DrawingFragment extends Fragment {
                 File file = new File(((TrialInterface)activity).getFilePath(fname));
                 if (file.exists()) {
                     drawingArea.setImageURI(Uri.fromFile(file));
+                    drawingArea.setAdjustViewBounds(true);
                 } else {
                     Thread thread = new Thread() {
                         @Override
@@ -82,7 +79,11 @@ public class DrawingFragment extends Fragment {
                                 while (true) {
                                     sleep(200);
                                     if (file.exists()) {
-                                        activity.runOnUiThread(() -> drawingArea.setImageURI(Uri.fromFile(file)));
+                                        activity.runOnUiThread(() ->
+                                        {
+                                            drawingArea.setImageURI(Uri.fromFile(file));
+                                            drawingArea.setAdjustViewBounds(true);
+                                        });
                                         break;
                                     }
                                 }
