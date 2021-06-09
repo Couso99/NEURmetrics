@@ -16,7 +16,7 @@ public class UserTrialsHolder extends NewTrialsHolder {
     public void bind(Trial trial){
         if (trial!=null) {
             TrialInfo info = trial.getTrialInfo();
-            binding.text1.setText("TrialID: " + info.getTrialID() + " - Start Time: "+info.getStartTime()+" - Score: "
+            binding.text1.setText("TrialID: " + info.getTrialID() + "\n - Start Time: "+TrialTimer.getDateFromTimestamp(info.getStartTime())+"\n - Score: "
             +info.getTotalScore()+"/"+info.getTotalMaxScore());
         }
 

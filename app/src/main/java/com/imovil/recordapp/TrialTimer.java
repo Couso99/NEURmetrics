@@ -1,5 +1,9 @@
 package com.imovil.recordapp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TrialTimer {
     private static long startTime;
 
@@ -14,5 +18,11 @@ public class TrialTimer {
 
     public static long getStartTime() {
         return startTime;
+    }
+
+    public static String getDateFromTimestamp(long startTime) {
+        Date date = new Date(startTime);
+        DateFormat f = new SimpleDateFormat("dd-MM-yyyy  hh:mm");
+        return f.format(date);
     }
 }
