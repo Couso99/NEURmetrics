@@ -20,15 +20,10 @@ public interface RestService {
             @Path(value="server_file_path",encoded=true) String server_file_path
     );
 
-    /*@GET("get-image/{image}")
-    Call<ResponseBody> downloadImage(
-            @Path("image") String image
+    @POST("initialize/{deviceID}")
+    Call<ResponseBody> initialize(
+            @Path("deviceID") String deviceID
     );
-
-    @GET("get-user-file/{fname}")
-    Call<ResponseBody> downloadUserMadeFile(
-            @Path(value="fname",encoded=true) String fname
-    );*/
 
     @GET("get-file/general/json/{json_fname}")
     Call<JsonElement> downloadJson(

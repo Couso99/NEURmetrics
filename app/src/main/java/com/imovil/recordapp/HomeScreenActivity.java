@@ -23,7 +23,9 @@ import java.util.List;
 public class HomeScreenActivity extends AppCompatActivity implements View.OnClickListener, RepositoryObserver{
     private static final String LOG_TAG = "AUDIO_RECORDER";
     private final static String TAG = "WebService";
-    private final String jsonFname = "try.json";
+    //private final String jsonFname = "try.json";
+
+    private final String deviceID = "dev_1";
 
     private JsonElement jsonElement;
     //WebService webService;
@@ -59,6 +61,8 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
 
         recordButton.setOnClickListener(this);
         stopButton.setOnClickListener(this);
+
+        recordButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -66,11 +70,12 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
         int id = view.getId();
         switch (id) {
             case R.id.recordButton:
-                repository.downloadJson(jsonFname);
+                //repository.downloadJson(jsonFname);
                 //downloadJson(jsonFname);
                 break;
             case R.id.stopButton:
                 //downloadJson(jsonFname);
+                repository.initialize_device(deviceID);
                 enterSearchMode();
                 break;
         }

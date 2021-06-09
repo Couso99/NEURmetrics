@@ -30,6 +30,7 @@ public class Repository {
     private Context context;
 
     private boolean isOutputJsonUploaded = false;
+    private boolean isServerInitialized = false;
 
     public Repository(Context context) {
         webService = new WebService();
@@ -39,6 +40,10 @@ public class Repository {
 
     public boolean isOutputJsonUploaded() {
         return isOutputJsonUploaded;
+    }
+
+    public boolean isServerInitialized() {
+        return isServerInitialized;
     }
 
     public String getFilePath(String fname) {
@@ -181,6 +186,22 @@ public class Repository {
         String server_path = WebService.GENERAL_IMAGE_BASE_PATH + fileName;
         Call<ResponseBody> call = webService.downloadFile(server_path);
         enqueueWriteResponseBody(call, fileName);
+    }
+
+    public void initialize_device(String deviceID) {
+        Call<ResponseBody> call = webService.initialize(deviceID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                isServerInitialized = false;
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     public void uploadJson(String fname) {

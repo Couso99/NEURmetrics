@@ -46,6 +46,11 @@ public class WebService {//implements RestService{
         return call;
     }
 
+    public Call<ResponseBody> initialize(String deviceID) {
+        Call<ResponseBody> call = downloadService.initialize(deviceID);
+        return call;
+    }
+
     public Call<ResponseBody> uploadFile(String file_type, RequestBody description, MultipartBody.Part body) {
         Call<ResponseBody> call = downloadService.uploadFile(file_type, description, body);
         return call;

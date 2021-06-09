@@ -98,7 +98,5 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
         intent.putExtra(SelectUser.ARG_USERS, users);
         intent.putExtra(SelectUser.ARG_IS_NEW_TRIAL, isNewTrial);
         startActivity(intent);
-
     }
-
 }

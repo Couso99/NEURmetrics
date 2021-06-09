@@ -25,6 +25,9 @@ public class TrialInfo implements Serializable {
     @SerializedName("startTime")
     @Expose
     private long startTime;
+    @SerializedName("edfFilename")
+    @Expose
+    private String edfFilename;
 
     public String getTrialID() {
         return trialID;
@@ -72,5 +75,13 @@ public class TrialInfo implements Serializable {
 
     public void setStartTime(long startTime) {
         this.startTime = startTime;
+    }
+
+    public String getEdfFilename() {
+        return edfFilename;
+    }
+
+    public void setEdfFilename(String edfFilename) {
+        this.edfFilename = edfFilename;
     }
 }
