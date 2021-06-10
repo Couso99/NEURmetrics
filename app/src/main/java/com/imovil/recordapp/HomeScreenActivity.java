@@ -2,12 +2,15 @@ package com.imovil.recordapp;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -81,33 +84,22 @@ public class HomeScreenActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-   /* public void downloadJson(String fname) {
-        // create upload service client
-        RestService service =
-                ServiceGenerator.createService(RestService.class);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings, menu);
+        return true;
+    }
 
-        Call<JsonElement> call = service.downloadJson(fname);
-
-        call.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "server contacted and has file");
-                    jsonElement = response.body();
-
-                    Log.d(TAG, "file download was a success? " + jsonElement);
-                    init_tests();
-                } else {
-                    Log.d(TAG, "server contact failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.e(TAG, "error");
-            }
-        });
-    }*/
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settingsButton:
+                Intent intent = new Intent(HomeScreenActivity.this, Settings.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
 
     public void enterSearchMode() {
 

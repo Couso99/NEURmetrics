@@ -60,6 +60,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 
@@ -80,6 +81,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIALS_INFO);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 
@@ -100,6 +102,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.USERS_LIST);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 
@@ -120,6 +123,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.USER_TRIALS_INFO);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 
@@ -139,6 +143,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 
@@ -158,6 +163,7 @@ public class Repository {
                     ((RepositoryObserver) context).onJsonDownloaded(response.body(), RepositoryObserver.TRIAL);
                 } else {
                     Log.d(TAG, "server contact failed");
+                    ((RepositoryObserver) context).onJsonDownloaded(null, RepositoryObserver.ERROR);
                 }
             }
 

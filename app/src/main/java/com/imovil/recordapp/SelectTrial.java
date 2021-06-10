@@ -1,5 +1,7 @@
 package com.imovil.recordapp;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,6 +47,12 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setWindowAnimations(R.style.SlideSelectTrial);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setContentView(R.layout.activity_select_trial);
 
@@ -82,7 +91,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
                     TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String userID = trialInfo.getUserID();
                     long startTime = trialInfo.getStartTime();
-                    Toast.makeText(getApplicationContext(),"UserTrialsAdapter",Toast.LENGTH_SHORT);
+                    //Toast.makeText(getApplicationContext(),"UserTrialsAdapter",Toast.LENGTH_SHORT);
                     repository.downloadUserTrial(userID,startTime);
                 }
             });
@@ -114,7 +123,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
 
                     TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String trialID = trialInfo.getTrialID();
-                    Toast.makeText(getApplicationContext(),"NewTrialsAdapter",Toast.LENGTH_SHORT);
+                    //Toast.makeText(getApplicationContext(),"NewTrialsAdapter",Toast.LENGTH_SHORT);
                     repository.downloadTrialFromTrialID(trialID);
                 }
             });
@@ -128,12 +137,24 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
         Log.d(TAG, String.valueOf(jsonCode));
         if (jsonCode==RepositoryObserver.TRIAL) {
             this.jsonElement = jsonElement;
             launchTrial();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     private void launchTrial() {
@@ -148,6 +169,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
             Intent intent = new Intent(SelectTrial.this, TestActivity.class);
 
             intent.putExtra(TestActivity.ARG_TRIAL, trial);
+
             startActivity(intent);
         }
         else {

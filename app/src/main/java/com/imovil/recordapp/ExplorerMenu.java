@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -35,6 +37,11 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         setContentView(R.layout.activity_explorer_menu);
 
         repository = new Repository(this);
@@ -48,6 +55,12 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
         settingsButton = findViewById(R.id.settingsButton);
         settingsButton.setOnClickListener(this);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -81,6 +94,10 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
             case RepositoryObserver.USERS_LIST:
                 this.jsonElementUsers = jsonElement;
                 launchSelectUser(isNewTrial);
+                break;
+
+            case RepositoryObserver.ERROR:
+                Toast.makeText(getApplicationContext(), "Error: Revisar conexion", Toast.LENGTH_SHORT).show();
                 break;
 
         }

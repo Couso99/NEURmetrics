@@ -1,5 +1,6 @@
 package com.imovil.recordapp;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +48,12 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setWindowAnimations(R.style.SlideSelectUser);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setContentView(R.layout.activity_select_user);
 
@@ -96,6 +104,12 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     private void addUser() {
 
     }
@@ -111,7 +125,9 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
         intent.putExtra(SelectTrial.ARG_TRIALS, trials_info);
         intent.putExtra(SelectTrial.ARG_IS_USER_TRIAL, !isNewTrial);
         intent.putExtra(SelectTrial.ARG_USER_ID, userID);
+
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override

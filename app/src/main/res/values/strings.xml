@@ -12,6 +12,11 @@
     <!-- Errors  -->
     <string name="error_no_trial_found">No se encontró la prueba seleccionada</string>
 
+    <!-- Activities Titles -->
+    <string name="title_activity_explorer_menu">Explorador</string>
+    <string name="title_activity_select_user">Seleccionar usuario</string>
+    <string name="title_activity_select_trial">Seleccionar prueba</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

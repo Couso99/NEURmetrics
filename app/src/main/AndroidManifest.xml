@@ -18,7 +18,6 @@
         android:theme="@style/Theme.RecordApp"
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
-        <activity android:name=".SelectTrial"></activity>
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings" />
@@ -30,8 +29,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestActivity" />
-        <activity android:name=".ExplorerMenu" />
-        <activity android:name=".SelectUser" />
+        <activity android:name=".ExplorerMenu"
+            android:label="@string/title_activity_explorer_menu" />
+        <activity android:name=".SelectUser"
+            android:label="@string/title_activity_select_user"/>
+        <activity android:name=".SelectTrial"
+            android:label="@string/title_activity_select_trial"/>
     </application>
 
 </manifest>
