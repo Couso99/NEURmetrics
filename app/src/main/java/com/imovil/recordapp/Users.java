@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Users implements Serializable {
@@ -13,6 +14,10 @@ public class Users implements Serializable {
 
     public Users(List<User> users) {
         setUsers(users);
+    }
+
+    public Users() {
+        users = new ArrayList<>();
     }
 
     public List<User> getUsers() {

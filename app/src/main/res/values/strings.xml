@@ -12,6 +12,13 @@
     <!-- Errors  -->
     <string name="error_no_trial_found">No se encontró la prueba seleccionada</string>
 
+
+    <!-- Sex options -->
+    <string name="sexMale">Hombre</string>
+    <string name="sexFemale">Mujer</string>
+    <string name="sexOther">Otro</string>
+    <string name="sexUnknown">Desconocido</string>
+
     <!-- Activities Titles -->
     <string name="title_activity_explorer_menu">Explorador</string>
     <string name="title_activity_select_user">Seleccionar usuario</string>
@@ -33,4 +40,9 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="beginAppButton">Comenzar</string>
     <string name="made_by">Hecho por: Pablo Couso</string>
+    <string name="nameField">Nombre:</string>
+    <string name="surnameField">Apellidos:</string>
+    <string name="ageField">Edad:</string>
+    <string name="genderField">Sexo:</string>
+    <string name="centreField">Centro asociado:</string>
 </resources>

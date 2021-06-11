@@ -7,19 +7,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.imovil.recordapp.databinding.SimpleListItemBinding;
+import com.imovil.recordapp.databinding.UserListItemBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersListAdapter extends RecyclerView.Adapter <UsersHolder> {
 
     private Users mUsers;
-    SimpleListItemBinding binding;
+    UserListItemBinding binding;
 
     public static ClickListener clickListener;
 
     @NonNull
     @Override
     public UsersHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = SimpleListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding = UserListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new UsersHolder(binding);
     }
 
@@ -37,6 +40,12 @@ public class UsersListAdapter extends RecyclerView.Adapter <UsersHolder> {
             return mUsers.getUsers().size();
         else
             return 0;
+    }
+
+    public void setFilter(List<User> newList){
+        mUsers=new Users();
+        mUsers.getUsers().addAll(newList);
+        notifyDataSetChanged();
     }
 
     public void setUsers(Users mUsers) {

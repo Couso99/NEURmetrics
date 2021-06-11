@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class User implements Serializable {
 
@@ -16,9 +15,17 @@ public class User implements Serializable {
     @Expose
     private String surname;
 
-    @SerializedName("year_of_birth")
+    @SerializedName("birthday")
     @Expose
-    private int year_of_birth;
+    private int birthday;
+
+    @SerializedName("sex")
+    @Expose
+    private String sex;
+
+    @SerializedName("centre")
+    @Expose
+    private String centre;
 
     @SerializedName("userID")
     @Expose
@@ -40,12 +47,28 @@ public class User implements Serializable {
         this.surname = surname;
     }
 
-    public int getYear_of_birth() {
-        return year_of_birth;
+    public int getBirthday() {
+        return birthday;
     }
 
-    public void setYear_of_birth(int year_of_birth) {
-        this.year_of_birth = year_of_birth;
+    public void setBirthday(int birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getCentre() {
+        return centre;
+    }
+
+    public void setCentre(String centre) {
+        this.centre = centre;
     }
 
     public String getUserID() {

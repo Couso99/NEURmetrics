@@ -11,4 +11,10 @@
     <string name="title_activity_settings">Settings</string>
     <string name="signature_title">Server IP</string>
     <string name="server_ip_title">Server IP</string>
+    <string name="title_activity_explorer_menu">Explorer</string>
+    <string name="title_activity_select_user">Select user</string>
+    <string name="title_activity_select_trial">Select trial</string>
+    <string name="beginAppButton">Begin</string>
+    <string name="made_by">By: Pablo Couso</string>
+    <string name="error_no_trial_found">Trial selected was not found</string>
 </resources>

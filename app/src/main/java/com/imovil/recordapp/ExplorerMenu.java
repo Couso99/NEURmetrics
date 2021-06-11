@@ -51,10 +51,6 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
 
         getTrialsButton.setOnClickListener(this);
         getUsersButton.setOnClickListener(this);
-
-        settingsButton = findViewById(R.id.settingsButton);
-        settingsButton.setOnClickListener(this);
-
     }
 
     @Override
@@ -75,10 +71,6 @@ public class ExplorerMenu extends AppCompatActivity implements View.OnClickListe
             case R.id.getUsersButton:
                 repository.downloadUsers();
                 isNewTrial = false;
-                break;
-            case R.id.settingsButton:
-                Intent intent = new Intent(ExplorerMenu.this, Settings.class);
-                startActivity(intent);
                 break;
         }
     }

@@ -122,7 +122,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onIsRecordingChanged(int isRecording) {
         if (isRecording==0) {
-            recordButton.setBackgroundColor(Color.BLUE);
+            recordButton.setBackgroundColor(0x303030);
             this.isRecording = false;
         }
         else {
