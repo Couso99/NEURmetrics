@@ -1,20 +1,21 @@
 package com.imovil.recordapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -22,13 +23,14 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class SelectTrial extends AppCompatActivity implements RepositoryObserver{
+public class SelectTrialFragment extends Fragment {
     private static final String TAG = "SelectTrial";
 
     public static final String ARG_TRIALS = "trials_info";
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
     public static final String ARG_USER_ID = "userID";
 
+    Activity activity;
     Repository repository;
 
     RecyclerView.Adapter trialsListAdapter;
@@ -40,29 +42,35 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
     private Trials trials;
     private boolean isUserTrial;
 
+    public static SelectUserFragment newInstance(Trials trials, boolean isUserTrial, String userID) {
+        SelectUserFragment fragment = new SelectUserFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_TRIALS, trials);
+        args.putBoolean(ARG_IS_USER_TRIAL, isUserTrial);
+        args.putString(ARG_USER_ID, userID);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            trials = (Trials) getArguments().getSerializable(ARG_TRIALS);
+            isUserTrial = (boolean) getArguments().getBoolean(ARG_IS_USER_TRIAL);
+            userID = getArguments().getString(ARG_USER_ID);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //getWindow().setWindowAnimations(R.style.SlideSelectTrial);
+        View view = inflater.inflate(R.layout.activity_select_trial, container, false);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        setContentView(R.layout.activity_select_trial);
-
-        repository = new Repository(this);
-
-        Intent intent = getIntent();
-
-        trials = (Trials) intent.getSerializableExtra(ARG_TRIALS);
-        isUserTrial = intent.getBooleanExtra(ARG_IS_USER_TRIAL,false);
-        userID = intent.getStringExtra(ARG_USER_ID);
+        activity = getActivity();
+        repository = new Repository(activity);
 
         if (isUserTrial) {
             trialsListAdapter = new UserTrialsListAdapter();
@@ -79,7 +87,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
                         public void run() {
                             try {
                                 sleep(200);
-                                runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                                activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -112,7 +120,7 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
                         public void run() {
                             try {
                                 sleep(200);
-                                runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                                activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -130,50 +138,10 @@ public class SelectTrial extends AppCompatActivity implements RepositoryObserver
         }
 
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(trialsListAdapter);
 
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
-
-    @Override
-    public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
-        Log.d(TAG, String.valueOf(jsonCode));
-        if (jsonCode==RepositoryObserver.TRIAL) {
-            this.jsonElement = jsonElement;
-            launchTrial();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-    }
-
-    private void launchTrial() {
-        Gson gson = new Gson();
-        List<Trial> trial_list = gson.fromJson(this.jsonElement, new TypeToken<List<Trial>>() {}.getType());
-        if (trial_list.size()>0)
-        {
-            Trial trial = trial_list.get(0);
-            trial.getTrialInfo().setUserID(userID);
-            Log.d(TAG, String.valueOf(trial));
-
-            Intent intent = new Intent(SelectTrial.this, TestActivity.class);
-
-            intent.putExtra(TestActivity.ARG_TRIAL, trial);
-
-            startActivity(intent);
-        }
-        else {
-            Toast.makeText(getApplicationContext(),R.string.error_no_trial_found,Toast.LENGTH_SHORT).show();
-        }
+        return view;
     }
 }

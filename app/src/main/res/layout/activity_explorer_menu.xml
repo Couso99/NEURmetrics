@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/getTrialsButton"
+        android:id="@+id/newTrialsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/getTrialsListButton"
@@ -19,14 +19,14 @@
         app:layout_constraintVertical_bias="0.162" />
 
     <Button
-        android:id="@+id/getUsersButton"
+        android:id="@+id/userTrialsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/getUsersListButton"
-        app:layout_constraintEnd_toEndOf="@+id/getTrialsButton"
+        app:layout_constraintEnd_toEndOf="@+id/newTrialsButton"
         app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintStart_toStartOf="@+id/getTrialsButton"
-        app:layout_constraintTop_toBottomOf="@+id/getTrialsButton" />
+        app:layout_constraintStart_toStartOf="@+id/newTrialsButton"
+        app:layout_constraintTop_toBottomOf="@+id/newTrialsButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.imovil.recordapp">
+    package="com.imovil.recordapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,24 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecordApp"
         android:usesCleartextTraffic="true"
-        tools:replace="android:theme">
+        tools:replace="android:theme" >
+
+        <activity android:name=".TestActivity" />
+
         <activity
-            android:name=".Settings"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".HomeScreenActivity">
+            android:name=".HostActivity">
+           <!-- android:label="@string/title_activity_select_user">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestActivity" />
-        <activity android:name=".ExplorerMenu"
-            android:label="@string/title_activity_explorer_menu" />
-        <activity android:name=".SelectUser"
-            android:label="@string/title_activity_select_user"/>
-        <activity android:name=".SelectTrial"
-            android:label="@string/title_activity_select_trial"/>
     </application>
 
 </manifest>

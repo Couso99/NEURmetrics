@@ -1,5 +1,6 @@
 package com.imovil.recordapp;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +8,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +22,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,65 +36,68 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectUser extends AppCompatActivity implements RepositoryObserver {
+public class SelectUserFragment extends Fragment {
     private static final String TAG = "SelectUser";
     public static final String ARG_USERS = "users";
     public static final String ARG_IS_NEW_TRIAL = "isNewTrial";
 
-    Repository repository;
-    UsersListAdapter usersListAdapter;
+    Activity activity;
 
-    JsonElement jsonElement;
+    SelectUserViewModel model;
+
+    UsersListAdapter usersListAdapter;
 
     private RecyclerView recyclerView;
     private FloatingActionButton mAddFab;
 
-    private Users users;
 
-    private boolean isNewTrial;
-
-    String userID;
+    public static SelectUserFragment newInstance(Users users, boolean isNewTrial) {
+        SelectUserFragment fragment = new SelectUserFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_USERS, users);
+        args.putBoolean(ARG_IS_NEW_TRIAL, isNewTrial);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //getWindow().setWindowAnimations(R.style.SlideSelectUser);
+        model = new ViewModelProvider(this).get(SelectUserViewModel.class);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (getArguments() != null) {
+            model.setUsers((Users) getArguments().getSerializable(ARG_USERS));
+            model.setNewTrial((boolean) getArguments().getBoolean(ARG_IS_NEW_TRIAL));
         }
+    }
 
-        setContentView(R.layout.activity_select_user);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 
-        repository = new Repository(this);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.activity_select_user, container, false);
 
-        Intent intent = getIntent();
+        activity = getActivity();
 
-        isNewTrial = intent.getBooleanExtra(ARG_IS_NEW_TRIAL, false);
-        users = (Users) intent.getSerializableExtra(ARG_USERS);
-
-
-            mAddFab = findViewById(R.id.floatingActionButton);
-        if (isNewTrial) {
+        mAddFab = view.findViewById(R.id.floatingActionButton);
+        if (model.isNewTrial()) {
             mAddFab.show();
             mAddFab.setOnClickListener(v -> addUser());
         }
         else mAddFab.hide();
 
         usersListAdapter = new UsersListAdapter();
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(usersListAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        usersListAdapter.setUsers(users);
+        usersListAdapter.setUsers(model.getUsers());
         usersListAdapter.setOnItemClickListener(new UsersListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -100,7 +108,7 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
                     public void run() {
                         try {
                             sleep(200);
-                            runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                            activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -109,22 +117,22 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
 
                 thread.start();
 
-                userID = users.getUsers().get(position).getUserID();
-                if (isNewTrial) repository.downloadTrialsList();
-                else repository.downloadTrialsListFromUserID(userID);
+                model.updateUserID(position);
+                ((UserInterface)activity).onUserSelected(model.getUserID());
+                model.downloadTrialsList();
             }
         });
+        return view;
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+    public void onResume() {
+        super.onResume();
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_user, menu);
         MenuItem search=menu.findItem(R.id.action_search);
 
@@ -132,7 +140,7 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
         SearchView searchView=(SearchView)search.getActionView();
         search(searchView);
 
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -162,7 +170,7 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
                 public boolean onQueryTextChange(String newText) {
                     newText = newText.toLowerCase();
                     ArrayList<User> newList = new ArrayList<>();
-                    for (User user : users.getUsers()) {
+                    for (User user : model.getUsers().getUsers()) {
                         String name = user.getName().toLowerCase();
                         String surname = user.getSurname().toLowerCase();
                         String centre = user.getCentre()!=null ? user.getCentre().toLowerCase() : "";
@@ -174,21 +182,6 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
                     return true;
                 }
             });
-
-            /*searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(final View view, boolean hasFocus) {
-                    if (hasFocus) {
-                        view.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                InputMethodManager imm = (InputMethodManager) getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(view.findFocus(), 0);
-                            }
-                        }, 200);
-                    }
-                }
-            });*/
         }
     }
 
@@ -196,33 +189,7 @@ public class SelectUser extends AppCompatActivity implements RepositoryObserver 
 
     }
 
-    public void launchSelectTrial(boolean isNewTrial) {
-        Gson gson =  new Gson();
-        List<Trial> trials_info_list = gson.fromJson(this.jsonElement, new TypeToken<List<Trial>>() {}.getType());
-        Trials trials_info = new Trials(trials_info_list);
-        Log.d(TAG, String.valueOf(trials_info));
-
-        Intent intent = new Intent(SelectUser.this, SelectTrial.class);
-
-        intent.putExtra(SelectTrial.ARG_TRIALS, trials_info);
-        intent.putExtra(SelectTrial.ARG_IS_USER_TRIAL, !isNewTrial);
-        intent.putExtra(SelectTrial.ARG_USER_ID, userID);
-
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
-        switch (jsonCode) {
-            case RepositoryObserver.USER_TRIALS_INFO:
-                //this.jsonElement = jsonElement;
-                //launchSelectTrial(isNewTrial);
-                //break;
-            case RepositoryObserver.TRIALS_INFO:
-                this.jsonElement = jsonElement;
-                launchSelectTrial(isNewTrial);
-                break;
-        }
+    public interface UserInterface {
+        void onUserSelected(String userID);
     }
 }
