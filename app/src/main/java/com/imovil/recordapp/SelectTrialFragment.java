@@ -36,14 +36,11 @@ public class SelectTrialFragment extends Fragment {
     Activity activity;
 
     SharedSelectionViewModel model;
-    Repository repository;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView.Adapter trialsListAdapter;
 
-
     private RecyclerView recyclerView;
-    String userID;
 
     public static SelectUserFragment newInstance(boolean isUserTrial, String userID) {
         SelectUserFragment fragment = new SelectUserFragment();
@@ -94,7 +91,6 @@ public class SelectTrialFragment extends Fragment {
         model.initSelectTrial();
 
         activity = getActivity();
-        repository = new Repository(activity);
 
         if (model.isUserTrial()) {
             trialsListAdapter = new UserTrialsListAdapter();

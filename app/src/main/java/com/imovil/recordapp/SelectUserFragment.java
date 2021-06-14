@@ -40,21 +40,23 @@ import java.util.List;
 
 public class SelectUserFragment extends Fragment {
     private static final String TAG = "SelectUser";
-    public static final String ARG_USERS = "users";
+
+    //public static final String ARG_USERS = "users";
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
-    Activity activity;
-    SharedSelectionViewModel model;
-    UsersListAdapter usersListAdapter;
+    private Activity activity;
+    private SharedSelectionViewModel model;
 
+    private UsersListAdapter usersListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FloatingActionButton mAddFab;
 
 
-    public static SelectUserFragment newInstance() {
+    public static SelectUserFragment newInstance(boolean isUserTrial) {
         SelectUserFragment fragment = new SelectUserFragment();
         Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_USER_TRIAL, isUserTrial);
         fragment.setArguments(args);
         return fragment;
     }

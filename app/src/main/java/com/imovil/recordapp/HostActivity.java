@@ -64,12 +64,7 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
     }
 
     public void launchSelectTrial(boolean isUserTrial, String userID) {
-        Bundle bundle = new Bundle();
-
-        bundle.putSerializable(SelectTrialFragment.ARG_IS_USER_TRIAL, isUserTrial);
-        bundle.putSerializable(SelectTrialFragment.ARG_USER_ID, userID);
-
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment, bundle);
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment);
     }
 
     @Override
