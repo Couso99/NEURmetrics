@@ -1,11 +1,7 @@
 package com.imovil.recordapp;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,15 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -31,12 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SelectUserFragment extends Fragment {
     private static final String TAG = "SelectUser";
@@ -87,7 +74,7 @@ public class SelectUserFragment extends Fragment {
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_select_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_user, container, false);
 
         model.initSelectUsers();
 

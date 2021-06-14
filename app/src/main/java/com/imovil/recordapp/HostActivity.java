@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class HostActivity extends AppCompatActivity implements RepositoryObserver, HostFragment.HostInterface, SelectUserFragment.UserInterface, HomeScreenFragment.HomeScreenInterface {
+public class HostActivity extends AppCompatActivity implements HostFragment.HostInterface, SelectUserFragment.UserInterface, HomeScreenFragment.HomeScreenInterface {
     AppBarConfiguration appBarConfiguration;
 
     private static String TAG = "ExplorerMenu";
@@ -69,15 +69,12 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
 
     @Override
     public void launchSettings() {
-
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_settingsFragment);
-
     }
 
     @Override
     public void enterSearchMode() {
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_hostFragment);
-
     }
 
     @Override
@@ -91,10 +88,5 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
         model.setUserID(userID);
         launchSelectTrial(model.isUserTrial(),model.getUserID());
         Log.d("WebService", "onUserSelected: "+model.getUserID());
-    }
-
-    @Override
-    public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
-     //   model.onJsonDownloaded(jsonElement, jsonCode);
     }
 }

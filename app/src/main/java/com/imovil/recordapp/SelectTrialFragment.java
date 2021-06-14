@@ -1,31 +1,20 @@
 package com.imovil.recordapp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
 
 public class SelectTrialFragment extends Fragment {
     private static final String TAG = "SelectTrial";
@@ -86,7 +75,7 @@ public class SelectTrialFragment extends Fragment {
                                 Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.activity_select_trial, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_trial, container, false);
 
         model.initSelectTrial();
 

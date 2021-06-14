@@ -1,33 +1,20 @@
 package com.imovil.recordapp;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-
-import java.util.List;
 
 public class HomeScreenFragment extends Fragment implements View.OnClickListener {
     private static final String LOG_TAG = "AUDIO_RECORDER";
@@ -64,7 +51,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
         setHasOptionsMenu(true);
 
-        View view = inflater.inflate(R.layout.activity_home_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_screen, container, false);
 
         activity = getActivity();
 
