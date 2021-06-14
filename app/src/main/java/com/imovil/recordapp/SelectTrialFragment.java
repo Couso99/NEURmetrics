@@ -12,10 +12,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -26,26 +30,24 @@ import java.util.List;
 public class SelectTrialFragment extends Fragment {
     private static final String TAG = "SelectTrial";
 
-    public static final String ARG_TRIALS = "trials_info";
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
     public static final String ARG_USER_ID = "userID";
 
     Activity activity;
+
+    SharedSelectionViewModel model;
     Repository repository;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView.Adapter trialsListAdapter;
-    JsonElement jsonElement;
 
-    String userID;
 
     private RecyclerView recyclerView;
-    private Trials trials;
-    private boolean isUserTrial;
+    String userID;
 
-    public static SelectUserFragment newInstance(Trials trials, boolean isUserTrial, String userID) {
+    public static SelectUserFragment newInstance(boolean isUserTrial, String userID) {
         SelectUserFragment fragment = new SelectUserFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_TRIALS, trials);
         args.putBoolean(ARG_IS_USER_TRIAL, isUserTrial);
         args.putString(ARG_USER_ID, userID);
         fragment.setArguments(args);
@@ -55,11 +57,31 @@ public class SelectTrialFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            trials = (Trials) getArguments().getSerializable(ARG_TRIALS);
-            isUserTrial = (boolean) getArguments().getBoolean(ARG_IS_USER_TRIAL);
-            userID = getArguments().getString(ARG_USER_ID);
+
+        model = new ViewModelProvider(requireActivity()).get(SharedSelectionViewModel.class);
+        if (getArguments()!=null) {
+            model.setUserTrial(getArguments().getBoolean(ARG_IS_USER_TRIAL));
+            model.setUserID(getArguments().getString(ARG_USER_ID));
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (model.isUserTrial()) {
+            model.getUserTrials().observe(requireActivity(), trials -> {
+                ((UserTrialsListAdapter)trialsListAdapter).setTrials(trials);
+                swipeRefreshLayout.setRefreshing(false);
+            });
+        }
+        else {
+            model.getNewTrials().observe(requireActivity(), trials -> {
+                ((NewTrialsListAdapter)trialsListAdapter).setTrials(trials);
+                swipeRefreshLayout.setRefreshing(false);
+            });
+        }
+
     }
 
     @Override
@@ -69,12 +91,13 @@ public class SelectTrialFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.activity_select_trial, container, false);
 
+        model.initSelectTrial();
+
         activity = getActivity();
         repository = new Repository(activity);
 
-        if (isUserTrial) {
+        if (model.isUserTrial()) {
             trialsListAdapter = new UserTrialsListAdapter();
-            ((UserTrialsListAdapter)trialsListAdapter).setTrials(trials);
             ((UserTrialsListAdapter)trialsListAdapter).setOnItemClickListener(new UserTrialsListAdapter.ClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
@@ -96,18 +119,17 @@ public class SelectTrialFragment extends Fragment {
 
                     thread.start();
 
-                    TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
+                    /*TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String userID = trialInfo.getUserID();
                     long startTime = trialInfo.getStartTime();
                     //Toast.makeText(getApplicationContext(),"UserTrialsAdapter",Toast.LENGTH_SHORT);
-                    repository.downloadUserTrial(userID,startTime);
+                    repository.downloadUserTrial(userID,startTime);*/
                 }
             });
         }
 
         else {
             trialsListAdapter = new NewTrialsListAdapter();
-            ((NewTrialsListAdapter)trialsListAdapter).setTrials(trials);
             ((NewTrialsListAdapter)trialsListAdapter).setOnItemClickListener(new NewTrialsListAdapter.ClickListener() {
                 @Override
                 public void onItemClick(int position, View v) {
@@ -129,14 +151,21 @@ public class SelectTrialFragment extends Fragment {
 
                     thread.start();
 
-                    TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
+                    /*TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
                     String trialID = trialInfo.getTrialID();
                     //Toast.makeText(getApplicationContext(),"NewTrialsAdapter",Toast.LENGTH_SHORT);
-                    repository.downloadTrialFromTrialID(trialID);
+                    repository.downloadTrialFromTrialID(trialID);*/
                 }
             });
         }
 
+        swipeRefreshLayout = view.findViewById(R.id.swipetorefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                model.updateTrials();
+            }
+        });
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));

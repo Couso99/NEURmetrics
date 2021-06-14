@@ -8,12 +8,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -29,12 +31,16 @@ import retrofit2.http.Multipart;
 public class WebService {//implements RestService{
     private final static String TAG = "WebService";
 
+    Gson gson =  new Gson();
+
     public final static String USER_MADE_BASE_PATH = "user-made"+File.separator;
     public final static String GENERAL_IMAGE_BASE_PATH = "general"+File.separator+"image"+File.separator;
 
     private RestService downloadService;
 
-    //private MutableLiveData<Image> imageMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Users> usersMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Trials> userTrialsMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Trials> newTrialsMutableLiveData = new MutableLiveData<>();
 
     WebService() {
         downloadService = ServiceGenerator.createService(RestService.class);
@@ -96,6 +102,79 @@ public class WebService {//implements RestService{
         Call<ResponseBody> call = downloadService.uploadUserTrial(description, body);
         return call;
     }
+
+    private void updateUsers() {
+        downloadService.downloadUsers().enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                List<User> users_list = gson.fromJson(response.body(), new TypeToken<List<User>>() {}.getType());
+                Users users = new Users(users_list);
+                usersMutableLiveData.setValue(users);
+                Log.d(TAG, "DESCARGO COSAS"+String.valueOf(users_list));
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+                Log.d(TAG, "DESCARGO COSAs: ERROR"+t.getMessage());
+            }
+        });
+    }
+
+    public MutableLiveData<Users> getUsers() {
+        updateUsers();
+        return usersMutableLiveData;
+    }
+
+    private void updateUserTrials(String userID) {
+        Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
+        Log.d(TAG, "DENTRO DE UPDATE");
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                List<Trial> trials_info_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
+                Trials trials_info = new Trials(trials_info_list);
+                userTrialsMutableLiveData.setValue(trials_info);
+                Log.d(TAG, "DESCARGO USERTRIALS"+String.valueOf(trials_info_list));
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+                Log.d(TAG, "ERROR");
+
+                Log.d(TAG, "DESCARGO COSAs: ERROR"+t.getMessage());
+            }
+        });
+    }
+
+    public MutableLiveData<Trials> getUserTrials(String userID) {
+        Log.d(TAG, "USERTRIALS");
+        updateUserTrials(userID);
+        Log.d(TAG, "USERTRIALS2");
+        return userTrialsMutableLiveData;
+    }
+
+    private void updateNewTrials() {
+        downloadService.downloadTrialsInfo().enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                List<Trial> trials_info_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
+                Trials trials_info = new Trials(trials_info_list);
+                newTrialsMutableLiveData.setValue(trials_info);
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public MutableLiveData<Trials> getNewTrials() {
+        updateNewTrials();
+        return newTrialsMutableLiveData;
+    }
+
 
     /*public Call<ResponseBody> downloadUserMadeFile(String fileName) {
         Call<ResponseBody> call = downloadService.downloadUserMadeFile(fileName);

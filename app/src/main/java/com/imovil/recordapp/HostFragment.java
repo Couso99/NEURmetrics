@@ -2,24 +2,16 @@ package com.imovil.recordapp;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,9 +31,8 @@ public class HostFragment extends Fragment implements View.OnClickListener {
 
     Activity activity;
     Repository repository;
-    Button getTrialsButton, getUsersButton, settingsButton;
-    JsonElement jsonElementTrials, jsonElementUsers;
-    boolean isNewTrial = false;
+    Button newTrialsButton, userTrialsButton;
+    boolean isUserTrial = false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -52,7 +43,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
     }
 
     public interface HostInterface {
-        void isNewTrial(boolean isNewTrial);
+        void isUserTrial(boolean isUserTrial);
     }
 
     /**
@@ -87,21 +78,17 @@ public class HostFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.activity_explorer_menu, container, false);
-        Button button1, button2;
-
 
         activity = getActivity();
 
         repository = new Repository(activity);
 
-        button1 = (Button) v.findViewById(R.id.newTrialsButton);
-        button2 = (Button) v.findViewById(R.id.userTrialsButton);
-        button1.setOnClickListener(this);
-        button2.setOnClickListener(this);
+        newTrialsButton = (Button) v.findViewById(R.id.newTrialsButton);
+        userTrialsButton = (Button) v.findViewById(R.id.userTrialsButton);
+        newTrialsButton.setOnClickListener(this);
+        userTrialsButton.setOnClickListener(this);
         return v;
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -111,16 +98,16 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         switch (id) {
             case R.id.newTrialsButton:
                 //repository.downloadTrialsList();
-                repository.downloadUsers();
-                isNewTrial = true;
+                //repository.downloadUsers();
+                isUserTrial = false;
                 break;
             case R.id.userTrialsButton:
-                repository.downloadUsers();
-                isNewTrial = false;
+                //repository.downloadUsers();
+                isUserTrial = true;
                 break;
         }
 
-        ((HostInterface)activity).isNewTrial(isNewTrial);
+        ((HostInterface)activity).isUserTrial(isUserTrial);
     }
 
 

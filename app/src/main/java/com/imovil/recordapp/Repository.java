@@ -3,6 +3,8 @@ package com.imovil.recordapp;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -31,6 +33,10 @@ public class Repository {
 
     private boolean isOutputJsonUploaded = false;
     private boolean isServerInitialized = false;
+
+    private LiveData<Users> users;
+    private LiveData<Trials> userTrials;
+    private LiveData<Trials> newTrials;
 
     public Repository(Context context) {
         webService = new WebService();
@@ -385,25 +391,28 @@ public class Repository {
         }
     }
 
-    public void writeJsonToDisk(Trial trial, String fileName) {
-        Gson gson =  new GsonBuilder().setPrettyPrinting().create();
-        String jsonElement = gson.toJson(trial, Trial.class);
+    public void updateUsersData() {
+        this.users = webService.getUsers();
+    }
 
-        File file = new File(FOLDER_PATH + fileName);
+    public LiveData<Users> getUsers() {
+        return users;
+    }
 
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(file);
-            stream.write(jsonElement.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void updateUserTrials(String userID) {
+        this.userTrials = webService.getUserTrials(userID);
+    }
+
+    public LiveData<Trials> getUserTrials() {
+        return userTrials;
+    }
+
+    public void updateNewTrials() {
+        this.newTrials = webService.getNewTrials();
+    }
+
+    public LiveData<Trials> getNewTrials() {
+        return newTrials;
     }
 
 }

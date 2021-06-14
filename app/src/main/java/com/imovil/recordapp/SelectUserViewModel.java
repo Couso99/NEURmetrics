@@ -4,26 +4,20 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 
 public class SelectUserViewModel extends AndroidViewModel {
 
     Repository repository;
-    private Users users;
+    private LiveData<Users> users;
     private boolean isNewTrial;
     private String userID;
 
     public SelectUserViewModel(@NonNull Application application) {
         super(application);
-
         repository = new Repository(application.getApplicationContext());
-    }
-
-    public Users getUsers() {
-        return users;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
+        repository.updateUsersData();
+        users = repository.getUsers();
     }
 
     public boolean isNewTrial() {
@@ -49,6 +43,14 @@ public class SelectUserViewModel extends AndroidViewModel {
     }
 
     public void updateUserID(int position) {
-        userID = users.getUsers().get(position).getUserID();
+        userID = users.getValue().getUsers().get(position).getUserID();
+    }
+
+    public void updateUsers() {
+        repository.updateUsersData();
+    }
+
+    public LiveData<Users> getUsers() {
+        return users;
     }
 }

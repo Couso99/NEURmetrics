@@ -39,7 +39,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     Activity activity;
 
     //WebService webService;
-    HomeScreenViewModel model;
+    SharedSelectionViewModel model;
 
     Button recordButton, stopButton;
     TextView isRecordingView, decibel;
@@ -68,7 +68,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
         activity = getActivity();
 
-        model = new ViewModelProvider(this).get(HomeScreenViewModel.class);
+        model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
         recordButton = view.findViewById(R.id.recordButton);
         stopButton = view.findViewById(R.id.stopButton);

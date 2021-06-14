@@ -28,7 +28,7 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
 
     private static String TAG = "ExplorerMenu";
 
-    HostActivityViewModel model;
+    SharedSelectionViewModel model;
 
     ActivityResultLauncher<String> askPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {});
 
@@ -42,11 +42,7 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
 
         setContentView(R.layout.activity_host);
 
-        model = new ViewModelProvider(this).get(HostActivityViewModel.class);
-
-        model.getJsonElementTrial().observe(this, jsonElement -> launchTrial(jsonElement, model.isNewTrial(), model.getUserID()));
-        model.getJsonElementTrials().observe(this, jsonElement -> launchSelectTrial(jsonElement, model.isNewTrial(), model.getUserID()));
-        model.getJsonElementUsers().observe(this, jsonElement -> launchSelectUser(jsonElement, model.isNewTrial()));
+        model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
         askPermission.launch(Manifest.permission.RECORD_AUDIO);
         askPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -63,53 +59,17 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
         return true;
     }
 
-    private void launchSelectUser(JsonElement jsonElement, boolean isNewTrial) {
-        Gson gson =  new Gson();
-        List<User> users_list = gson.fromJson(jsonElement, new TypeToken<List<User>>() {}.getType());
-        Users users = new Users(users_list);
-        Log.d(TAG, String.valueOf(users));
-
-        Bundle bundle = new Bundle();
-
-        bundle.putSerializable(SelectUserFragment.ARG_USERS, users);
-        bundle.putSerializable(SelectUserFragment.ARG_IS_NEW_TRIAL, isNewTrial);
-
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_hostFragment_to_selectUserFragment, bundle);
+    private void launchSelectUser() {
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_hostFragment_to_selectUserFragment);
     }
 
-    public void launchSelectTrial(JsonElement jsonElement, boolean isNewTrial, String userID) {
-        Gson gson =  new Gson();
-        List<Trial> trials_info_list = gson.fromJson(jsonElement, new TypeToken<List<Trial>>() {}.getType());
-        Trials trials_info = new Trials(trials_info_list);
-        Log.d(TAG, String.valueOf(trials_info));
-
+    public void launchSelectTrial(boolean isUserTrial, String userID) {
         Bundle bundle = new Bundle();
 
-        bundle.putSerializable(SelectTrialFragment.ARG_TRIALS, trials_info);
-        bundle.putSerializable(SelectTrialFragment.ARG_IS_USER_TRIAL, !isNewTrial);
-        bundle.putSerializable(SelectTrialFragment.ARG_USER_ID, isNewTrial ? userID:null);
+        bundle.putSerializable(SelectTrialFragment.ARG_IS_USER_TRIAL, isUserTrial);
+        bundle.putSerializable(SelectTrialFragment.ARG_USER_ID, userID);
 
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment, bundle);
-    }
-
-    public void launchTrial(JsonElement jsonElement, boolean isNewTrial, String userID) {
-        Gson gson = new Gson();
-        List<Trial> trial_list = gson.fromJson(jsonElement, new TypeToken<List<Trial>>() {}.getType());
-        if (trial_list.size()>0)
-        {
-            Trial trial = trial_list.get(0);
-            if(isNewTrial) trial.getTrialInfo().setUserID(userID);
-            Log.d(TAG, String.valueOf(trial));
-
-            Intent intent = new Intent(HostActivity.this, TestActivity.class);
-
-            intent.putExtra(TestActivity.ARG_TRIAL, trial);
-
-            startActivity(intent);
-        }
-        else {
-            Toast.makeText(getApplicationContext(),R.string.error_no_trial_found,Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -126,18 +86,20 @@ public class HostActivity extends AppCompatActivity implements RepositoryObserve
     }
 
     @Override
-    public void isNewTrial(boolean isNewTrial) {
-        model.setNewTrial(isNewTrial);
+    public void isUserTrial(boolean isUserTrial) {
+        model.setUserTrial(isUserTrial);
+        launchSelectUser();
     }
 
     @Override
     public void onUserSelected(String userID) {
         model.setUserID(userID);
+        launchSelectTrial(model.isUserTrial(),model.getUserID());
+        Log.d("WebService", "onUserSelected: "+model.getUserID());
     }
-
 
     @Override
     public void onJsonDownloaded(JsonElement jsonElement, int jsonCode) {
-        model.onJsonDownloaded(jsonElement, jsonCode);
+     //   model.onJsonDownloaded(jsonElement, jsonCode);
     }
 }

@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -39,23 +41,20 @@ import java.util.List;
 public class SelectUserFragment extends Fragment {
     private static final String TAG = "SelectUser";
     public static final String ARG_USERS = "users";
-    public static final String ARG_IS_NEW_TRIAL = "isNewTrial";
+    public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
     Activity activity;
-
-    SelectUserViewModel model;
-
+    SharedSelectionViewModel model;
     UsersListAdapter usersListAdapter;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FloatingActionButton mAddFab;
 
 
-    public static SelectUserFragment newInstance(Users users, boolean isNewTrial) {
+    public static SelectUserFragment newInstance() {
         SelectUserFragment fragment = new SelectUserFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_USERS, users);
-        args.putBoolean(ARG_IS_NEW_TRIAL, isNewTrial);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,12 +63,20 @@ public class SelectUserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        model = new ViewModelProvider(this).get(SelectUserViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(SharedSelectionViewModel.class);
 
         if (getArguments() != null) {
-            model.setUsers((Users) getArguments().getSerializable(ARG_USERS));
-            model.setNewTrial((boolean) getArguments().getBoolean(ARG_IS_NEW_TRIAL));
+            model.setUserTrial((boolean) getArguments().getBoolean(ARG_IS_USER_TRIAL));
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        model.getUsers().observe(requireActivity(), users -> {
+            usersListAdapter.setUsers(users);
+            swipeRefreshLayout.setRefreshing(false);
+        });
     }
 
     @Override
@@ -80,24 +87,34 @@ public class SelectUserFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.activity_select_user, container, false);
 
+        model.initSelectUsers();
+
         activity = getActivity();
 
         mAddFab = view.findViewById(R.id.floatingActionButton);
-        if (model.isNewTrial()) {
+        if (!model.isUserTrial()) {
             mAddFab.show();
             mAddFab.setOnClickListener(v -> addUser());
         }
         else mAddFab.hide();
 
         usersListAdapter = new UsersListAdapter();
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(usersListAdapter);
 
+        swipeRefreshLayout = view.findViewById(R.id.swipetorefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                model.updateUsers();
+            }
+        });
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        usersListAdapter.setUsers(model.getUsers());
         usersListAdapter.setOnItemClickListener(new UsersListAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -119,7 +136,7 @@ public class SelectUserFragment extends Fragment {
 
                 model.updateUserID(position);
                 ((UserInterface)activity).onUserSelected(model.getUserID());
-                model.downloadTrialsList();
+                //model.downloadTrialsList();
             }
         });
         return view;
@@ -170,7 +187,7 @@ public class SelectUserFragment extends Fragment {
                 public boolean onQueryTextChange(String newText) {
                     newText = newText.toLowerCase();
                     ArrayList<User> newList = new ArrayList<>();
-                    for (User user : model.getUsers().getUsers()) {
+                    for (User user : model.getUsers().getValue().getUsers()) {
                         String name = user.getName().toLowerCase();
                         String surname = user.getSurname().toLowerCase();
                         String centre = user.getCentre()!=null ? user.getCentre().toLowerCase() : "";
