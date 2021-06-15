@@ -22,7 +22,7 @@
         <activity android:name=".TestActivity" />
 
         <activity
-            android:name=".HostActivity">
+            android:name=".SelectionActivity">
            <!-- android:label="@string/title_activity_select_user">-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

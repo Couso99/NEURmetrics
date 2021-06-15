@@ -135,4 +135,6 @@ public class SharedSelectionViewModel extends AndroidViewModel {
     public void setIsTrialDownloaded(boolean isTrialDownloaded) {
         repository.setIsTrialDownloaded(isTrialDownloaded);
     }
+
+
 }

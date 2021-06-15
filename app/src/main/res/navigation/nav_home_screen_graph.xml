@@ -6,14 +6,6 @@
     app:startDestination="@id/homeScreenFragment">
 
     <fragment
-        android:id="@+id/hostFragment"
-        android:name="com.imovil.recordapp.HostFragment"
-        android:label="Modo de funcionamiento">
-        <action
-            android:id="@+id/action_hostFragment_to_selectUserFragment"
-            app:destination="@id/selectUserFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/selectUserFragment"
         android:name="com.imovil.recordapp.SelectUserFragment"
         android:label="@string/SelectUserFragmentLabel">
@@ -30,11 +22,11 @@
         android:name="com.imovil.recordapp.HomeScreenFragment"
         android:label="@string/app_name">
         <action
-            android:id="@+id/action_homeScreenFragment_to_hostFragment"
-            app:destination="@id/hostFragment" />
-        <action
             android:id="@+id/action_homeScreenFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeScreenFragment_to_selectUserFragment"
+            app:destination="@id/selectUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

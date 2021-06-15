@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="160dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name"
         android:src="@drawable/logo_epi"
@@ -22,25 +22,24 @@
         app:layout_constraintVertical_bias="0.044" />
 
     <Button
-        android:id="@+id/recordButton"
+        android:id="@+id/newTrialsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/beginAppButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.238"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.751" />
+        android:layout_marginBottom="36dp"
+        android:text="@string/getTrialsListButton"
+        app:layout_constraintBottom_toTopOf="@+id/userTrialsButton"
+        app:layout_constraintEnd_toEndOf="@+id/userTrialsButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/userTrialsButton" />
 
     <Button
-        android:id="@+id/stopButton"
+        android:id="@+id/userTrialsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
         android:layout_marginRight="28dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/beginAppButton"
+        android:layout_marginBottom="28dp"
+        android:text="@string/getUsersListButton"
         app:layout_constraintBottom_toTopOf="@+id/creditsView"
         app:layout_constraintEnd_toEndOf="parent" />
 

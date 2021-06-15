@@ -26,8 +26,9 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     //WebService webService;
     SharedSelectionViewModel model;
 
-    Button recordButton, stopButton;
-    TextView isRecordingView, decibel;
+
+    Button newTrialsButton, userTrialsButton;
+    TextView isRecordingView;
     ImageView imageView;
 
     public static SelectUserFragment newInstance() {
@@ -55,16 +56,12 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
         model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
-        recordButton = view.findViewById(R.id.recordButton);
-        stopButton = view.findViewById(R.id.stopButton);
         isRecordingView = view.findViewById(R.id.isRecordingView);
-        decibel = view.findViewById(R.id.decibel);
-        imageView = view.findViewById(R.id.imageView);
 
-        recordButton.setOnClickListener(this);
-        stopButton.setOnClickListener(this);
-
-        recordButton.setVisibility(View.INVISIBLE);
+        newTrialsButton = view.findViewById(R.id.newTrialsButton);
+        userTrialsButton = view.findViewById(R.id.userTrialsButton);
+        newTrialsButton.setOnClickListener(this);
+        userTrialsButton.setOnClickListener(this);
 
         return view;
     }
@@ -73,11 +70,17 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         int id = view.getId();
         switch (id) {
-            case R.id.stopButton:
+            case R.id.newTrialsButton:
                 model.initialize_device();
-                enterSearchMode();
+                model.setUserTrial(false);
+                break;
+            case R.id.userTrialsButton:
+                model.initialize_device();
+                model.setUserTrial(true);
                 break;
         }
+
+        ((NavigationInterface)activity).onModeSelected(model.isUserTrial());
     }
 
     @Override
@@ -105,9 +108,4 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
         }
         return true;
     }
-
-    public void enterSearchMode() {
-        ((NavigationInterface)activity).launchSelectionMode();
-    }
-
 }

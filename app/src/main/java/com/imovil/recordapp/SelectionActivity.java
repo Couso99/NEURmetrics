@@ -17,7 +17,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class HostActivity extends AppCompatActivity implements NavigationInterface {
+public class SelectionActivity extends AppCompatActivity implements NavigationInterface {
     AppBarConfiguration appBarConfiguration;
 
     private static String TAG = "ExplorerMenu";
@@ -64,7 +64,7 @@ public class HostActivity extends AppCompatActivity implements NavigationInterfa
 
     private void launchSelectUser() {
         try {
-            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_hostFragment_to_selectUserFragment);
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_selectUserFragment);
         } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
@@ -78,13 +78,6 @@ public class HostActivity extends AppCompatActivity implements NavigationInterfa
     public void launchSettings() {
         try {
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_settingsFragment);
-        } catch (java.lang.IllegalArgumentException ignored) {}
-    }
-
-    @Override
-    public void launchSelectionMode() {
-        try {
-            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_hostFragment);
         } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
@@ -122,7 +115,7 @@ public class HostActivity extends AppCompatActivity implements NavigationInterfa
         Trial trial = model.getTrial();
         trial.getTrialInfo().setUserID(model.getUserID());
 
-        Intent intent = new Intent(HostActivity.this, TestActivity.class);
+        Intent intent = new Intent(SelectionActivity.this, TestActivity.class);
         intent.putExtra(TestActivity.ARG_TRIAL, trial);
         startActivity(intent);
     }
