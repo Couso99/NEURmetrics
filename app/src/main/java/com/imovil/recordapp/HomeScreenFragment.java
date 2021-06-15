@@ -21,8 +21,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     private final static String TAG = "WebService";
     //private final String jsonFname = "try.json";
 
-    private final String deviceID = "dev_1";
-
     Activity activity;
 
     //WebService webService;
@@ -76,7 +74,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
         int id = view.getId();
         switch (id) {
             case R.id.stopButton:
-                model.initialize_device(deviceID);
+                model.initialize_device();
                 enterSearchMode();
                 break;
         }

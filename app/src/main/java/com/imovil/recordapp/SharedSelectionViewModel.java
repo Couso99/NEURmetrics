@@ -1,6 +1,8 @@
 package com.imovil.recordapp;
 
+import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,16 +13,21 @@ public class SharedSelectionViewModel extends AndroidViewModel {
     Repository repository;
     private LiveData<Users> users;
     private LiveData<Trials> userTrials, newTrials;
+    private TrialInfo userTrialInfo;
+    private TrialInfo newTrialInfo;
     private boolean isUserTrial;
     private String userID;
+    private LiveData<Boolean> isTrialDownloaded;
 
     public SharedSelectionViewModel(@NonNull Application application) {
         super(application);
         repository = new Repository(application.getApplicationContext());
+        Log.d("ViewModel","Inicializado el viewmodelo");
+        isTrialDownloaded = repository.isTrialDownloaded();
     }
 
-    public void initialize_device(String deviceID) {
-        repository.initialize_device(deviceID);
+    public void initialize_device() {
+        repository.initialize_device();
     }
 
     public void initSelectUsers() {
@@ -39,12 +46,17 @@ public class SharedSelectionViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<Trials> getUserTrials() {
-        return userTrials;
+    public void downloadTrial() {
+        if(isUserTrial) {
+            repository.downloadUserTrial(userTrialInfo.getUserID(), userTrialInfo.getStartTime());
+        }
+        else {
+            repository.downloadNewTrial(newTrialInfo.getTrialID());
+        }
     }
 
-    public LiveData<Trials> getNewTrials() {
-        return newTrials;
+    public LiveData<Boolean> getIsTrialDownloaded() {
+        return isTrialDownloaded;
     }
 
     public boolean isUserTrial() {
@@ -67,6 +79,15 @@ public class SharedSelectionViewModel extends AndroidViewModel {
         userID = users.getValue().getUsers().get(position).getUserID();
     }
 
+    public void updateUserTrialInfo(int position) {
+        userTrialInfo = userTrials.getValue().getTrials().get(position).getTrialInfo();
+    }
+
+    public void updateNewTrialInfo(int position) {
+        newTrialInfo = newTrials.getValue().getTrials().get(position).getTrialInfo();
+
+    }
+
     public void updateUsers() {
         repository.updateUsersData();
     }
@@ -82,6 +103,14 @@ public class SharedSelectionViewModel extends AndroidViewModel {
         repository.updateNewTrials();
     }
 
+    public LiveData<Trials> getUserTrials() {
+        return userTrials;
+    }
+
+    public LiveData<Trials> getNewTrials() {
+        return newTrials;
+    }
+
     public void updateTrials() {
         if (isUserTrial) {
             updateUserTrials();
@@ -93,5 +122,17 @@ public class SharedSelectionViewModel extends AndroidViewModel {
 
     public boolean isServerReachable() {
         return repository.isReachable();
+    }
+
+    public void onChangePreferences() {
+        repository.updateBaseURL();
+    }
+
+    public Trial getTrial() {
+        return repository.getTrial();
+    }
+
+    public void setIsTrialDownloaded(boolean isTrialDownloaded) {
+        repository.setIsTrialDownloaded(isTrialDownloaded);
     }
 }

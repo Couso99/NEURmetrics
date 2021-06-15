@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -104,11 +105,8 @@ public class SelectTrialFragment extends Fragment {
 
                     thread.start();
 
-                    /*TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
-                    String userID = trialInfo.getUserID();
-                    long startTime = trialInfo.getStartTime();
-                    //Toast.makeText(getApplicationContext(),"UserTrialsAdapter",Toast.LENGTH_SHORT);
-                    repository.downloadUserTrial(userID,startTime);*/
+                    model.updateUserTrialInfo(position);
+                    ((NavigationInterface)activity).onTrialSelected();
                 }
             });
         }
@@ -136,10 +134,8 @@ public class SelectTrialFragment extends Fragment {
 
                     thread.start();
 
-                    /*TrialInfo trialInfo = trials.getTrials().get(position).getTrialInfo();
-                    String trialID = trialInfo.getTrialID();
-                    //Toast.makeText(getApplicationContext(),"NewTrialsAdapter",Toast.LENGTH_SHORT);
-                    repository.downloadTrialFromTrialID(trialID);*/
+                    model.updateNewTrialInfo(position);
+                    ((NavigationInterface)activity).onTrialSelected();
                 }
             });
         }
@@ -155,6 +151,9 @@ public class SelectTrialFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(trialsListAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         return view;
     }

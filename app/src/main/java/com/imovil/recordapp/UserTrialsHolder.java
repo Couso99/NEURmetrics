@@ -3,25 +3,33 @@ package com.imovil.recordapp;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.imovil.recordapp.databinding.SimpleListItemBinding;
+import com.imovil.recordapp.databinding.UserListItemBinding;
+import com.imovil.recordapp.databinding.UserTrialListItemBinding;
 
-public class UserTrialsHolder extends NewTrialsHolder {
+public class UserTrialsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public UserTrialsHolder(@NonNull SimpleListItemBinding binding) {
-        super(binding);
+    UserTrialListItemBinding binding;
+
+    public UserTrialsHolder(@NonNull UserTrialListItemBinding binding) {
+        super(binding.getRoot());
+        binding.getRoot().setOnClickListener(this);
+        this.binding = binding;
     }
 
-    @Override
     public void bind(Trial trial){
         if (trial!=null) {
             TrialInfo info = trial.getTrialInfo();
-            binding.text1.setText("TrialID: " + info.getTrialID() + "\n - Start Time: "+TrialTimer.getDateFromTimestamp(info.getStartTime())+"\n - Score: "
-            +info.getTotalScore()+"/"+info.getTotalMaxScore());
+            binding.nameView.setText(info.getName());
+            if (info.getStartTime()!=0) {
+                binding.dateView.setText(TrialTimer.getDateFromTimestamp(info.getStartTime()));
+            }
+            else binding.dateLayout.setVisibility(View.GONE);
+            binding.scoreView.setText(info.getTotalScore()+(info.getTotalMaxScore()!=0 ? ("/"+info.getTotalMaxScore()) : ""));
         }
-
-        else
-            binding.text1.setText("No hay datos disponibles");
+        else binding.nameView.setText("No hay datos disponibles");
     }
 
     @Override

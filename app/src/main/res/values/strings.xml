@@ -14,10 +14,10 @@
 
 
     <!-- Sex options -->
-    <string name="sexMale">Hombre</string>
+    <!--<string name="sexMale">Hombre</string>
     <string name="sexFemale">Mujer</string>
     <string name="sexOther">Otro</string>
-    <string name="sexUnknown">Desconocido</string>
+    <string name="sexUnknown">Desconocido</string>-->
 
     <!-- Activities Titles -->
     <string name="title_activity_explorer_menu">Explorador</string>
@@ -25,15 +25,15 @@
     <string name="title_activity_select_trial">Seleccionar prueba</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="server_settings_header">Servidor</string>
+    <string name="device_header">Dispositivo</string>
 
     <!-- Messages Preferences -->
     <string name="server_ip_title">IP del servidor</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="server_port_title">Puerto</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
+    <string name="device_id_title">ID del dispositivo</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
@@ -59,4 +59,8 @@
     <string name="SelectUserFragmentLabel">Seleccionar usuario</string>
     <string name="SelectTrialFragmentLabel">Seleccionar prueba</string>
     <string name="SettingsFragmentLabel">Ajustes</string>
+    <string name="trialIdField">Fecha de realización:</string>
+    <string name="scoreField">Puntuación:</string>
+    <string name="descriptionField">Descripción:</string>
+    <string name="trialField">Prueba:</string>
 </resources>

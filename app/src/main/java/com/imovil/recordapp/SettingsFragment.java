@@ -2,9 +2,12 @@ package com.imovil.recordapp;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+
+    SharedSelectionViewModel model;
 
     public static SelectUserFragment newInstance() {
         SelectUserFragment fragment = new SelectUserFragment();
@@ -16,6 +19,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(requireActivity()).get(SharedSelectionViewModel.class);
     }
 
     @Override
@@ -23,5 +27,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
+        model.onChangePreferences();
+    }
 }

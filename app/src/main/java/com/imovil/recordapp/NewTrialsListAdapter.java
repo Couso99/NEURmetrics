@@ -7,19 +7,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.imovil.recordapp.databinding.NewTrialListItemBinding;
 import com.imovil.recordapp.databinding.SimpleListItemBinding;
 
 public class NewTrialsListAdapter extends RecyclerView.Adapter <NewTrialsHolder> {
 
     private Trials mTrials;
-    SimpleListItemBinding binding;
+    NewTrialListItemBinding binding;
 
     public static NewTrialsListAdapter.ClickListener clickListener;
 
     @NonNull
     @Override
     public NewTrialsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = SimpleListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding = NewTrialListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new NewTrialsHolder(binding);
     }
 

@@ -1,9 +1,11 @@
 package com.imovil.recordapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,6 +47,8 @@ public class WebService {//implements RestService{
     private MutableLiveData<Users> usersMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<Trials> userTrialsMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<Trials> newTrialsMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Trial> userTrialMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Trial> newTrialMutableLiveData = new MutableLiveData<>();
 
     WebService() {
         downloadService = ServiceGenerator.createService(RestService.class);
@@ -56,9 +60,20 @@ public class WebService {//implements RestService{
         return call;
     }
 
-    public Call<ResponseBody> initialize(String deviceID) {
+    public void initialize(String deviceID) {
         Call<ResponseBody> call = downloadService.initialize(deviceID);
-        return call;
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
     public Call<ResponseBody> uploadFile(String file_type, RequestBody description, MultipartBody.Part body) {
@@ -179,11 +194,59 @@ public class WebService {//implements RestService{
         return newTrialsMutableLiveData;
     }
 
-    public boolean isReachable() {
+    public void updateNewTrial(String trialID) {
+        Call<JsonElement> call = downloadService.downloadTrialFromTrialID(trialID);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
+                    }.getType());
+                    if (trial_list.size() > 0) {
+                        Trial trial = trial_list.get(0);
+                        newTrialMutableLiveData.setValue(trial);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {}
+        });
+    }
+
+    public MutableLiveData<Trial> getNewTrial(String trialID) {
+        updateNewTrial(trialID);
+        return newTrialMutableLiveData;
+    }
+
+    public void updateUserTrial(String userID, long startTime) {
+        Call<JsonElement> call = downloadService.downloadUserTrial(userID,startTime);
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
+                    }.getType());
+                    if (trial_list.size() > 0) {
+                        Trial trial = trial_list.get(0);
+                        userTrialMutableLiveData.setValue(trial);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {}
+        });
+    }
+
+    public MutableLiveData<Trial> getUserTrial(String userID, long startTime) {
+        updateUserTrial(userID, startTime);
+        return userTrialMutableLiveData;
+    }
+
+    public boolean isReachable(String host) {
         boolean isReachable = false;
 
         try {
-            InetAddress serverAddr = InetAddress.getByName("192.168.0.21");
+            InetAddress serverAddr = InetAddress.getByName(host);
             isReachable = serverAddr.isReachable(2000);
         } catch (UnknownHostException e) {
             e.printStackTrace();

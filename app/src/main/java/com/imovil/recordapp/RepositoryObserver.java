@@ -10,6 +10,7 @@ public interface RepositoryObserver {
     int USERS_LIST = 2;
     int USER_TRIALS_INFO = 3;
 
-    void onJsonDownloaded(JsonElement jsonElement, int jsonCode);
+    //void onJsonDownloaded(JsonElement jsonElement, int jsonCode);
+    void onTrialDownloaded(Trial trial);
 
 }

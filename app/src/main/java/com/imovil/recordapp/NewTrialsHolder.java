@@ -5,13 +5,14 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.imovil.recordapp.databinding.NewTrialListItemBinding;
 import com.imovil.recordapp.databinding.SimpleListItemBinding;
 
 public class NewTrialsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    SimpleListItemBinding binding;
+    NewTrialListItemBinding binding;
 
-    public NewTrialsHolder(@NonNull SimpleListItemBinding binding) {
+    public NewTrialsHolder(@NonNull NewTrialListItemBinding binding) {
         super(binding.getRoot());
         binding.getRoot().setOnClickListener(this);
         this.binding = binding;
@@ -25,11 +26,12 @@ public class NewTrialsHolder extends RecyclerView.ViewHolder implements View.OnC
     public void bind(Trial trial){
         if (trial!=null) {
             TrialInfo info = trial.getTrialInfo();
-            binding.text1.setText("TrialID: " + info.getTrialID());
+            binding.nameView.setText(info.getName());
+            if (info.getDescription()!=null) {
+                binding.descriptionView.setText(info.getDescription());
+            }
+            else binding.descriptionLayout.setVisibility(View.GONE);
         }
-
-        else
-            binding.text1.setText("No hay datos disponibles");
+        else binding.nameView.setText("No hay datos disponibles");
     }
-
 }

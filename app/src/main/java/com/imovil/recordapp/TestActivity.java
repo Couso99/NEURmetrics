@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.app.Fragment;
 
 import java.util.List;
@@ -19,6 +22,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     public final static String ARG_TRIAL = "trial";
     public static final String ARG_TEST = "test";
     public static final String ARG_TRIAL_INFO = "trialInfo";
+    public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
     Repository repository;
 
@@ -48,19 +52,35 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
         repository = new Repository(this);
 
-        Bundle b = getIntent().getExtras();
-        trial = (Trial) b.getSerializable(ARG_TRIAL);
-        tests_list = trial.getTests();
+        //model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
-        trialInfo = trial.getTrialInfo();
-        if (!(isTrialScored = trialInfo.isTrialScored())) {
-            isTrialScored = false;
-            TrialTimer.init_timer();
-            trialInfo.setStartTime(TrialTimer.getStartTime());
+        //model.getNewTrials().observe();
+
+        Bundle b = getIntent().getExtras();
+
+        //isUserTrial = b.getBoolean(ARG_IS_USER_TRIAL);
+        /*if (isUserTrial) {
+            trialLive = repository.getUserTrial();
+        } else {
+            trialLive = repository.getNewTrial();
         }
 
-        startDownloadingTests(trial);
-        nextTest();
+        trialLive.observe(this, trial1 -> {
+            trial = trial1;*/
+        trial = (Trial) b.getSerializable(ARG_TRIAL);
+            tests_list = trial.getTests();
+
+            trialInfo = trial.getTrialInfo();
+            if (!(isTrialScored = trialInfo.isTrialScored())) {
+                isTrialScored = false;
+                TrialTimer.init_timer();
+                trialInfo.setStartTime(TrialTimer.getStartTime());
+            }
+
+            startDownloadingTests(trial);
+            nextTest();
+       // });
+
     }
 
     @Override

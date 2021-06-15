@@ -1,19 +1,23 @@
 package com.imovil.recordapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -32,24 +36,31 @@ public class Repository {
     private Context context;
 
     private boolean isOutputJsonUploaded = false;
-    private boolean isServerInitialized = false;
 
     private LiveData<Users> users;
     private LiveData<Trials> userTrials;
     private LiveData<Trials> newTrials;
+    private static Trial trial;
+    private MutableLiveData<Boolean> isTrialDownloaded = new MutableLiveData<>();
 
     public Repository(Context context) {
-        webService = new WebService();
         this.context = context;
+        updateBaseURL();
         FOLDER_PATH = context.getExternalCacheDir() + File.separator;
+    }
+
+    public void updateBaseURL() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+        String host = SP.getString("server_ip","");
+        String port = SP.getString("port", "");
+        String url  = ("http://"+host+(port.isEmpty() ? "":(":"+port)));
+        boolean isChanged = ServiceGenerator.setBaseUrl(url);
+
+        if (webService==null || isChanged) webService = new WebService();
     }
 
     public boolean isOutputJsonUploaded() {
         return isOutputJsonUploaded;
-    }
-
-    public boolean isServerInitialized() {
-        return isServerInitialized;
     }
 
     public String getFilePath(String fname) {
@@ -76,20 +87,11 @@ public class Repository {
         enqueueWriteResponseBody(call, fileName);
     }
 
-    public void initialize_device(String deviceID) {
-        Call<ResponseBody> call = webService.initialize(deviceID);
+    public void initialize_device() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+        String deviceID = SP.getString("device_id", "device0000");
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                isServerInitialized = false;
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+        webService.initialize(deviceID);
     }
 
     public void uploadGeneral(String fname, String mediaType) {
@@ -287,8 +289,87 @@ public class Repository {
         return newTrials;
     }
 
+    /*public void updateUserTrial(String userID, long startTime) {
+        userTrial = webService.getUserTrial(userID, startTime);
+    }
+
+    public LiveData<Trial> getUserTrial() {
+        return userTrial;
+    }
+
+    public void updateNewTrial(String trialID) {
+        newTrial = webService.getNewTrial(trialID);
+    }
+
+    public LiveData<Trial> getNewTrial() {
+        return newTrial;
+    }*/
+
+    public void downloadUserTrial(String userID, long startTime) {
+        Call<JsonElement> call = webService.downloadUserTrial(userID, startTime);
+
+        // finally, execute the request
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                Gson gson = new Gson();
+                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
+                }.getType());
+                if (trial_list.size() > 0) {
+                    trial = trial_list.get(0);
+                    isTrialDownloaded.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {}
+            });
+    }
+
+    public void downloadNewTrial(String trialID) {
+        Call<JsonElement> call = webService.downloadTrialFromTrialID(trialID);
+
+        call.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                Gson gson = new Gson();
+                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
+                }.getType());
+                if (trial_list.size() > 0) {
+                    trial = trial_list.get(0);
+                    isTrialDownloaded.setValue(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public MutableLiveData<Boolean> isTrialDownloaded() {
+        return isTrialDownloaded;
+    }
+
+    public void setIsTrialDownloaded(boolean isTrialDownloaded) {
+        this.isTrialDownloaded.setValue(isTrialDownloaded);
+    }
+
+    public Trial getTrial() {
+        return trial;
+    }
+
     public boolean isReachable() {
-        return webService.isReachable();
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+        String host = SP.getString("server_ip","");
+
+        //Log.d(TAG,host);
+
+        if (host.isEmpty()) return false;
+
+        return webService.isReachable(host);
     }
 
 }

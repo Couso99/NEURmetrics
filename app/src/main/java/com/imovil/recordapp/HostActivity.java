@@ -17,12 +17,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
-
 public class HostActivity extends AppCompatActivity implements NavigationInterface {
     AppBarConfiguration appBarConfiguration;
 
@@ -48,10 +42,19 @@ public class HostActivity extends AppCompatActivity implements NavigationInterfa
         askPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
         askPermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        model.getIsTrialDownloaded().observe(this,isTrialDownloaded -> {
+            if (isTrialDownloaded) {
+                model.setIsTrialDownloaded(false);
+                launchTrial();
+            }
+        });
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
+
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -107,5 +110,20 @@ public class HostActivity extends AppCompatActivity implements NavigationInterfa
         model.setUserID(userID);
         launchSelectTrial(model.isUserTrial(),model.getUserID());
         Log.d("WebService", "onUserSelected: "+model.getUserID());
+    }
+
+    @Override
+    public void onTrialSelected() {
+        model.downloadTrial();
+    }
+
+    @Override
+    public void launchTrial() {
+        Trial trial = model.getTrial();
+        trial.getTrialInfo().setUserID(model.getUserID());
+
+        Intent intent = new Intent(HostActivity.this, TestActivity.class);
+        intent.putExtra(TestActivity.ARG_TRIAL, trial);
+        startActivity(intent);
     }
 }
