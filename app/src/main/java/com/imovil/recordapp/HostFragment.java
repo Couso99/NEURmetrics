@@ -22,10 +22,6 @@ public class HostFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public interface HostInterface {
-        void isUserTrial(boolean isUserTrial);
-    }
-
     public static HostFragment newInstance(String param1, String param2) {
         HostFragment fragment = new HostFragment();
         Bundle args = new Bundle();
@@ -47,8 +43,8 @@ public class HostFragment extends Fragment implements View.OnClickListener {
 
         activity = getActivity();
 
-        newTrialsButton = (Button) v.findViewById(R.id.newTrialsButton);
-        userTrialsButton = (Button) v.findViewById(R.id.userTrialsButton);
+        newTrialsButton = v.findViewById(R.id.newTrialsButton);
+        userTrialsButton = v.findViewById(R.id.userTrialsButton);
         newTrialsButton.setOnClickListener(this);
         userTrialsButton.setOnClickListener(this);
         return v;
@@ -70,7 +66,7 @@ public class HostFragment extends Fragment implements View.OnClickListener {
                 break;
         }
 
-        ((HostInterface)activity).isUserTrial(isUserTrial);
+        ((NavigationInterface)activity).onModeSelected(isUserTrial);
     }
 
 

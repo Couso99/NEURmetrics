@@ -15,6 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -173,6 +177,21 @@ public class WebService {//implements RestService{
     public MutableLiveData<Trials> getNewTrials() {
         updateNewTrials();
         return newTrialsMutableLiveData;
+    }
+
+    public boolean isReachable() {
+        boolean isReachable = false;
+
+        try {
+            InetAddress serverAddr = InetAddress.getByName("192.168.0.21");
+            isReachable = serverAddr.isReachable(2000);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return isReachable;
     }
 
 

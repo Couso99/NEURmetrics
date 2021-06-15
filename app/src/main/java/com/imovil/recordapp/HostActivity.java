@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class HostActivity extends AppCompatActivity implements HostFragment.HostInterface, SelectUserFragment.UserInterface, HomeScreenFragment.HomeScreenInterface {
+public class HostActivity extends AppCompatActivity implements NavigationInterface {
     AppBarConfiguration appBarConfiguration;
 
     private static String TAG = "ExplorerMenu";
@@ -60,27 +60,46 @@ public class HostActivity extends AppCompatActivity implements HostFragment.Host
     }
 
     private void launchSelectUser() {
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_hostFragment_to_selectUserFragment);
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_hostFragment_to_selectUserFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
     public void launchSelectTrial(boolean isUserTrial, String userID) {
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment);
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
     @Override
     public void launchSettings() {
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_settingsFragment);
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_settingsFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
     @Override
-    public void enterSearchMode() {
-        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_hostFragment);
+    public void launchSelectionMode() {
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_hostFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
     @Override
-    public void isUserTrial(boolean isUserTrial) {
+    public void onModeSelected(boolean isUserTrial) {
         model.setUserTrial(isUserTrial);
-        launchSelectUser();
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                if (model.isServerReachable())
+                    runOnUiThread(()->launchSelectUser());
+                else
+                    runOnUiThread(() -> Toast.makeText(getApplicationContext(),"No hay conexión con el servidor",Toast.LENGTH_SHORT).show());
+            }
+        };
+
+        thread.start();
     }
 
     @Override

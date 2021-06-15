@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class SharedSelectionViewModel extends AndroidViewModel {
     Repository repository;
@@ -88,5 +89,9 @@ public class SharedSelectionViewModel extends AndroidViewModel {
         else {
             updateNewTrials();
         }
+    }
+
+    public boolean isServerReachable() {
+        return repository.isReachable();
     }
 }

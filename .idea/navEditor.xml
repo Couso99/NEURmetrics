@@ -70,6 +70,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_homeScreenFragment_to_settingsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
@@ -129,13 +134,13 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="settingsFragment3">
+                  <entry key="settingsFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-158" />
-                            <option name="y" value="-266" />
+                            <option name="x" value="-146" />
+                            <option name="y" value="-405" />
                           </Point>
                         </option>
                       </LayoutPositions>

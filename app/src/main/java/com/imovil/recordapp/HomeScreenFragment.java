@@ -86,6 +86,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         getActivity().invalidateOptionsMenu();
+        //getActivity().getActionBar().setTitle("Nombre de la app");
     }
 
     @Override
@@ -99,7 +100,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settingsButton:
-                ((HomeScreenInterface)activity).launchSettings();
+                ((NavigationInterface)activity).launchSettings();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -108,11 +109,7 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
     }
 
     public void enterSearchMode() {
-        ((HomeScreenInterface)activity).enterSearchMode();
+        ((NavigationInterface)activity).launchSelectionMode();
     }
 
-    public interface HomeScreenInterface {
-        void enterSearchMode();
-        void launchSettings();
-    }
 }

@@ -287,4 +287,8 @@ public class Repository {
         return newTrials;
     }
 
+    public boolean isReachable() {
+        return webService.isReachable();
+    }
+
 }

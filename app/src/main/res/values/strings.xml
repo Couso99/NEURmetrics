@@ -56,4 +56,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="SelectUserFragmentLabel">Seleccionar usuario</string>
+    <string name="SelectTrialFragmentLabel">Seleccionar prueba</string>
+    <string name="SettingsFragmentLabel">Ajustes</string>
 </resources>

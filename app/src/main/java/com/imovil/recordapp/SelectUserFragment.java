@@ -124,7 +124,7 @@ public class SelectUserFragment extends Fragment {
                 thread.start();
 
                 model.updateUserID(position);
-                ((UserInterface)activity).onUserSelected(model.getUserID());
+                ((NavigationInterface)activity).onUserSelected(model.getUserID());
                 //model.downloadTrialsList();
             }
         });
@@ -193,9 +193,5 @@ public class SelectUserFragment extends Fragment {
 
     private void addUser() {
 
-    }
-
-    public interface UserInterface {
-        void onUserSelected(String userID);
     }
 }
