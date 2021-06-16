@@ -39,8 +39,8 @@ public class TapLettersFragment extends Fragment {
     public static TapLettersFragment newInstance(Test test, TrialInfo trialInfo) {
         TapLettersFragment fragment = new TapLettersFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TestActivity.ARG_TEST, test);
-        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
+        args.putSerializable(TrialActivity.ARG_TEST, test);
+        args.putSerializable(TrialActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,7 +49,7 @@ public class TapLettersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
+            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
         }
     }
 
@@ -62,8 +62,8 @@ public class TapLettersFragment extends Fragment {
         activity = getActivity();
 
         if (getArguments() != null) {
-            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
-            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
+            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
             textArray = test.getParameters();
         }
 

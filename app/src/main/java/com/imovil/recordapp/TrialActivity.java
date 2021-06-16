@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.app.Fragment;
 
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity implements TrialInterface {
+public class TrialActivity extends AppCompatActivity implements TrialInterface {
     private final static String TAG = "TestActivity";
     private final String outputJsonFname = "nombre_aqui.json";
 
@@ -22,6 +27,8 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
     Repository repository;
 
+    TrialViewModel model;
+
     Test test, test_piece;
     List<Test> tests_list, test_pieces_list;
     Trial trial;
@@ -29,7 +36,6 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     int test_index=0, isLastTest = 0, isTestScored=0;
     int test_pieces_index=0;
     boolean isScoreDuringTests=true;
-    boolean isTrialScored = false;
     boolean isRunTestPiece = false;
 
     //todo mover recorder a ImageTestFragment y a cualquiera que lo utilice??
@@ -42,11 +48,13 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_trial);
 
         recorder = new RecorderPlayer();
 
         repository = new Repository(this);
+
+        model = new ViewModelProvider(this).get(TrialViewModel.class);
 
         //model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
@@ -54,18 +62,23 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
         Bundle b = getIntent().getExtras();
 
-        trial = (Trial) b.getSerializable(ARG_TRIAL);
-            tests_list = trial.getTests();
+        model.setTrial((Trial) b.getSerializable(ARG_TRIAL));
 
-            trialInfo = trial.getTrialInfo();
-            if (!(isTrialScored = trialInfo.isTrialScored())) {
-                isTrialScored = false;
-                TrialTimer.init_timer();
-                trialInfo.setStartTime(TrialTimer.getStartTime());
-            }
+        trial = model.getTrial();
+        tests_list = trial.getTests();
 
-            startDownloadingTests(trial);
-            nextTest();
+        trialInfo = trial.getTrialInfo();
+
+        model.initTrial();
+
+        update_hdr();
+
+        //startDownloadingTests(trial);
+        nextTest();
+
+        //NavController navController = Navigation.findNavController(this, R.id.headers_host_fragment);
+        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
        // });
 
     }
@@ -129,7 +142,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                     while(true) {
                         sleep(200);
                         if (!recorder.isRecording()) {
-                            TestActivity.this.runOnUiThread(() -> observer.onIsRecordingChanged(0));
+                            TrialActivity.this.runOnUiThread(() -> observer.onIsRecordingChanged(0));
                             break;
                         }
                     }
@@ -179,39 +192,6 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                 trialInfo.setTrialScored(true);
     }
 
-    private void startDownloadingTests(Trial trial) {
-        boolean isTrialScored = trial.getTrialInfo().isTrialScored();
-
-        for (Test test : trial.getTests()) {
-            if (test.getParametersNumber() != 0) {
-                List<String> parameters_type = test.getParametersType();
-                List<String> parameters = test.getParameters();
-
-                for (int i=0; i<test.getParametersNumber(); i++)
-                    if (parameters_type.get(i).equals("filename"))
-                        repository.downloadFile(parameters.get(0));
-            }
-            if (isTrialScored)
-                if (test.getOutputFilename() != null)
-                    repository.downloadUserMadeFile(test.getOutputFilename());
-            if (test.isContainsTests())
-                for (Test child_test: test.getTests()) {
-                    if (child_test.getParametersNumber() != 0) {
-                        List<String> parameters_type = child_test.getParametersType();
-                        List<String> parameters = child_test.getParameters();
-
-                        for (int i=0; i<child_test.getParametersNumber(); i++)
-                            if (parameters_type.get(i).equals("filename"))
-                                repository.downloadFile(parameters.get(0));
-                    }
-
-                    if (isTrialScored)
-                        if (child_test.getOutputFilename() != null)
-                            repository.downloadUserMadeFile(child_test.getOutputFilename());
-                }
-        }
-    }
-
     private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
         Fragment test_fragment;
 
@@ -248,7 +228,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             scoreTest();
             isTestScored = 1;
         }
-        else if (!isTrialScored){
+        else if (!model.isUserTrial()){
             stopPlaying();
 
             isLastTest = updateTest();
@@ -257,8 +237,9 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                 Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test, trialInfo);
                 update_headers(isRunTestPiece ? test_piece : test);
                 (isRunTestPiece ? test_piece : test).setStartTestTimeOffset(TrialTimer.getElapsedTime());
+                model.setTest(isRunTestPiece ? test_piece : test);
 
-                fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
+                fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
                 fragmentTransaction.commit();
 
                 if (isScoreDuringTests) {
@@ -270,20 +251,21 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             scoreTest();
         }
         if (isLastTest != 0){
-            String fname = outputJsonFname;
+            //String fname = outputJsonFname;
             prepareJson(trial);
 
-            if(isTrialScored) {repository.updateUserTrial(trial);}
+
+            if(model.isUserTrial()) {repository.updateUserTrial(trial);}
             else {repository.uploadUserTrial(trial);}
             //repository.writeJsonToDisk(trial, fname);
             //repository.uploadJson(repository.getFilePath(fname));
-            if (isScoreDuringTests || isTrialScored) testsResult();
+            if (isScoreDuringTests || model.isUserTrial()) testsResult();
         }
     }
 
     @Override
     public void scoreTest() {
-        if(isTrialScored) {
+        if(model.isUserTrial()) {
             stopPlaying();
             isLastTest = updateTest();
         } else {
@@ -293,10 +275,10 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Fragment test_fragment = ScoringFragment.newInstance(isRunTestPiece ? test_piece : test, isTrialScored);
+        Fragment test_fragment = ScoringFragment.newInstance(isRunTestPiece ? test_piece : test, model.isUserTrial());
         update_headers(isRunTestPiece ? test_piece : test);
 
-        fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
+        fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
         fragmentTransaction.commit();
     }
 
@@ -307,7 +289,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
         Fragment test_fragment = ResultsFragment.newInstance(trial);
 
-        fragmentTransaction.replace(R.id.relativeLayout, test_fragment);
+        fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
         fragmentTransaction.commit();
     }
 
@@ -334,12 +316,25 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
     }
 
     public void update_headers(Test test) {
-        FragmentManager fragmentManager = getFragmentManager();
+        /*FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         Fragment headers_fragment = HeadersFragment.newInstance(test.getTitle(), test.getH1(), test.getH2());
 
-        fragmentTransaction.replace(R.id.headersLayout, headers_fragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.headers_host_fragment, headers_fragment);
+        fragmentTransaction.commit();*/
+
+        /*getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.headers_host_fragment, HeadersFragment.class, null)
+                .commit();*/
     }
+
+    public void update_hdr() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.headers_host_fragment, HeadersFragment.class, null)
+                .commit();
+    }
+
 }

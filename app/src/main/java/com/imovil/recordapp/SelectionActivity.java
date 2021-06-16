@@ -115,8 +115,8 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         Trial trial = model.getTrial();
         trial.getTrialInfo().setUserID(model.getUserID());
 
-        Intent intent = new Intent(SelectionActivity.this, TestActivity.class);
-        intent.putExtra(TestActivity.ARG_TRIAL, trial);
+        Intent intent = new Intent(SelectionActivity.this, TrialActivity.class);
+        intent.putExtra(TrialActivity.ARG_TRIAL, trial);
         startActivity(intent);
     }
 }

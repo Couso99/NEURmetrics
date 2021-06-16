@@ -11,7 +11,7 @@ public class Test implements Serializable {
     @SerializedName("isContainsTests")
     @Expose
     private boolean isContainsTests;
-    @SerializedName("testPieces")
+    @SerializedName("tests")
     @Expose
     private List<Test> tests;
     @SerializedName("name")

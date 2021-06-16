@@ -56,8 +56,6 @@ public class HomeScreenFragment extends Fragment implements View.OnClickListener
 
         model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
-        isRecordingView = view.findViewById(R.id.isRecordingView);
-
         newTrialsButton = view.findViewById(R.id.newTrialsButton);
         userTrialsButton = view.findViewById(R.id.userTrialsButton);
         newTrialsButton.setOnClickListener(this);

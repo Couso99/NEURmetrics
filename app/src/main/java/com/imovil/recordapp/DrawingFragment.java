@@ -35,8 +35,8 @@ public class DrawingFragment extends Fragment {
     public static DrawingFragment newInstance(Test test, TrialInfo trialInfo) {
         DrawingFragment fragment = new DrawingFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TestActivity.ARG_TEST, test);
-        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
+        args.putSerializable(TrialActivity.ARG_TEST, test);
+        args.putSerializable(TrialActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,8 +45,8 @@ public class DrawingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
-            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
+            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
         }
     }
 

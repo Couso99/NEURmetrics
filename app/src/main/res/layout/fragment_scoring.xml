@@ -4,40 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ScoringFragment">
 
 
     <LinearLayout
         android:id="@+id/linearLayoutScoring"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="start"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:gravity="start|left"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/nextButtonScoring"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutScoring"
-            android:layout_width="400dp"
-            android:layout_height="192dp"
-            android:gravity="start">
-
-        </RelativeLayout>
-
         <LinearLayout
-            android:id="@+id/linearLayoutCheckboxes"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="96dp"
-            android:layout_marginLeft="96dp"
-            android:layout_marginTop="32dp"
-            android:gravity="start|center_horizontal"
-            android:orientation="vertical"
-            android:paddingLeft="64dp"
-            android:paddingBottom="32dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="top"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutScoring"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_weight="0"
+                android:gravity="start">
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/editTextTextMultiLine"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_weight="1"
+                android:gravity="start|top"
+                android:hint="@string/scoringCommentHint"
+                android:inputType="textMultiLine"
+                tools:layout_conversion_absoluteHeight="45dp"
+                tools:layout_conversion_absoluteWidth="210dp" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutCheckboxes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:orientation="vertical" />
+        </ScrollView>
 
 
     </LinearLayout>
@@ -46,11 +78,13 @@
         android:id="@+id/nextButtonScoring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="96dp"
-        android:layout_marginRight="96dp"
-        android:layout_marginBottom="96dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
         android:text="@string/nextButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_conversion_absoluteHeight="48dp"
+        tools:layout_conversion_absoluteWidth="111dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,16 @@
 package com.imovil.recordapp;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-import android.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,30 +28,25 @@ public class HeadersFragment extends Fragment {
     private static final String ARG_H1 = "h1";
     private static final String ARG_H2 = "h2";
 
-    private String title;
+    /*private String title;
     private String h1;
     private String h2;
 
+    private Activity activity;*/
+    private TrialViewModel model;
+
+    TextView titleView, h1View, h2View;
 
     public HeadersFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param title Title.
-     * @param h1 Header 1.
-     * @param h2 Header 2.
-     * @return A new instance of fragment HeadersFragment.
-     */
     public static HeadersFragment newInstance(String title, String h1, String h2) {
         HeadersFragment fragment = new HeadersFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_TITLE, title);
+        /*args.putString(ARG_TITLE, title);
         args.putString(ARG_H1, h1);
-        args.putString(ARG_H2, h2);
+        args.putString(ARG_H2, h2);*/
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +55,9 @@ public class HeadersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_TITLE);
+            /*title = getArguments().getString(ARG_TITLE);
             h1 = getArguments().getString(ARG_H1);
-            h2 = getArguments().getString(ARG_H2);
+            h2 = getArguments().getString(ARG_H2);*/
         }
     }
 
@@ -65,16 +67,27 @@ public class HeadersFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_headers, container, false);
 
-        TextView titleView, h1View, h2View;
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
         titleView = view.findViewById(R.id.title);
         h1View = view.findViewById(R.id.h1);
         h2View = view.findViewById(R.id.h2);
 
-        if (title!=null) titleView.setText(title);
-        if (h1!=null) h1View.setText(h1);
-        if (h2!=null) h2View.setText(h2);
-
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        model.getIsUpdateHeaders().observe(requireActivity(), isUpdateHeaders -> {
+            if(isUpdateHeaders) {
+                Test test = model.getTest();
+                titleView.setText(test.getTitle()!=null ? test.getTitle() : "");
+                h1View.setText(test.getH1()!=null ? test.getH1() : "");
+                h2View.setText(test.getH2()!=null ? test.getH2() : "");
+                model.setIsUpdateHeaders(false);
+            }
+        });
     }
 }

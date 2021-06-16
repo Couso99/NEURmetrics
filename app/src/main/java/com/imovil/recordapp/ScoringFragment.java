@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +31,7 @@ public class ScoringFragment extends Fragment {
     File file = null, outputFile=null;
 
     private Button nextButton;
-    //todo solucionar la gochada esta
+
     ImageView imageView = null;
     RelativeLayout relativeLayout;
 
@@ -40,6 +41,8 @@ public class ScoringFragment extends Fragment {
     private int maxScore;
     List<CheckBox> checkBoxList = new ArrayList<>();
     List<Integer> scoreWeights = new ArrayList<>();
+
+    EditText editText;
 
     int elegantNumber;
 
@@ -81,6 +84,9 @@ public class ScoringFragment extends Fragment {
 
         activity = getActivity();
 
+        //editText = view.findViewById(R.id.editTextTextMultiLine);
+        //editText.setFocusableInTouchMode(true);
+
         nextButton = view.findViewById(R.id.nextButtonScoring);
         nextButton.setOnClickListener(v -> {
             int activeCheckBoxes=0;
@@ -120,7 +126,7 @@ public class ScoringFragment extends Fragment {
                 btnTag.setLayoutParams(new LinearLayout.LayoutParams
                         (LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.MATCH_PARENT));
-                btnTag.setTextSize(32);
+                btnTag.setTextSize(18);
 
                 if (scoreOptions != null) {
                     if (scoreOptions.size() > j && (comment = scoreOptions.get(j)) != null)
@@ -164,7 +170,7 @@ public class ScoringFragment extends Fragment {
                     btnTag.setLayoutParams(new LinearLayout.LayoutParams
                             (LinearLayout.LayoutParams.WRAP_CONTENT,
                                     LinearLayout.LayoutParams.MATCH_PARENT));
-                    btnTag.setTextSize(32);
+                    btnTag.setTextSize(18);
                     checkBoxList.add(btnTag);
                     linearLayout.addView(btnTag);
                 }
@@ -180,8 +186,8 @@ public class ScoringFragment extends Fragment {
         }
 
         relativeLayout = view.findViewById(R.id.relativeLayoutScoring);
-        //= null;
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2,-1);
 
         switch (test.getTestType()) {
             case 1:

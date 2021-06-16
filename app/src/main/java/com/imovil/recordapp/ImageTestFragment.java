@@ -35,8 +35,8 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
     public static ImageTestFragment newInstance(Test test, TrialInfo trialInfo) {
         ImageTestFragment fragment = new ImageTestFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TestActivity.ARG_TEST, test);
-        args.putSerializable(TestActivity.ARG_TRIAL_INFO, trialInfo);
+        args.putSerializable(TrialActivity.ARG_TEST, test);
+        args.putSerializable(TrialActivity.ARG_TRIAL_INFO, trialInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,13 +63,14 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         activity = getActivity();
 
         if (getArguments() != null) {
-            trialInfo = (TrialInfo) getArguments().getSerializable(TestActivity.ARG_TRIAL_INFO);
-            test = (Test) getArguments().getSerializable(TestActivity.ARG_TEST);
+            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
             if (test.getParameters().get(0) != null) {
                 String fname = test.getParameters().get(0);
                 File file = new File(((TrialInterface)activity).getFilePath(fname));
                 if (file.exists()) {
                     imageView.setImageURI(Uri.fromFile(file));
+                    imageView.setAdjustViewBounds(true);
                 }
                 else {
                     Thread thread = new Thread() {
@@ -79,7 +80,9 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
                                 while(true) {
                                     sleep(200);
                                     if (file.exists()) {
-                                        activity.runOnUiThread(() -> imageView.setImageURI(Uri.fromFile(file)));
+                                        activity.runOnUiThread(() -> {
+                                            imageView.setImageURI(Uri.fromFile(file));
+                                            imageView.setAdjustViewBounds(true);});
                                         break;
                                     }
                                 }
@@ -123,11 +126,13 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
     public void onIsRecordingChanged(int isRecording) {
         if (isRecording==0) {
             recordButton.setBackgroundColor(0x303030);
+            recordButton.setText("Pulse para grabar de nuevo");
             this.isRecording = false;
         }
         else {
             recordButton.setBackgroundColor(Color.RED);
             test.setOutputFilename(outputFilename);
+            recordButton.setText("Grabando");
             this.isRecording = true;
         }
     }
