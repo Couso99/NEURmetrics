@@ -11,7 +11,11 @@
         android:label="@string/SelectUserFragmentLabel">
         <action
             android:id="@+id/action_selectUserFragment_to_selectTrialFragment"
-            app:destination="@id/selectTrialFragment" />
+            app:destination="@id/selectTrialFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/selectTrialFragment"
@@ -23,10 +27,18 @@
         android:label="@string/app_name">
         <action
             android:id="@+id/action_homeScreenFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeScreenFragment_to_selectUserFragment"
-            app:destination="@id/selectUserFragment" />
+            app:destination="@id/selectUserFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

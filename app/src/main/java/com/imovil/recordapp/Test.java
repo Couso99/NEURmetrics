@@ -13,7 +13,7 @@ public class Test implements Serializable {
     private boolean isContainsTests;
     @SerializedName("testPieces")
     @Expose
-    private List<Test> testPieces;
+    private List<Test> tests;
     @SerializedName("name")
     @Expose
     private String name;
@@ -74,12 +74,12 @@ public class Test implements Serializable {
         isContainsTests = containsTests;
     }
 
-    public List<Test> getTestPieces() {
-        return testPieces;
+    public List<Test> getTests() {
+        return tests;
     }
 
-    public void setTestPieces(List<Test> testPieces) {
-        this.testPieces = testPieces;
+    public void setTests(List<Test> tests) {
+        this.tests = tests;
     }
 
     public String getName() {

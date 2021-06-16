@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
+public class RecorderPlayer {
     private final static String LOG_TAG="Recorder";
 
     private static boolean isRecording=false;
@@ -30,7 +30,15 @@ public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
     public void startPlaying(String fileName) {
         if (isPlaying) return;
         player = new MediaPlayer();
-        player.setOnCompletionListener(this);
+        player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+                mp = null;
+                isPlaying = false;
+                Log.d(LOG_TAG, "Fin reproducción (Final archivo)");
+            }
+        });
         Log.d(LOG_TAG, "Inicio reproducción");
         try {
             player.setDataSource(fileName);
@@ -108,13 +116,5 @@ public class RecorderPlayer implements MediaPlayer.OnCompletionListener {
             isRecording = false;
             return;
         }
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-        mp.release();
-        mp = null;
-        isPlaying = false;
-        Log.d(LOG_TAG, "Fin reproducción (Final archivo)");
     }
 }

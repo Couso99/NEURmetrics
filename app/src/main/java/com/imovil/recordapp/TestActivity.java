@@ -6,16 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Fragment;
 
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity implements TrialInterface {
-    //todo implement timing of tests
-
     private final static String TAG = "TestActivity";
     private final String outputJsonFname = "nombre_aqui.json";
 
@@ -58,15 +54,6 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
 
         Bundle b = getIntent().getExtras();
 
-        //isUserTrial = b.getBoolean(ARG_IS_USER_TRIAL);
-        /*if (isUserTrial) {
-            trialLive = repository.getUserTrial();
-        } else {
-            trialLive = repository.getNewTrial();
-        }
-
-        trialLive.observe(this, trial1 -> {
-            trial = trial1;*/
         trial = (Trial) b.getSerializable(ARG_TRIAL);
             tests_list = trial.getTests();
 
@@ -114,7 +101,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
             test_index++;
 
             if (test.isContainsTests()) {
-                test_pieces_list = test.getTestPieces();
+                test_pieces_list = test.getTests();
                 isRunTestPiece = true;
                 test_pieces_index = 0;
                 return updateTest();
@@ -170,7 +157,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
         List<Test> test_p;
 
         for (Test test : trial.getTests()) {
-            if ((test_p = test.getTestPieces())!= null){
+            if ((test_p = test.getTests())!= null){
                 testScore = 0;
                 testMaxScore=0;
 
@@ -208,7 +195,7 @@ public class TestActivity extends AppCompatActivity implements TrialInterface {
                 if (test.getOutputFilename() != null)
                     repository.downloadUserMadeFile(test.getOutputFilename());
             if (test.isContainsTests())
-                for (Test child_test: test.getTestPieces()) {
+                for (Test child_test: test.getTests()) {
                     if (child_test.getParametersNumber() != 0) {
                         List<String> parameters_type = child_test.getParametersType();
                         List<String> parameters = child_test.getParameters();
