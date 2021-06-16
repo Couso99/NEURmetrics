@@ -50,11 +50,15 @@ public class Repository {
     }
 
     public void updateBaseURL() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
-        String host = SP.getString("server_ip","");
-        String port = SP.getString("port", "");
-        String url  = ("http://"+host+(port.isEmpty() ? "":(":"+port)));
-        boolean isChanged = ServiceGenerator.setBaseUrl(url);
+        boolean isChanged = false;
+
+        if (webService!=null) {
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+            String host = SP.getString("server_ip","localhost");
+            String port = SP.getString("port", "");
+            String url  = ("http://"+host+(port.isEmpty() ? "":(":"+port)));
+            isChanged = ServiceGenerator.setBaseUrl(url);
+        }
 
         if (webService==null || isChanged) webService = new WebService();
     }

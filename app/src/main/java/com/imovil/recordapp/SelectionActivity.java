@@ -34,7 +34,7 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_host);
+        setContentView(R.layout.activity_selection);
 
         model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
 
