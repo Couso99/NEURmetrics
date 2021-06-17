@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.app.Fragment;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,8 @@ public class ScoringFragment extends Fragment {
     private static final String ARG_IS_TRIAL_SCORED = "isTrialScored";
 
     Activity activity;
+
+    TrialViewModel model;
 
     File file = null, outputFile=null;
 
@@ -66,14 +70,10 @@ public class ScoringFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            test = (Test) getArguments().getSerializable(ARG_TEST);
-            isTrialScored = (boolean) getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
-            maxScore = test.getMaxScore();
-            scoreWeights = test.getScoreWeights();
-            if (scoreWeights != null)
-                isScoreWeights = true;
-        }
+
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
+
     }
 
     @Override
@@ -81,6 +81,15 @@ public class ScoringFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scoring, container, false);
+
+        //if (getArguments() != null) {
+        test = model.getTest();//(Test) getArguments().getSerializable(ARG_TEST);
+        isTrialScored = model.isUserTrial();//(boolean) getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
+        maxScore = test.getMaxScore();
+        scoreWeights = test.getScoreWeights();
+        if (scoreWeights != null)
+            isScoreWeights = true;
+        //}
 
         activity = getActivity();
 
@@ -107,7 +116,7 @@ public class ScoringFragment extends Fragment {
             }
 
             test.setExpandedScore(expandedScore);
-            ((TrialInterface) activity).nextTest();
+            model.nextTest();
         });
 
         LinearLayout linearLayout = view.findViewById(R.id.linearLayoutCheckboxes);
@@ -141,26 +150,6 @@ public class ScoringFragment extends Fragment {
                 linearLayout.addView(btnTag);
             }
         }
-
-        /*else if (maxScore==0) {
-            if (scoreOptions != null) {
-                for (int i=0;i<scoreOptions.size();i++) {
-                    CheckBox btnTag = new CheckBox(activity);
-                    btnTag.setText(scoreOptions.get(i));
-                    btnTag.setLayoutParams(new LinearLayout.LayoutParams
-                            (LinearLayout.LayoutParams.WRAP_CONTENT,
-                                    LinearLayout.LayoutParams.MATCH_PARENT));
-                    btnTag.setTextSize(32);
-                    checkBoxList.add(btnTag);
-                    linearLayout.addView(btnTag);
-                }
-            } else {
-                TextView textView = new TextView(activity);
-                textView.setText("No hay puntuación para este test");
-                textView.setTextSize(32);
-                linearLayout.addView(textView);
-            }
-        }*/
 
         else if (maxScore==-1) {
             if (scoreOptions != null) {
@@ -205,14 +194,14 @@ public class ScoringFragment extends Fragment {
 
         if(test.getParametersNumber()!=0 && test.getParametersType().get(0).equals("filename") && (fname = test.getParameters().get(0)) != null) {
             isFilename = true;
-            file = new File(((TrialInterface)activity).getFilePath(fname));
+            file = new File(model.getFilePath(fname));
             if (!file.exists())
             isDownloadFile = true;
         }
 
         if(isTrialScored && (outputfname = test.getOutputFilename()) != null) {
             isOutputFilename = true;
-            outputFile = new File(((TrialInterface)activity).getFilePath(outputfname));
+            outputFile = new File(model.getFilePath(outputfname));
             if (!outputFile.exists()) isDownloadOutputFile = true;
         }
 
@@ -254,13 +243,13 @@ public class ScoringFragment extends Fragment {
                     checkBoxList.get(0).setChecked(true);
             case 1:
                 //imageView = new ImageView(activity);
-                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getOutputFilename()))));
+                imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
                 //imageView.setLayoutParams(layoutParams);
                 break;
             case 3:
                 //imageView = new PlayableImageView(activity, null, test.getFilename(), test.getOutputFilename());
                 //imageView.setLayoutParams(layoutParams);
-                imageView.setImageURI(Uri.fromFile(new File(((TrialInterface)activity).getFilePath(test.getParameters().get(0)))));
+                imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
                 ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
                 break;
         }

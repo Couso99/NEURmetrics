@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import android.widget.ImageView;
 
 import java.io.File;
 
-public class ImageTestFragment extends Fragment implements View.OnClickListener, RecorderObserver{
+public class ImageTestFragment extends Fragment implements View.OnClickListener {
     Activity activity;
+
+    TrialViewModel model;
 
     private Test test;
     private TrialInfo trialInfo;
@@ -44,6 +47,9 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
         //if (getArguments() != null) {
             //mParam1 = getArguments().getString(ARG_PARAM1);
             //mParam2 = getArguments().getString(ARG_PARAM2);
@@ -62,12 +68,14 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
 
         activity = getActivity();
 
-        if (getArguments() != null) {
-            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
-            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
+        model.getIsRecording().observe(requireActivity(), this::onIsRecordingChanged);
+
+        //if (getArguments() != null) {
+            trialInfo = model.getTrial().getTrialInfo();//(TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
+            test = model.getTest();//(Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
             if (test.getParameters().get(0) != null) {
                 String fname = test.getParameters().get(0);
-                File file = new File(((TrialInterface)activity).getFilePath(fname));
+                File file = new File(model.getFilePath(fname));
                 if (file.exists()) {
                     imageView.setImageURI(Uri.fromFile(file));
                     imageView.setAdjustViewBounds(true);
@@ -95,11 +103,11 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
                     thread.start();
                 }
             }
-        }
+       // }
 
 
         outputFilename = test.getName()+'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+"_audio.3gp";
-        fileName = ((TrialInterface)activity).getFilePath(outputFilename);
+        fileName = model.getFilePath(outputFilename);
 
         recordButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
@@ -112,28 +120,27 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener,
         int id = v.getId();
         switch (id) {
             case R.id.recordButton:
-                if (isRecording) ((TrialInterface) activity).stopRecording();
-                else ((TrialInterface) activity).startRecording(fileName, recording_time_ms);
+                if (isRecording) model.stopRecording();
+                else model.startRecording(fileName, recording_time_ms);
                 break;
             case R.id.finishedButton:
-                ((TrialInterface) activity).uploadFile(fileName, "audio/*");
-                ((TrialInterface) activity).nextTest();
+                model.uploadFile(fileName, "audio/*");
+                model.nextTest();
                 break;
         }
     }
 
-    @Override
-    public void onIsRecordingChanged(int isRecording) {
-        if (isRecording==0) {
-            recordButton.setBackgroundColor(0x303030);
-            recordButton.setText("Pulse para grabar de nuevo");
-            this.isRecording = false;
-        }
-        else {
+    public void onIsRecordingChanged(boolean isRecording) {
+        if (isRecording) {
             recordButton.setBackgroundColor(Color.RED);
             test.setOutputFilename(outputFilename);
             recordButton.setText("Grabando");
             this.isRecording = true;
+        }
+        else {
+            recordButton.setBackgroundColor(0x303030);
+            recordButton.setText("Pulse para grabar de nuevo");
+            this.isRecording = false;
         }
     }
 }

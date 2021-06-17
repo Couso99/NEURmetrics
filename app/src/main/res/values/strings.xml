@@ -21,7 +21,7 @@
 
     <!-- Activities Titles -->
     <string name="title_activity_explorer_menu">Explorador</string>
-    <string name="title_activity_select_user">Seleccionar usuario</string>
+    <string name="title_activity_select_user">Seleccionar sujeto</string>
     <string name="title_activity_select_trial">Seleccionar prueba</string>
 
     <!-- Preference Titles -->

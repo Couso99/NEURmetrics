@@ -2,4 +2,61 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_trial_main" />
+    android:id="@+id/nav_trial_main"
+    app:startDestination="@id/blankFragment">
+    <fragment
+        android:id="@+id/scoringFragment"
+        android:name="com.imovil.recordapp.ScoringFragment"
+        android:label="fragment_scoring"
+        tools:layout="@layout/fragment_scoring" >
+        <action
+            android:id="@+id/action_scoringFragment_to_resultsFragment"
+            app:destination="@id/resultsFragment" />
+        <action
+            android:id="@+id/action_scoringFragment_self"
+            app:destination="@id/scoringFragment" />
+        <action
+            android:id="@+id/action_scoringFragment_to_imageTestFragment"
+            app:destination="@id/imageTestFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="com.imovil.recordapp.ResultsFragment"
+        android:label="ResultsFragment" />
+    <fragment
+        android:id="@+id/imageTestFragment"
+        android:name="com.imovil.recordapp.ImageTestFragment"
+        android:label="fragment_image_test"
+        tools:layout="@layout/fragment_image_test" >
+        <action
+            android:id="@+id/action_imageTestFragment_to_scoringFragment"
+            app:destination="@id/scoringFragment" />
+        <action
+            android:id="@+id/action_imageTestFragment_self"
+            app:destination="@id/imageTestFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="com.imovil.recordapp.BlankFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_blank" >
+        <action
+            android:id="@+id/action_blankFragment_to_imageTestFragment"
+            app:destination="@id/imageTestFragment" />
+        <action
+            android:id="@+id/action_blankFragment_to_scoringFragment"
+            app:destination="@id/scoringFragment" />
+        <action
+            android:id="@+id/action_blankFragment_to_drawingFragment"
+            app:destination="@id/drawingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/drawingFragment"
+        android:name="com.imovil.recordapp.DrawingFragment"
+        android:label="fragment_drawing"
+        tools:layout="@layout/fragment_drawing" >
+        <action
+            android:id="@+id/action_drawingFragment_to_scoringFragment"
+            app:destination="@id/scoringFragment" />
+    </fragment>
+</navigation>

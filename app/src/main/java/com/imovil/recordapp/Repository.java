@@ -35,13 +35,12 @@ public class Repository {
     private static WebService webService;
     private Context context;
 
-    private boolean isOutputJsonUploaded = false;
-
     private LiveData<Users> users;
     private LiveData<Trials> userTrials;
     private LiveData<Trials> newTrials;
     private static Trial trial;
     private MutableLiveData<Boolean> isTrialDownloaded = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isDataUploaded = new MutableLiveData<>();
 
     public Repository(Context context) {
         this.context = context;
@@ -61,10 +60,6 @@ public class Repository {
         }
 
         if (webService==null || isChanged) webService = new WebService();
-    }
-
-    public boolean isOutputJsonUploaded() {
-        return isOutputJsonUploaded;
     }
 
     public String getFilePath(String fname) {
@@ -130,7 +125,7 @@ public class Repository {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.v("Upload", "success");
                 if (server_file_path=="json")
-                    isOutputJsonUploaded = true;
+                    isDataUploaded.setValue(true);
             }
 
             @Override
@@ -164,7 +159,7 @@ public class Repository {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.v("Upload", "success");
-                isOutputJsonUploaded = true;
+                isDataUploaded.setValue(true);
             }
 
             @Override
@@ -198,7 +193,7 @@ public class Repository {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.v("Upload", "success");
-                isOutputJsonUploaded = true;
+                isDataUploaded.setValue(true);
             }
 
             @Override
@@ -293,22 +288,6 @@ public class Repository {
         return newTrials;
     }
 
-    /*public void updateUserTrial(String userID, long startTime) {
-        userTrial = webService.getUserTrial(userID, startTime);
-    }
-
-    public LiveData<Trial> getUserTrial() {
-        return userTrial;
-    }
-
-    public void updateNewTrial(String trialID) {
-        newTrial = webService.getNewTrial(trialID);
-    }
-
-    public LiveData<Trial> getNewTrial() {
-        return newTrial;
-    }*/
-
     public void downloadUserTrial(String userID, long startTime) {
         Call<JsonElement> call = webService.downloadUserTrial(userID, startTime);
 
@@ -376,4 +355,12 @@ public class Repository {
         return webService.isReachable(host);
     }
 
+
+    public LiveData<Boolean> isDataUploaded() {
+        return isDataUploaded;
+    }
+
+    public void setIsDataUploaded(MutableLiveData<Boolean> isDataUploaded) {
+        this.isDataUploaded = isDataUploaded;
+    }
 }

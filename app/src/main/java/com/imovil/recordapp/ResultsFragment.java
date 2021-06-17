@@ -3,7 +3,9 @@ package com.imovil.recordapp;
 import android.app.Activity;
 import android.os.Bundle;
 
-import android.app.Fragment;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,9 @@ public class ResultsFragment extends Fragment {
     private static final String ARG_TESTS = "tests";
 
     Activity activity;
+
+    TrialViewModel model;
+
     TestsListAdapter testsListAdapter;
 
     private RecyclerView recyclerView;
@@ -45,9 +50,12 @@ public class ResultsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            trial = (Trial) getArguments().getSerializable(ARG_TESTS);
-        }
+
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
+        //if (getArguments() != null) {
+            trial = model.getTrial();//(Trial) getArguments().getSerializable(ARG_TESTS);
+        //}
     }
 
     @Override
@@ -66,7 +74,11 @@ public class ResultsFragment extends Fragment {
         testsListAdapter.setTests(trial);
 
         nextButton = view.findViewById(R.id.finishedButton);
-        nextButton.setOnClickListener(v -> ((TrialInterface) activity).endTrial());
+        model.getIsDataUploaded().observe(requireActivity(), isDataUploaded -> {
+            nextButton.setOnClickListener(v -> {
+                if (isDataUploaded) activity.finish();
+            });
+        });
 
         TrialInfo trialInfo = trial.getTrialInfo();
 

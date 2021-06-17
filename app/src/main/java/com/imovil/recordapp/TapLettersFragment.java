@@ -8,7 +8,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import java.util.List;
 
 public class TapLettersFragment extends Fragment {
     private Activity activity;
+
+    TrialViewModel model;
 
     private Test test;
     private TrialInfo trialInfo;
@@ -48,6 +51,9 @@ public class TapLettersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
         }
@@ -88,7 +94,7 @@ public class TapLettersFragment extends Fragment {
         }
 
         outputFilename = test.getName()+'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+ "_screenshot.jpeg";
-        fileName = ((TrialInterface) activity).getFilePath(outputFilename);
+        fileName = model.getFilePath(outputFilename);
 
         finishedButton = view.findViewById(R.id.finishedButton);
         finishedButton.setOnClickListener(new View.OnClickListener() {
@@ -108,11 +114,11 @@ public class TapLettersFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ((TrialInterface) activity).uploadFile(fileName, "image/*");
+                model.uploadFile(fileName, "image/*");
 
                 test.setScore(score);
                 test.setOutputFilename(outputFilename);
-                ((TrialInterface) activity).nextTest();
+                model.nextTest();
             }
         });
 

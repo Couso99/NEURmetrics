@@ -6,7 +6,8 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 
-import android.app.Fragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import java.io.FileOutputStream;
 
 public class DrawingFragment extends Fragment {
     Activity activity;
+
+    TrialViewModel model;
 
     private Test test;
     private TrialInfo trialInfo;
@@ -44,10 +47,16 @@ public class DrawingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+
+        model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
+
+        /*if (getArguments() != null) {
             test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
             trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
-        }
+        }*/
+
+        test = model.getTest();
+        trialInfo = model.getTrial().getTrialInfo();
     }
 
     @Override
@@ -67,7 +76,7 @@ public class DrawingFragment extends Fragment {
 
         if (test.getParametersNumber() != 0) {
             String fname = test.getParameters().get(0);
-                File file = new File(((TrialInterface)activity).getFilePath(fname));
+                File file = new File(model.getFilePath(fname));
                 if (file.exists()) {
                     drawingArea.setImageURI(Uri.fromFile(file));
                     drawingArea.setAdjustViewBounds(true);
@@ -102,7 +111,7 @@ public class DrawingFragment extends Fragment {
             //commentTextView.setText(title);
 
         outputFilename = test.getName() +'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+ "_draw.jpeg";
-        fileName = ((TrialInterface) activity).getFilePath(outputFilename);
+        fileName = model.getFilePath(outputFilename);
         //.getExternalCacheDir().getAbsolutePath();
 
         finishedButton = view.findViewById(R.id.finishedButton);
@@ -116,9 +125,9 @@ public class DrawingFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            ((TrialInterface) activity).uploadFile(fileName, "image/*");
+            model.uploadFile(fileName, "image/*");
             test.setOutputFilename(outputFilename);
-            ((TrialInterface) activity).nextTest();
+            model.nextTest();
         });
 
         return view;

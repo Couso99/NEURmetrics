@@ -1,22 +1,13 @@
 package com.imovil.recordapp;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import android.app.Fragment;
-
-import java.util.List;
-
-public class TrialActivity extends AppCompatActivity implements TrialInterface {
+public class TrialActivity extends AppCompatActivity {
     private final static String TAG = "TestActivity";
 
     public final static String ARG_TRIAL = "trial";
@@ -24,16 +15,9 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
     public static final String ARG_TRIAL_INFO = "trialInfo";
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
-    Repository repository;
-
     TrialViewModel model;
 
-    Trial trial;
     int isLastTest = 0, isTestScored=0;
-
-    //todo mover recorder a ImageTestFragment y a cualquiera que lo utilice??
-    private RecorderPlayer recorder;
-    private RecorderObserver observer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +25,43 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
 
         setContentView(R.layout.activity_trial);
 
-        recorder = new RecorderPlayer();
-
-        repository = new Repository(this);
-
         model = new ViewModelProvider(this).get(TrialViewModel.class);
 
         Bundle b = getIntent().getExtras();
 
         model.setTrial((Trial) b.getSerializable(ARG_TRIAL));
-
-        trial = model.getTrial();
-
         model.initTrial();
+
+        model.getIsLaunchScoring().observe(this, isNextFragment -> {
+            if (isNextFragment) {
+                scoreTest();
+                model.setIsLaunchScoring(false);
+            }
+        });
+
+        model.getIsLaunchNextTest().observe(this, isLaunchTest -> {
+            if (isLaunchTest) {
+                nextTest();
+                model.setIsLaunchNextTest(false);
+            }
+        });
+
+        model.getIsLaunchTrialResults().observe(this, isLaunchTrialResults -> {
+            if (isLaunchTrialResults) {
+                trialResults();
+                model.setIsLaunchTrialResults(false);
+            }
+        });
 
         update_hdr();
 
-        //startDownloadingTests(trial);
-        nextTest();
 
-        //NavController navController = Navigation.findNavController(this, R.id.headers_host_fragment);
-        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-       // });
+        initFragmentNavigation();
 
+        model.nextTest();
     }
+
+
 
     @Override
     protected void onResume() {
@@ -83,47 +79,21 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-    private void startPlaying(String fileName) {
-        recorder.startPlaying(fileName);
+    private void initFragmentNavigation() {
+        if (model.isUserTrial()) {
+            try {
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_blankFragment_to_scoringFragment);
+            } catch (java.lang.IllegalArgumentException ignored) {}
+        }
+        else  {
+            try {
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_blankFragment_to_drawingFragment);
+            } catch (java.lang.IllegalArgumentException ignored) {}
+        }
+
     }
 
-    private void stopPlaying() {
-        recorder.stopPlaying();
-    }
-
-    public void startRecording(String fileName, int recording_time_ms) {
-        recorder.startRecording(fileName, recording_time_ms);
-        observer.onIsRecordingChanged(1);
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while(true) {
-                        sleep(200);
-                        if (!recorder.isRecording()) {
-                            TrialActivity.this.runOnUiThread(() -> observer.onIsRecordingChanged(0));
-                            break;
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        thread.start();
-    }
-
-    public void stopRecording() {
-        recorder.stopRecording();
-        observer.onIsRecordingChanged(0);
-    }
-
-    public void uploadFile(String fileName, String mediaType) {
-        repository.uploadGeneral(fileName, mediaType);
-    }
-
-    private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
+   /* private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
         Fragment test_fragment;
 
         switch (t.getTestType()) {//testType) {
@@ -143,103 +113,33 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
         }
 
         return test_fragment;
-    }
+    }*/
 
-    @Override
-    public String getFilePath(String fname) {
-        return repository.getFilePath(fname);
-    }
-
-    @Override
     public void nextTest() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        if (model.getTest()!=null && model.isScoreDuringTests() && isTestScored==0) {
-            scoreTest();
-            isTestScored = 1;
-        }
-        else if (!model.isUserTrial()){
-            stopPlaying();
-
-            isLastTest = model.nextTest();
-
-            if (isLastTest == 0) {
-                Fragment test_fragment = nextTestNewFragment(model.getTest(), model.getTrial().getTrialInfo());
-
-                (model.getTest()).setStartTestTimeOffset(TrialTimer.getElapsedTime());
-                //model.setTest(model.getTest());
-
-                fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
-                fragmentTransaction.commit();
-
-                if (model.isScoreDuringTests()) {
-                    isTestScored = 0;
-                }
-            }
-        }
-        else {
-            scoreTest();
-        }
-        if (isLastTest != 0){
-            model.updateTrialInfo();
-
-            if(model.isUserTrial()) {repository.updateUserTrial(trial);}
-            else {repository.uploadUserTrial(trial);}
-
-            if (model.isScoreDuringTests() || model.isUserTrial()) testsResult();
+        if (!model.isUserTrial()) {
+            try {
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_imageTestFragment);
+            } catch (java.lang.IllegalArgumentException ignored) {}
         }
     }
 
-    @Override
     public void scoreTest() {
-        if(model.isUserTrial()) {
-            stopPlaying();
-            isLastTest = model.nextTest();
-        } else {
-            (model.getTest()).setStopTestTimeOffset(TrialTimer.getElapsedTime());
+        if (model.isUserTrial()) {
+            try {
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_self);
+            } catch (java.lang.IllegalArgumentException ignored) {}
         }
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment test_fragment = ScoringFragment.newInstance(model.getTest(), model.isUserTrial());
-
-        fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
-        fragmentTransaction.commit();
+        else if (model.isScoreDuringTests()) {
+            try {
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_drawingFragment_to_scoringFragment);
+            } catch (java.lang.IllegalArgumentException ignored) {}
+        }
     }
 
-    @Override
-    public void testsResult() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment test_fragment = ResultsFragment.newInstance(trial);
-
-        fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void endTrial() {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (true) {
-                        if (repository.isOutputJsonUploaded()) {
-                            finish();
-                            break;
-                        }
-                        sleep(200);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        thread.start();
+    public void trialResults() {
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_resultsFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
     public void update_hdr() {

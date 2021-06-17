@@ -1,7 +1,6 @@
 package com.imovil.recordapp;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,24 +10,29 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 public class TrialViewModel extends AndroidViewModel {
-    Repository repository;
+    private Repository repository;
 
-    Trial trial;
-    Test test;
+    private Trial trial;
+    private Test test;
 
-    int testIndex;
-    int testSubIndex;
+    private int testIndex, testSubIndex;
 
-    boolean isUserTrial;
-    boolean isScoreDuringTests = true;
+    private boolean isUserTrial, isScoreDuringTests = true, isTestScored = true;
 
     private MutableLiveData<Boolean> isUpdateHeaders = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLaunchScoring = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLaunchNextTest = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLaunchTrialResults = new MutableLiveData<>();
+    private LiveData<Boolean> isRecording;
+    private LiveData<Boolean> isDataUploaded;
 
+    private final RecorderPlayer recorder = new RecorderPlayer();
 
     public TrialViewModel(@NonNull Application application) {
         super(application);
         repository = new Repository(application.getApplicationContext());
-
+        isDataUploaded = repository.isDataUploaded();
+        isRecording = recorder.isRecording();
     }
 
     public Trial getTrial() {
@@ -37,6 +41,7 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setTrial(Trial trial) {
         this.trial = trial;
+        //navigateTests(0,0);
     }
 
     public boolean isUserTrial() {
@@ -55,6 +60,14 @@ public class TrialViewModel extends AndroidViewModel {
         isScoreDuringTests = scoreDuringTests;
     }
 
+    public boolean isTestScored() {
+        return isTestScored;
+    }
+
+    public void setTestScored(boolean testScored) {
+        isTestScored = testScored;
+    }
+
     public LiveData<Boolean> getIsUpdateHeaders() {
         return isUpdateHeaders;
     }
@@ -63,21 +76,55 @@ public class TrialViewModel extends AndroidViewModel {
         this.isUpdateHeaders.setValue(isUpdateHeaders);
     }
 
+    public LiveData<Boolean> getIsRecording() {
+        return isRecording;
+    }
+
+    public LiveData<Boolean> getIsDataUploaded() {
+        return isDataUploaded;
+    }
+
+    public LiveData<Boolean> getIsLaunchScoring() {
+        return isLaunchScoring;
+    }
+
+    public void setIsLaunchScoring(boolean isLaunchScoring) {
+        this.isLaunchScoring.setValue(isLaunchScoring);
+    }
+
+    public LiveData<Boolean> getIsLaunchNextTest() {
+        return isLaunchNextTest;
+    }
+
+    public void setIsLaunchNextTest(boolean isLaunchNextTest) {
+        this.isLaunchNextTest.setValue(isLaunchNextTest);
+    }
+
+    public LiveData<Boolean> getIsLaunchTrialResults() {
+        return isLaunchTrialResults;
+    }
+
+    public void setIsLaunchTrialResults(boolean isLaunchTrialResults) {
+        this.isLaunchTrialResults.setValue(isLaunchTrialResults);
+        if (isLaunchTrialResults) postTrial();
+    }
+
     public Test getTest() {
         return test;
     }
 
     public void setTest(Test test) {
         this.test = test;
+        this.test.setStartTestTimeOffset(TrialTimer.getElapsedTime());
         setIsUpdateHeaders(true);
-        Log.d("VIEWMODELOS","CAMBIOVALORVARIABLE");
+        isTestScored = false;
     }
 
     public void initTrial() {
 
         isUserTrial = trial.getTrialInfo().isTrialScored();
 
-        if (isUserTrial) {
+        if (!isUserTrial) {
             TrialTimer.init_timer();
             trial.getTrialInfo().setStartTime(TrialTimer.getStartTime());
         }
@@ -114,13 +161,10 @@ public class TrialViewModel extends AndroidViewModel {
             trial.getTrialInfo().setTrialScored(true);
     }
 
-    public void endTrial() {
+    public void postTrial() {
         updateTrialInfo();
         if(isUserTrial) {repository.updateUserTrial(trial);}
         else {repository.uploadUserTrial(trial);}
-        //repository.writeJsonToDisk(trial, fname);
-        //repository.uploadJson(repository.getFilePath(fname));
-
     }
 
     private void navigateTests(int index, int subindex) {
@@ -128,45 +172,56 @@ public class TrialViewModel extends AndroidViewModel {
         testIndex = index;
 
         if (test.isContainsTests()) {
-            this.test = test.getTests().get(subindex);
-            setIsUpdateHeaders(true);
+            setTest(test.getTests().get(subindex));
             testSubIndex = subindex;
             return;
         }
-        this.test = test;
-        setIsUpdateHeaders(true);
+        setTest(test);
         testSubIndex = -1;
     }
 
     public int nextTest() {
 
-        if (testIndex==0) {
-            if (test==null) {
-                navigateTests(0,0);
-                return 0;
+        stopPlaying();
+
+        if (test==null) {
+            navigateTests(0,0);
+            if (isUserTrial) {
+                setIsLaunchScoring(true);
+                isTestScored = true;
             }
+            else setIsLaunchNextTest(true);
+            return 0;
         }
 
-        if (testSubIndex == -1) {
-            if (testIndex >= trial.getTests().size()-1) {
-                //launchResults();
-                return -1;
-            }
-            navigateTests(testIndex+1,0);
-        }
-        else {
-            if (testSubIndex >= test.getTests().size()-1) {
-                if (testIndex >= trial.getTests().size()-1) {
-                    //launchResults();
+        if (isTestScored || !isScoreDuringTests) {
+            if (testSubIndex == -1) {
+                if (testIndex >= trial.getTests().size() - 1) {
+                    setIsLaunchTrialResults(true);
                     return -1;
                 }
-                navigateTests(testIndex+1,0);
+                navigateTests(testIndex + 1, 0);
+            } else {
+                if (testSubIndex >= test.getTests().size() - 1) {
+                    if (testIndex >= trial.getTests().size() - 1) {
+                        setIsLaunchTrialResults(true);
+                        return -1;
+                    }
+                    navigateTests(testIndex + 1, 0);
+                } else {
+                    navigateTests(testIndex, testSubIndex + 1);
+                }
             }
-            else {
-                navigateTests(testIndex,testSubIndex+1);
-            }
+
+            setIsLaunchNextTest(true);
+        }
+        else {
+            setIsLaunchScoring(true);
+            test.setStopTestTimeOffset(TrialTimer.getElapsedTime());
+            isTestScored = true;
         }
         return 0;
+
     }
 
     private void startDownloadingTests(Trial trial) {
@@ -200,5 +255,29 @@ public class TrialViewModel extends AndroidViewModel {
                             repository.downloadUserMadeFile(child_test.getOutputFilename());
                 }
         }
+    }
+
+    public void uploadFile(String fileName, String mediaType) {
+        repository.uploadGeneral(fileName, mediaType);
+    }
+
+    public String getFilePath(String fileName) {
+        return repository.getFilePath(fileName);
+    }
+
+    public void startRecording(String fileName, int recording_time_ms) {
+        recorder.startRecording(fileName, recording_time_ms);
+    }
+
+    public void stopRecording() {
+        recorder.stopRecording();
+    }
+
+    public void startPlaying(String fileName) {
+        recorder.startPlaying(fileName);
+    }
+
+    public void stopPlaying() {
+        recorder.stopPlaying();
     }
 }
