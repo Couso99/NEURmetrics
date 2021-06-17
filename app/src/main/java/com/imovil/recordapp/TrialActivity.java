@@ -18,7 +18,6 @@ import java.util.List;
 
 public class TrialActivity extends AppCompatActivity implements TrialInterface {
     private final static String TAG = "TestActivity";
-    private final String outputJsonFname = "nombre_aqui.json";
 
     public final static String ARG_TRIAL = "trial";
     public static final String ARG_TEST = "test";
@@ -29,20 +28,12 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
 
     TrialViewModel model;
 
-    Test test, test_piece;
-    List<Test> tests_list, test_pieces_list;
     Trial trial;
-    TrialInfo trialInfo;
-    int test_index=0, isLastTest = 0, isTestScored=0;
-    int test_pieces_index=0;
-    boolean isScoreDuringTests=true;
-    boolean isRunTestPiece = false;
+    int isLastTest = 0, isTestScored=0;
 
     //todo mover recorder a ImageTestFragment y a cualquiera que lo utilice??
     private RecorderPlayer recorder;
     private RecorderObserver observer;
-
-    //private TrialTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +47,11 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
 
         model = new ViewModelProvider(this).get(TrialViewModel.class);
 
-        //model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
-
-        //model.getNewTrials().observe();
-
         Bundle b = getIntent().getExtras();
 
         model.setTrial((Trial) b.getSerializable(ARG_TRIAL));
 
         trial = model.getTrial();
-        tests_list = trial.getTests();
-
-        trialInfo = trial.getTrialInfo();
 
         model.initTrial();
 
@@ -97,31 +81,6 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
                         // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
-
-    private int updateTest() {
-        if (isRunTestPiece) {
-            if (test_pieces_index < test_pieces_list.size()) {
-                test_piece = test_pieces_list.get(test_pieces_index);
-                test_pieces_index++;
-                return 0;
-            }
-        }
-        isRunTestPiece = false;
-
-        if (test_index < tests_list.size()) {
-            test = tests_list.get(test_index);
-            test_index++;
-
-            if (test.isContainsTests()) {
-                test_pieces_list = test.getTests();
-                isRunTestPiece = true;
-                test_pieces_index = 0;
-                return updateTest();
-            }
-            return 0;
-        }
-        return -1;
     }
 
     private void startPlaying(String fileName) {
@@ -164,34 +123,6 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
         repository.uploadGeneral(fileName, mediaType);
     }
 
-    private void prepareJson(Trial trial) {
-        int totalScore=0, totalMaxScore=0;
-        int testScore, testMaxScore;
-        List<Test> test_p;
-
-        for (Test test : trial.getTests()) {
-            if ((test_p = test.getTests())!= null){
-                testScore = 0;
-                testMaxScore=0;
-
-                for (Test test_piece : test_p){
-                    testScore += test_piece.getScore();
-                    if (test_piece.getMaxScore()>0) testMaxScore += test_piece.getMaxScore();
-                }
-                test.setScore(testScore);
-                test.setMaxScore(testMaxScore);
-            }
-
-            totalScore += test.getScore();
-            if (test.getMaxScore()>0) totalMaxScore += test.getMaxScore();
-        }
-
-        trialInfo.setTotalScore(totalScore);
-        trialInfo.setTotalMaxScore(totalMaxScore);
-        if (isScoreDuringTests)
-                trialInfo.setTrialScored(true);
-    }
-
     private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
         Fragment test_fragment;
 
@@ -224,25 +155,25 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (test!=null && isScoreDuringTests && isTestScored==0) {
+        if (model.getTest()!=null && model.isScoreDuringTests() && isTestScored==0) {
             scoreTest();
             isTestScored = 1;
         }
         else if (!model.isUserTrial()){
             stopPlaying();
 
-            isLastTest = updateTest();
+            isLastTest = model.nextTest();
 
             if (isLastTest == 0) {
-                Fragment test_fragment = nextTestNewFragment(isRunTestPiece ? test_piece : test, trialInfo);
-                update_headers(isRunTestPiece ? test_piece : test);
-                (isRunTestPiece ? test_piece : test).setStartTestTimeOffset(TrialTimer.getElapsedTime());
-                model.setTest(isRunTestPiece ? test_piece : test);
+                Fragment test_fragment = nextTestNewFragment(model.getTest(), model.getTrial().getTrialInfo());
+
+                (model.getTest()).setStartTestTimeOffset(TrialTimer.getElapsedTime());
+                //model.setTest(model.getTest());
 
                 fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
                 fragmentTransaction.commit();
 
-                if (isScoreDuringTests) {
+                if (model.isScoreDuringTests()) {
                     isTestScored = 0;
                 }
             }
@@ -251,15 +182,12 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
             scoreTest();
         }
         if (isLastTest != 0){
-            //String fname = outputJsonFname;
-            prepareJson(trial);
-
+            model.updateTrialInfo();
 
             if(model.isUserTrial()) {repository.updateUserTrial(trial);}
             else {repository.uploadUserTrial(trial);}
-            //repository.writeJsonToDisk(trial, fname);
-            //repository.uploadJson(repository.getFilePath(fname));
-            if (isScoreDuringTests || model.isUserTrial()) testsResult();
+
+            if (model.isScoreDuringTests() || model.isUserTrial()) testsResult();
         }
     }
 
@@ -267,16 +195,15 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
     public void scoreTest() {
         if(model.isUserTrial()) {
             stopPlaying();
-            isLastTest = updateTest();
+            isLastTest = model.nextTest();
         } else {
-            (isRunTestPiece ? test_piece : test).setStopTestTimeOffset(TrialTimer.getElapsedTime());
+            (model.getTest()).setStopTestTimeOffset(TrialTimer.getElapsedTime());
         }
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Fragment test_fragment = ScoringFragment.newInstance(isRunTestPiece ? test_piece : test, model.isUserTrial());
-        update_headers(isRunTestPiece ? test_piece : test);
+        Fragment test_fragment = ScoringFragment.newInstance(model.getTest(), model.isUserTrial());
 
         fragmentTransaction.replace(R.id.trial_host_fragment, test_fragment);
         fragmentTransaction.commit();
@@ -313,21 +240,6 @@ public class TrialActivity extends AppCompatActivity implements TrialInterface {
         };
 
         thread.start();
-    }
-
-    public void update_headers(Test test) {
-        /*FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        Fragment headers_fragment = HeadersFragment.newInstance(test.getTitle(), test.getH1(), test.getH2());
-
-        fragmentTransaction.replace(R.id.headers_host_fragment, headers_fragment);
-        fragmentTransaction.commit();*/
-
-        /*getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.headers_host_fragment, HeadersFragment.class, null)
-                .commit();*/
     }
 
     public void update_hdr() {

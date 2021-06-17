@@ -16,7 +16,11 @@ public class TrialViewModel extends AndroidViewModel {
     Trial trial;
     Test test;
 
+    int testIndex;
+    int testSubIndex;
+
     boolean isUserTrial;
+    boolean isScoreDuringTests = true;
 
     private MutableLiveData<Boolean> isUpdateHeaders = new MutableLiveData<>();
 
@@ -41,6 +45,14 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setUserTrial(boolean userTrial) {
         isUserTrial = userTrial;
+    }
+
+    public boolean isScoreDuringTests() {
+        return isScoreDuringTests;
+    }
+
+    public void setScoreDuringTests(boolean scoreDuringTests) {
+        isScoreDuringTests = scoreDuringTests;
     }
 
     public LiveData<Boolean> getIsUpdateHeaders() {
@@ -71,9 +83,10 @@ public class TrialViewModel extends AndroidViewModel {
         }
 
         startDownloadingTests(trial);
+
     }
 
-    private void updateTrialInfo() {
+    public void updateTrialInfo() {
         int totalScore=0, totalMaxScore=0;
         int testScore, testMaxScore;
         List<Test> test_p;
@@ -97,7 +110,7 @@ public class TrialViewModel extends AndroidViewModel {
 
         trial.getTrialInfo().setTotalScore(totalScore);
         trial.getTrialInfo().setTotalMaxScore(totalMaxScore);
-        if (isUserTrial)
+        if (isScoreDuringTests)
             trial.getTrialInfo().setTrialScored(true);
     }
 
@@ -107,7 +120,53 @@ public class TrialViewModel extends AndroidViewModel {
         else {repository.uploadUserTrial(trial);}
         //repository.writeJsonToDisk(trial, fname);
         //repository.uploadJson(repository.getFilePath(fname));
-       
+
+    }
+
+    private void navigateTests(int index, int subindex) {
+        Test test = trial.getTests().get(index);
+        testIndex = index;
+
+        if (test.isContainsTests()) {
+            this.test = test.getTests().get(subindex);
+            setIsUpdateHeaders(true);
+            testSubIndex = subindex;
+            return;
+        }
+        this.test = test;
+        setIsUpdateHeaders(true);
+        testSubIndex = -1;
+    }
+
+    public int nextTest() {
+
+        if (testIndex==0) {
+            if (test==null) {
+                navigateTests(0,0);
+                return 0;
+            }
+        }
+
+        if (testSubIndex == -1) {
+            if (testIndex >= trial.getTests().size()-1) {
+                //launchResults();
+                return -1;
+            }
+            navigateTests(testIndex+1,0);
+        }
+        else {
+            if (testSubIndex >= test.getTests().size()-1) {
+                if (testIndex >= trial.getTests().size()-1) {
+                    //launchResults();
+                    return -1;
+                }
+                navigateTests(testIndex+1,0);
+            }
+            else {
+                navigateTests(testIndex,testSubIndex+1);
+            }
+        }
+        return 0;
     }
 
     private void startDownloadingTests(Trial trial) {
