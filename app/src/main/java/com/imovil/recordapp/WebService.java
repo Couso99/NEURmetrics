@@ -81,7 +81,7 @@ public class WebService {//implements RestService{
         return call;
     }
 
-    public Call<JsonElement> downloadJson(String server_file_path) {
+    /*public Call<JsonElement> downloadJson(String server_file_path) {
         Call<JsonElement> call = downloadService.downloadJson(server_file_path);
 
         return call;
@@ -100,7 +100,7 @@ public class WebService {//implements RestService{
     public Call<JsonElement> downloadTrialsListFromUserID(String userID) {
         Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
         return call;
-    }
+    }*/
 
     public Call<JsonElement> downloadTrialFromTrialID(String trialID) {
         Call<JsonElement> call = downloadService.downloadTrialFromTrialID(trialID);
