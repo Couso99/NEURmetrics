@@ -15,7 +15,7 @@ import java.util.List;
 public class UsersListAdapter extends RecyclerView.Adapter <UsersHolder> {
 
     private Users mUsers;
-    UserListItemBinding binding;
+    private UserListItemBinding binding;
 
     public static ClickListener clickListener;
 

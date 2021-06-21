@@ -30,6 +30,7 @@ public class UsersHolder extends RecyclerView.ViewHolder implements View.OnClick
             if (user.getSex()!=null) {
                 String sex = user.getSex();
                 String sexString;
+
                 /*switch (sex) {
                     case "M":
                         sexString = getString(R.string.sexMale);
@@ -43,7 +44,6 @@ public class UsersHolder extends RecyclerView.ViewHolder implements View.OnClick
                     default:
                         sexString = R.string.sexUnknown;
                         break;
-
                 }*/
 
                 binding.genderView.setText(sex);

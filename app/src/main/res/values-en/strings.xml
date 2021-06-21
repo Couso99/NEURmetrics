@@ -17,4 +17,25 @@
     <string name="beginAppButton">Begin</string>
     <string name="made_by">By: Pablo Couso</string>
     <string name="error_no_trial_found">Trial selected was not found</string>
+    <string name="server_settings_header">Server</string>
+    <string name="device_header">Device</string>
+    <string name="server_port_title">Port</string>
+    <string name="device_id_title">Device ID</string>
+    <string name="nameField">Name:</string>
+    <string name="surnameField">Surname:</string>
+    <string name="ageField">Age:</string>
+    <string name="sexField">Sex:</string>
+    <string name="centreField">Centre:</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
+    <string name="action_settings">Settings</string>
+    <string name="SelectUserFragmentLabel">Select user</string>
+    <string name="SelectTrialFragmentLabel">Select trial</string>
+    <string name="SettingsFragmentLabel">Settings</string>
+    <string name="scoreField">Score:</string>
+    <string name="descriptionField">Description:</string>
+    <string name="trialField">Trial:</string>
+    <string name="scoringCommentHint">Comment</string>
+    <string name="next">Next</string>
+    <string name="previous">Back</string>
+    <string name="trialIdField">Realization date:</string>
 </resources>
