@@ -1,6 +1,7 @@
 package com.imovil.recordapp;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -73,6 +74,10 @@ public class ScoringFragment extends Fragment {
 
         model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
 
+        if (getArguments() != null) {
+            test = (Test) getArguments().getSerializable(ARG_TEST);
+            isTrialScored = getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
+        }
 
     }
 
@@ -82,14 +87,12 @@ public class ScoringFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scoring, container, false);
 
-        //if (getArguments() != null) {
-        test = model.getTest();//(Test) getArguments().getSerializable(ARG_TEST);
-        isTrialScored = model.isUserTrial();//(boolean) getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
+        test = model.getTest();
+        isTrialScored = model.isUserTrial();
         maxScore = test.getMaxScore();
         scoreWeights = test.getScoreWeights();
         if (scoreWeights != null)
             isScoreWeights = true;
-        //}
 
         activity = getActivity();
 
@@ -176,7 +179,7 @@ public class ScoringFragment extends Fragment {
 
         relativeLayout = view.findViewById(R.id.relativeLayoutScoring);
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2,-1);
+        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2,-1);
 
         switch (test.getTestType()) {
             case 1:
@@ -186,7 +189,7 @@ public class ScoringFragment extends Fragment {
             case 3:
                 imageView = new PlayableImageView(activity, null);
         }
-        imageView.setLayoutParams(layoutParams);
+        //imageView.setLayoutParams(layoutParams);
 
         relativeLayout.addView(imageView);
         String fname, outputfname;
@@ -236,6 +239,13 @@ public class ScoringFragment extends Fragment {
         //String testID = test.getTestID();
         //int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
         //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,-1);
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        } else {
+            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        }
 
         switch (test.getTestType()) {
             case 2:
@@ -244,6 +254,11 @@ public class ScoringFragment extends Fragment {
             case 1:
                 //imageView = new ImageView(activity);
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
+                imageView.setBackgroundResource(R.drawable.image_border);
+                imageView.setLayoutParams(layoutParams);
+
+                imageView.setAdjustViewBounds(true);
+                //imageView.setLayoutParams();
                 //imageView.setLayoutParams(layoutParams);
                 break;
             case 3:
@@ -251,6 +266,10 @@ public class ScoringFragment extends Fragment {
                 //imageView.setLayoutParams(layoutParams);
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
                 ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
+                imageView.setBackgroundResource(R.drawable.image_border);
+                imageView.setLayoutParams(layoutParams);
+
+                imageView.setAdjustViewBounds(true);
                 break;
         }
         //relativeLayout.addView(imageView);
