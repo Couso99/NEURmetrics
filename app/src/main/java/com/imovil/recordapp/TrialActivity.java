@@ -56,12 +56,23 @@ public class TrialActivity extends AppCompatActivity {
         update_hdr();
 
 
-        initFragmentNavigation();
 
         model.nextTest();
+
+
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        model.previousTest();
+    }
 
     @Override
     protected void onResume() {
@@ -82,64 +93,62 @@ public class TrialActivity extends AppCompatActivity {
     private void initFragmentNavigation() {
         if (model.isUserTrial()) {
             try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_blankFragment_to_scoringFragment);
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.scoringFragment);
             } catch (java.lang.IllegalArgumentException ignored) {}
         }
         else  {
             try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_blankFragment_to_drawingFragment);
+                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(getTestFragment(model.getTest().getTestType()));
             } catch (java.lang.IllegalArgumentException ignored) {}
         }
 
     }
 
-   /* private Fragment nextTestNewFragment(Test t, TrialInfo trialInfo) {
-        Fragment test_fragment;
+    private int getTestFragment(int testType) {
 
-        switch (t.getTestType()) {//testType) {
+        int res = 0;
+
+        switch (model.getTest().getTestType()) {//testType) {
             case 1:
-                test_fragment = DrawingFragment.newInstance(t, trialInfo);
+                res = R.id.drawingFragment;
                 break;
             case 2:
-                test_fragment = TapLettersFragment.newInstance(t, trialInfo);
+                res = R.id.tapLettersFragment;
                 break;
             case 3:
-                test_fragment = ImageTestFragment.newInstance(t, trialInfo);
-                observer = (RecorderObserver) test_fragment;
+                res = R.id.imageTestFragment;
                 break;
             default:
-                test_fragment = ImageTestFragment.newInstance(t, trialInfo);
+                res = R.id.imageTestFragment;
                 break;
         }
 
-        return test_fragment;
-    }*/
+        return res;
+    }
 
     public void nextTest() {
-        if (!model.isUserTrial()) {
+
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(getTestFragment(model.getTest().getTestType()));
+
+        /*if (!model.isUserTrial()) {
             try {
                 Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_imageTestFragment);
             } catch (java.lang.IllegalArgumentException ignored) {}
-        }
+        }*/
     }
 
     public void scoreTest() {
-        if (model.isUserTrial()) {
-            try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_self);
-            } catch (java.lang.IllegalArgumentException ignored) {}
-        }
-        else if (model.isScoreDuringTests()) {
-            try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_drawingFragment_to_scoringFragment);
-            } catch (java.lang.IllegalArgumentException ignored) {}
-        }
+
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.scoringFragment);
+
     }
 
     public void trialResults() {
-        try {
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.resultsFragment);
+
+       /* try {
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_resultsFragment);
-        } catch (java.lang.IllegalArgumentException ignored) {}
+        } catch (java.lang.IllegalArgumentException ignored) {}*/
     }
 
     public void update_hdr() {

@@ -41,6 +41,8 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setTrial(Trial trial) {
         this.trial = trial;
+
+        isScoreDuringTests = !trial.getTrialInfo().isTrialScored();
         //navigateTests(0,0);
     }
 
@@ -172,6 +174,9 @@ public class TrialViewModel extends AndroidViewModel {
         testIndex = index;
 
         if (test.isContainsTests()) {
+            if (subindex==-2)
+                subindex = test.getTests().size()-1;
+
             setTest(test.getTests().get(subindex));
             testSubIndex = subindex;
             return;
@@ -202,7 +207,7 @@ public class TrialViewModel extends AndroidViewModel {
                 }
                 navigateTests(testIndex + 1, 0);
             } else {
-                if (testSubIndex >= test.getTests().size() - 1) {
+                if (testSubIndex >= trial.getTests().get(testIndex).getTests().size() - 1) {
                     if (testIndex >= trial.getTests().size() - 1) {
                         setIsLaunchTrialResults(true);
                         return -1;
@@ -213,14 +218,27 @@ public class TrialViewModel extends AndroidViewModel {
                 }
             }
 
-            setIsLaunchNextTest(true);
+            if (!isUserTrial) setIsLaunchNextTest(true);
+            else setIsLaunchScoring(true);
         }
         else {
             setIsLaunchScoring(true);
-            test.setStopTestTimeOffset(TrialTimer.getElapsedTime());
+            if (isScoreDuringTests) test.setStopTestTimeOffset(TrialTimer.getElapsedTime());
             isTestScored = true;
         }
         return 0;
+
+    }
+
+    public void previousTest() {
+        if (testIndex==0 && testSubIndex<=0) return;
+
+        if (testSubIndex>0) {
+            navigateTests(testIndex, testSubIndex-1);
+        }
+        else {
+            navigateTests(testIndex-1, -2);
+        }
 
     }
 

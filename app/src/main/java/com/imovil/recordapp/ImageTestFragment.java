@@ -50,10 +50,10 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
 
         model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
 
-        //if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        //}
+        if (getArguments() != null) {
+            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
+            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
+        }
     }
 
     @Override
@@ -70,41 +70,38 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
 
         model.getIsRecording().observe(requireActivity(), this::onIsRecordingChanged);
 
-        //if (getArguments() != null) {
-            trialInfo = model.getTrial().getTrialInfo();//(TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
-            test = model.getTest();//(Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
-            if (test.getParameters().get(0) != null) {
-                String fname = test.getParameters().get(0);
-                File file = new File(model.getFilePath(fname));
-                if (file.exists()) {
-                    imageView.setImageURI(Uri.fromFile(file));
-                    imageView.setAdjustViewBounds(true);
-                }
-                else {
-                    Thread thread = new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                while(true) {
-                                    sleep(200);
-                                    if (file.exists()) {
-                                        activity.runOnUiThread(() -> {
-                                            imageView.setImageURI(Uri.fromFile(file));
-                                            imageView.setAdjustViewBounds(true);});
-                                        break;
-                                    }
-                                }
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    thread.start();
-                }
+        trialInfo = model.getTrial().getTrialInfo();
+        test = model.getTest();
+        if (test.getParameters().get(0) != null) {
+            String fname = test.getParameters().get(0);
+            File file = new File(model.getFilePath(fname));
+            if (file.exists()) {
+                imageView.setImageURI(Uri.fromFile(file));
+                imageView.setAdjustViewBounds(true);
             }
-       // }
+            else {
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            while(true) {
+                                sleep(200);
+                                if (file.exists()) {
+                                    activity.runOnUiThread(() -> {
+                                        imageView.setImageURI(Uri.fromFile(file));
+                                        imageView.setAdjustViewBounds(true);});
+                                    break;
+                                }
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
 
+                thread.start();
+            }
+        }
 
         outputFilename = test.getName()+'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+"_audio.3gp";
         fileName = model.getFilePath(outputFilename);
@@ -139,7 +136,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
         }
         else {
             recordButton.setBackgroundColor(0x303030);
-            recordButton.setText("Pulse para grabar de nuevo");
+            recordButton.setText("Pulse para grabar");
             this.isRecording = false;
         }
     }

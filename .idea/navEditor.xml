@@ -226,28 +226,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-508" />
-                            <option name="y" value="82" />
+                            <option name="x" value="-595" />
+                            <option name="y" value="64" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_blankFragment_to_drawingFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_blankFragment_to_imageTestFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_blankFragment_to_scoringFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -261,15 +242,6 @@
                             <option name="y" value="334" />
                           </Point>
                         </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_drawingFragment_to_scoringFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -278,23 +250,9 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-281" />
-                            <option name="y" value="-303" />
+                            <option name="x" value="-269" />
+                            <option name="y" value="-53" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_imageTestFragment_self">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_imageTestFragment_to_scoringFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -304,8 +262,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="250" />
-                            <option name="y" value="76" />
+                            <option name="x" value="313" />
+                            <option name="y" value="68" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -316,28 +274,30 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="-11" />
-                            <option name="y" value="78" />
+                            <option name="x" value="52" />
+                            <option name="y" value="70" />
                           </Point>
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_scoringFragment_self">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_scoringFragment_to_imageTestFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
                             <entry key="action_scoringFragment_to_resultsFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="tapLettersFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-271" />
+                            <option name="y" value="-388" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

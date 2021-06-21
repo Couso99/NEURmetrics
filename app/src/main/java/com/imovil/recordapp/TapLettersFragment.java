@@ -55,7 +55,9 @@ public class TapLettersFragment extends Fragment {
         model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
 
         if (getArguments() != null) {
+            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
             test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
+            textArray = test.getParameters();
         }
     }
 
@@ -67,11 +69,9 @@ public class TapLettersFragment extends Fragment {
 
         activity = getActivity();
 
-        if (getArguments() != null) {
-            trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
-            test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
-            textArray = test.getParameters();
-        }
+        trialInfo = model.getTrial().getTrialInfo();
+        test = model.getTest();
+        textArray = test.getParameters();
 
         LinearLayout linearLayoutVertical = view.findViewById(R.id.linearLayoutTapLetters);
         LinearLayout linearLayout = null;
