@@ -17,8 +17,6 @@ public class TrialActivity extends AppCompatActivity {
 
     TrialViewModel model;
 
-    int isLastTest = 0, isTestScored=0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +51,13 @@ public class TrialActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+    if (savedInstanceState==null) {
         update_hdr();
-
-
-
         model.nextTest();
-
+    }
 
     }
 

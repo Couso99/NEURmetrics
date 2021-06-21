@@ -73,6 +73,11 @@ public class HeadersFragment extends Fragment {
         h1View = view.findViewById(R.id.h1);
         h2View = view.findViewById(R.id.h2);
 
+        Test test = model.getTest();
+        titleView.setText(test.getTitle()!=null ? test.getTitle() : "");
+        h1View.setText(test.getH1()!=null ? test.getH1() : "");
+        h2View.setText(test.getH2()!=null ? test.getH2() : "");
+
         return view;
     }
 

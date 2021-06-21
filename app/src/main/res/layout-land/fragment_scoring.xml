@@ -29,11 +29,11 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:gravity="top"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutScoring"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="200dp"
                 android:layout_weight="0"
                 android:gravity="start">
@@ -42,14 +42,13 @@
 
             <EditText
                 android:id="@+id/editTextTextMultiLine"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="0"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_weight="1"
                 android:gravity="start|top"
                 android:hint="@string/scoringCommentHint"
                 android:inputType="textMultiLine"

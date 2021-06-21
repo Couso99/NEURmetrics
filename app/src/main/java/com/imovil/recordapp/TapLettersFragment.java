@@ -151,5 +151,4 @@ public class TapLettersFragment extends Fragment {
         view.draw(canvas);
         return bitmap;
     }
-
 }
