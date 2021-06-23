@@ -75,9 +75,4 @@ public class User implements Serializable {
     public String getUserID() {
         return userID.get("$oid").toString();//["$oid"];
     }
-
-
-    /*public void setUserID(String userID) {
-        this.userID = new Object(userID);
-    }*/
 }

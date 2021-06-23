@@ -59,5 +59,7 @@
     <string name="signature_title">IP del servidor</string>
 
     <string name="birthdayField">Fecha de nacimiento:</string>
+    <string name="setBirthdayButton">Elegir</string>
+    <string name="CreateUserFragmentLabel">Crear usuario</string>
 
 </resources>

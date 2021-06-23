@@ -51,6 +51,6 @@
     <fragment
         android:id="@+id/createUserFragment"
         android:name="com.imovil.recordapp.CreateUserFragment"
-        android:label="fragment_create_user"
+        android:label="@string/CreateUserFragmentLabel"
         tools:layout="@layout/fragment_create_user" />
 </navigation>

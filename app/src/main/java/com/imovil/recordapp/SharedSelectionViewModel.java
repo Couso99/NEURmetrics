@@ -136,5 +136,7 @@ public class SharedSelectionViewModel extends AndroidViewModel {
         repository.setIsTrialDownloaded(isTrialDownloaded);
     }
 
-
+    public void uploadNewUser(User user) {
+        repository.uploadNewUser(user);
+    }
 }

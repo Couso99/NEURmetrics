@@ -26,11 +26,6 @@ public interface RestService {
             @Path("deviceID") String deviceID
     );
 
-    /*@GET("get-file/general/json/{json_fname}")
-    Call<JsonElement> downloadJson(
-            @Path("json_fname") String json_fname
-    );*/
-
     @Multipart
     @POST("file/{type}")
     Call<ResponseBody> uploadFile(
@@ -59,6 +54,7 @@ public interface RestService {
     @GET("users")
     Call<JsonElement> downloadUsers();
 
+    @Multipart
     @POST("users")
     Call<ResponseBody> uploadNewUser(
             @Part("description") RequestBody description,
@@ -80,18 +76,4 @@ public interface RestService {
             @Path("userID") String userID,
             @Path("start_time") long start_time
     );
-
-    /*@Multipart
-    @POST("upload-general")
-    Call<ResponseBody> uploadGeneral(
-            @Part("description") RequestBody description,
-            @Part MultipartBody.Part file
-    );
-
-    @Multipart
-    @POST("upload-json")
-    Call<ResponseBody> uploadJson(
-            @Part("description") RequestBody description,
-            @Part MultipartBody.Part file
-    );*/
 }

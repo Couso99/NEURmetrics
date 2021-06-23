@@ -348,8 +348,6 @@ public class Repository {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
         String host = SP.getString("server_ip","");
 
-        //Log.d(TAG,host);
-
         if (host.isEmpty()) return false;
 
         return webService.isReachable(host);
@@ -362,5 +360,9 @@ public class Repository {
 
     public void setIsDataUploaded(MutableLiveData<Boolean> isDataUploaded) {
         this.isDataUploaded = isDataUploaded;
+    }
+
+    public void uploadNewUser(User user) {
+        webService.uploadNewUser(user);
     }
 }

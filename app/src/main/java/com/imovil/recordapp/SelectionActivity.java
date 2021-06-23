@@ -56,6 +56,10 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
             }
         });
 
+        newUserModel.getIsUploadUser().observe(this, isUploadUser -> {
+            onUserCreated(newUserModel.getUser());
+        });
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -118,6 +122,12 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         Log.d("WebService", "onUserSelected: "+model.getUserID());
     }
 
+    public void onUserCreated(User user) {
+        model.uploadNewUser(user);
+        onBackPressed();
+        // maybe todo fetch new user ID, then invoke onUserSelected and launch select trial directly
+    }
+
     @Override
     public void onTrialSelected() {
         model.downloadTrial();
@@ -140,8 +150,6 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-
         newUserModel.setBirthday(year,month,dayOfMonth);
     }
 }
