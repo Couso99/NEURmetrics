@@ -58,4 +58,6 @@
     <string name="previous">Anterior</string>
     <string name="signature_title">IP del servidor</string>
 
+    <string name="birthdayField">Fecha de nacimiento:</string>
+
 </resources>

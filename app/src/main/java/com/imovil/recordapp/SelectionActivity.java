@@ -1,11 +1,13 @@
 package com.imovil.recordapp;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,12 +19,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class SelectionActivity extends AppCompatActivity implements NavigationInterface {
+import java.text.DateFormat;
+import java.util.Calendar;
+
+public class SelectionActivity extends AppCompatActivity implements NavigationInterface, DatePickerDialog.OnDateSetListener {
     AppBarConfiguration appBarConfiguration;
 
     private static String TAG = "ExplorerMenu";
 
     SharedSelectionViewModel model;
+    NewUserViewModel newUserModel;
 
     ActivityResultLauncher<String> askPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(), result -> {});
 
@@ -37,6 +43,7 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         setContentView(R.layout.activity_selection);
 
         model = new ViewModelProvider(this).get(SharedSelectionViewModel.class);
+        newUserModel = new ViewModelProvider(this).get(NewUserViewModel.class);
 
         askPermission.launch(Manifest.permission.RECORD_AUDIO);
         askPermission.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -62,13 +69,19 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         return true;
     }
 
+    public void launchCreateUser() {
+        try {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_createUserFragment);
+        } catch (java.lang.IllegalArgumentException ignored) {}
+    }
+
     private void launchSelectUser() {
         try {
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_homeScreenFragment_to_selectUserFragment);
         } catch (java.lang.IllegalArgumentException ignored) {}
     }
 
-    public void launchSelectTrial(boolean isUserTrial, String userID) {
+    public void launchSelectTrial() {
         try {
             Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_selectUserFragment_to_selectTrialFragment);
         } catch (java.lang.IllegalArgumentException ignored) {}
@@ -101,7 +114,7 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
     @Override
     public void onUserSelected(String userID) {
         model.setUserID(userID);
-        launchSelectTrial(model.isUserTrial(),model.getUserID());
+        launchSelectTrial();
         Log.d("WebService", "onUserSelected: "+model.getUserID());
     }
 
@@ -118,5 +131,17 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
         Intent intent = new Intent(SelectionActivity.this, TrialActivity.class);
         intent.putExtra(TrialActivity.ARG_TRIAL, trial);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCreateUser() {
+        launchCreateUser();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+
+        newUserModel.setBirthday(year,month,dayOfMonth);
     }
 }

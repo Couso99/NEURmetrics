@@ -192,6 +192,6 @@ public class SelectUserFragment extends Fragment {
     }
 
     private void addUser() {
-
+        ((NavigationInterface)activity).onCreateUser();
     }
 }

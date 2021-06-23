@@ -232,6 +232,10 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void previousTest() {
         if (testIndex==0 && testSubIndex<=0) return;
+        if (isScoreDuringTests && isTestScored) {
+            isTestScored=false;
+            return;
+        }
 
         if (testSubIndex>0) {
             navigateTests(testIndex, testSubIndex-1);

@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class SharedSelectionViewModel extends AndroidViewModel {
-    Repository repository;
+    private Repository repository;
     private LiveData<Users> users;
     private LiveData<Trials> userTrials, newTrials;
     private TrialInfo userTrialInfo;

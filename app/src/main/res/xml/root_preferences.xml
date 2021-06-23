@@ -5,12 +5,13 @@
 
         <EditTextPreference
             android:defaultValue="192.168.0.21"
+            android:inputType="phone"
             app:key="server_ip"
             app:title="@string/server_ip_title"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:inputType="number"
+            android:inputType="phone"
             app:defaultValue="5000"
             app:key="port"
             app:title="@string/server_port_title"

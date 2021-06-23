@@ -25,7 +25,7 @@
             android:id="@+id/nameFieldView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0"
             android:paddingRight="54dp"
             android:text="@string/trialField"
             android:textSize="18sp"

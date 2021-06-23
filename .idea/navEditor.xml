@@ -106,6 +106,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="createUserFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="306" />
+                            <option name="y" value="-307" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="homeScreenFragment">
                     <value>
                       <LayoutPositions>
@@ -172,18 +184,6 @@
                           <Point>
                             <option name="x" value="-146" />
                             <option name="y" value="-405" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="trialActivity">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="264" />
-                            <option name="y" value="-522" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -17,6 +17,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_selectUserFragment_to_createUserFragment"
+            app:destination="@id/createUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/selectTrialFragment"
@@ -45,4 +48,9 @@
         android:id="@+id/settingsFragment"
         android:name="com.imovil.recordapp.SettingsFragment"
         android:label="@string/SettingsFragmentLabel" />
+    <fragment
+        android:id="@+id/createUserFragment"
+        android:name="com.imovil.recordapp.CreateUserFragment"
+        android:label="fragment_create_user"
+        tools:layout="@layout/fragment_create_user" />
 </navigation>
