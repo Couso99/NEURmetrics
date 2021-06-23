@@ -40,14 +40,14 @@ public interface RestService {
     );
 
     @Multipart
-    @PATCH("/user-trial")
+    @PATCH("/user-trials")
     Call<ResponseBody> updateUserTrial(
             @Part("description") RequestBody description,
             @Part MultipartBody.Part file
     );
 
     @Multipart
-    @POST("/user-trial")
+    @POST("/user-trials")
     Call<ResponseBody> uploadUserTrial(
             @Part("description") RequestBody description,
             @Part MultipartBody.Part file
@@ -59,6 +59,12 @@ public interface RestService {
     @GET("users")
     Call<JsonElement> downloadUsers();
 
+    @POST("users")
+    Call<ResponseBody> uploadNewUser(
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part file
+    );
+
     @GET("user-trials/{userID}")
     Call<JsonElement> downloadTrialsInfoFromUserID(
             @Path("userID") String userID
@@ -69,7 +75,7 @@ public interface RestService {
             @Path("trialID") String trialID
     );
 
-    @GET("user-trial/{userID}/{start_time}")
+    @GET("user-trials/{userID}/{start_time}")
     Call<JsonElement> downloadUserTrial(
             @Path("userID") String userID,
             @Path("start_time") long start_time

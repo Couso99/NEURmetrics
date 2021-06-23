@@ -2,6 +2,7 @@ package com.imovil.recordapp;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.Serializable;
 
@@ -17,7 +18,7 @@ public class User implements Serializable {
 
     @SerializedName("birthday")
     @Expose
-    private int birthday;
+    private long birthday;
 
     @SerializedName("sex")
     @Expose
@@ -27,9 +28,9 @@ public class User implements Serializable {
     @Expose
     private String centre;
 
-    @SerializedName("userID")
+    @SerializedName("_id")
     @Expose
-    private String userID;
+    private LinkedTreeMap userID;
 
     public String getName() {
         return name;
@@ -47,11 +48,11 @@ public class User implements Serializable {
         this.surname = surname;
     }
 
-    public int getBirthday() {
+    public long getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(int birthday) {
+    public void setBirthday(long birthday) {
         this.birthday = birthday;
     }
 
@@ -72,10 +73,11 @@ public class User implements Serializable {
     }
 
     public String getUserID() {
-        return userID;
+        return userID.get("$oid").toString();//["$oid"];
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
+
+    /*public void setUserID(String userID) {
+        this.userID = new Object(userID);
+    }*/
 }

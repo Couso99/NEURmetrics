@@ -81,27 +81,6 @@ public class WebService {//implements RestService{
         return call;
     }
 
-    /*public Call<JsonElement> downloadJson(String server_file_path) {
-        Call<JsonElement> call = downloadService.downloadJson(server_file_path);
-
-        return call;
-    }
-
-    public Call<JsonElement> downloadTrialsList() {
-        Call<JsonElement> call = downloadService.downloadTrialsInfo();
-        return call;
-    }
-
-    public Call<JsonElement> downloadUsers() {
-        Call<JsonElement> call = downloadService.downloadUsers();
-        return call;
-    }
-
-    public Call<JsonElement> downloadTrialsListFromUserID(String userID) {
-        Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
-        return call;
-    }*/
-
     public Call<JsonElement> downloadTrialFromTrialID(String trialID) {
         Call<JsonElement> call = downloadService.downloadTrialFromTrialID(trialID);
         return call;
@@ -143,6 +122,30 @@ public class WebService {//implements RestService{
     public MutableLiveData<Users> getUsers() {
         updateUsers();
         return usersMutableLiveData;
+    }
+
+    public void uploadNewUser(User user) {
+        JsonElement jsonElement = gson.toJsonTree(user,User.class);
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(jsonElement));
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
+
+        // add another part within the multipart request
+        String descriptionString = "hello, this is description speaking";
+        RequestBody description =
+                RequestBody.create(
+                        okhttp3.MultipartBody.FORM, descriptionString);
+
+        Call<ResponseBody> call = downloadService.uploadNewUser(description, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {}
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
+        });
     }
 
     private void updateUserTrials(String userID) {
@@ -256,23 +259,4 @@ public class WebService {//implements RestService{
 
         return isReachable;
     }
-
-
-    /*public Call<ResponseBody> downloadUserMadeFile(String fileName) {
-        Call<ResponseBody> call = downloadService.downloadUserMadeFile(fileName);
-
-        return call;
-    }
-
-    public void downloadImage(String fileName){
-        RestService downloadService = ServiceGenerator.createService(RestService.class);
-
-        File file = new File(context.getExternalCacheDir() + File.separator + fileName);
-        if (file.exists()) {
-            return;
-        }
-
-        enqueueWriteResponseBody(downloadService.downloadImage(fileName), fileName);
-    }*/
-
 }
