@@ -74,10 +74,13 @@ public class ResultsFragment extends Fragment {
         testsListAdapter.setTests(trial);
 
         nextButton = view.findViewById(R.id.finishedButton);
+
+        nextButton.setOnClickListener(v -> {
+            model.postTrial();
+        });
+
         model.getIsDataUploaded().observe(requireActivity(), isDataUploaded -> {
-            nextButton.setOnClickListener(v -> {
-                if (isDataUploaded) activity.finish();
-            });
+            if (isDataUploaded) activity.finish();
         });
 
         TrialInfo trialInfo = trial.getTrialInfo();

@@ -91,7 +91,7 @@ public class RecorderPlayer {
             isTimeSpecified = false;
         }
 
-        timer.schedule(new TimerTask() {
+        /*timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 amplitude = mediaRecorder.getMaxAmplitude();
@@ -107,7 +107,7 @@ public class RecorderPlayer {
                     time_counter = 0;
                 }
             }
-        }, period_ms, period_ms);
+        }, period_ms, period_ms);*/
     }
 
     public void stopRecording() {

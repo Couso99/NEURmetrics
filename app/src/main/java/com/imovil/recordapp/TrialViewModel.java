@@ -18,6 +18,7 @@ public class TrialViewModel extends AndroidViewModel {
     private int testIndex, testSubIndex;
 
     private boolean isUserTrial, isScoreDuringTests = true, isTestScored = true;
+    private boolean isShowingResults;
 
     private MutableLiveData<Boolean> isUpdateHeaders = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLaunchScoring = new MutableLiveData<>();
@@ -108,7 +109,7 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setIsLaunchTrialResults(boolean isLaunchTrialResults) {
         this.isLaunchTrialResults.setValue(isLaunchTrialResults);
-        if (isLaunchTrialResults) postTrial();
+        if (isLaunchTrialResults) isShowingResults=true;
     }
 
     public Test getTest() {
@@ -230,11 +231,15 @@ public class TrialViewModel extends AndroidViewModel {
 
     }
 
-    public void previousTest() {
-        if (testIndex==0 && testSubIndex<=0) return;
+    public boolean previousTest() {
+        if (isShowingResults) {
+            isShowingResults = false;
+            return true;
+        }
+        if (testIndex==0 && testSubIndex<=0) return false;
         if (isScoreDuringTests && isTestScored) {
             isTestScored=false;
-            return;
+            return true;
         }
 
         if (testSubIndex>0) {
@@ -243,7 +248,7 @@ public class TrialViewModel extends AndroidViewModel {
         else {
             navigateTests(testIndex-1, -2);
         }
-
+        return true;
     }
 
     private void startDownloadingTests(Trial trial) {

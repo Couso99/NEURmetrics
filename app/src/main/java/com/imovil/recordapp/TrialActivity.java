@@ -51,14 +51,10 @@ public class TrialActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-    if (savedInstanceState==null) {
-        update_hdr();
-        model.nextTest();
-    }
-
+        if (savedInstanceState == null) {
+            update_hdr();
+            model.nextTest();
+        }
     }
 
     @Override
@@ -69,8 +65,9 @@ public class TrialActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        model.previousTest();
+        if (model.previousTest())
+            super.onBackPressed();
+        else finish();
     }
 
     @Override
@@ -144,10 +141,6 @@ public class TrialActivity extends AppCompatActivity {
 
     public void trialResults() {
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.resultsFragment);
-
-       /* try {
-            Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_resultsFragment);
-        } catch (java.lang.IllegalArgumentException ignored) {}*/
     }
 
     public void update_hdr() {
