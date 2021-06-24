@@ -32,6 +32,9 @@ public class Test implements Serializable {
     @SerializedName("h2")
     @Expose
     private String h2;
+    @SerializedName("comment")
+    @Expose
+    private String comment;
     @SerializedName("parametersNumber")
     @Expose
     private int parametersNumber;
@@ -128,6 +131,14 @@ public class Test implements Serializable {
 
     public void setH2(String h2) {
         this.h2 = h2;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public int getParametersNumber() {

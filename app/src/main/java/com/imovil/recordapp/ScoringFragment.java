@@ -9,6 +9,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +49,7 @@ public class ScoringFragment extends Fragment {
     List<CheckBox> checkBoxList = new ArrayList<>();
     List<Integer> scoreWeights = new ArrayList<>();
 
-    EditText editText;
+    EditText commentEdit;
 
     int elegantNumber;
 
@@ -96,8 +98,21 @@ public class ScoringFragment extends Fragment {
 
         activity = getActivity();
 
-        //editText = view.findViewById(R.id.editTextTextMultiLine);
-        //editText.setFocusableInTouchMode(true);
+        commentEdit = view.findViewById(R.id.editTextTextMultiLine);
+        if (test.getComment()!=null) commentEdit.setText(test.getComment());
+
+        commentEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                test.setComment(s.toString());
+            }
+        });
 
         nextButton = view.findViewById(R.id.nextButtonScoring);
         nextButton.setOnClickListener(v -> {
@@ -179,8 +194,6 @@ public class ScoringFragment extends Fragment {
 
         relativeLayout = view.findViewById(R.id.relativeLayoutScoring);
 
-        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2,-1);
-
         switch (test.getTestType()) {
             case 1:
             case 2:
@@ -189,7 +202,6 @@ public class ScoringFragment extends Fragment {
             case 3:
                 imageView = new PlayableImageView(activity, null);
         }
-        //imageView.setLayoutParams(layoutParams);
 
         relativeLayout.addView(imageView);
         String fname, outputfname;
@@ -236,10 +248,7 @@ public class ScoringFragment extends Fragment {
     }
 
     private void loadImageView() {
-        //String testID = test.getTestID();
-        //int testType = Integer.parseInt(String.valueOf(testID.charAt(0)));
-        //ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1,-1);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,-1);
+        ViewGroup.LayoutParams layoutParams;
         int orientation = this.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -252,18 +261,13 @@ public class ScoringFragment extends Fragment {
                 if (test.getScore()==1)
                     checkBoxList.get(0).setChecked(true);
             case 1:
-                //imageView = new ImageView(activity);
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
                 imageView.setBackgroundResource(R.drawable.image_border);
                 imageView.setLayoutParams(layoutParams);
 
                 imageView.setAdjustViewBounds(true);
-                //imageView.setLayoutParams();
-                //imageView.setLayoutParams(layoutParams);
                 break;
             case 3:
-                //imageView = new PlayableImageView(activity, null, test.getFilename(), test.getOutputFilename());
-                //imageView.setLayoutParams(layoutParams);
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
                 ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
                 imageView.setBackgroundResource(R.drawable.image_border);
@@ -272,7 +276,5 @@ public class ScoringFragment extends Fragment {
                 imageView.setAdjustViewBounds(true);
                 break;
         }
-        //relativeLayout.addView(imageView);
-
     }
 }
