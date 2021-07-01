@@ -1,7 +1,9 @@
 package com.imovil.recordapp;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
+import android.widget.Chronometer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,12 +18,15 @@ public class TrialActivity extends AppCompatActivity {
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
     TrialViewModel model;
+    Chronometer chronometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_trial);
+
+        chronometer = findViewById(R.id.recordingChrono);
 
         model = new ViewModelProvider(this).get(TrialViewModel.class);
 
@@ -48,6 +53,20 @@ public class TrialActivity extends AppCompatActivity {
             if (isLaunchTrialResults) {
                 trialResults();
                 model.setIsLaunchTrialResults(false);
+            }
+        });
+
+        model.getIsRecording().observe(this, isRecording -> {
+            if (isRecording) {
+                if (model.getRecorderBaseTime()==0)
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                else
+                    chronometer.setBase(model.getRecorderBaseTime());
+                chronometer.setVisibility(View.VISIBLE);
+                chronometer.start();
+            } else {
+                chronometer.setVisibility(View.INVISIBLE);
+                chronometer.stop();
             }
         });
 

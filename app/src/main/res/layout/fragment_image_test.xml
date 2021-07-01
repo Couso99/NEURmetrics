@@ -47,17 +47,20 @@
             tools:layout_conversion_absoluteHeight="52dp"
             tools:layout_conversion_absoluteWidth="233dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/finishedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
-            android:text="@string/finishedButton"
+            android:minWidth="0dp"
+            app:icon="@drawable/ic_baseline_arrow_forward_24"
+            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/recordButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/recordButton"
             tools:layout_conversion_absoluteHeight="48dp"
             tools:layout_conversion_absoluteWidth="106dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

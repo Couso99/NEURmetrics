@@ -1,6 +1,7 @@
 package com.imovil.recordapp;
 
 import android.app.Application;
+import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,6 +17,7 @@ public class TrialViewModel extends AndroidViewModel {
     private Test test;
 
     private int testIndex, testSubIndex;
+    private long recorderBaseTime;
 
     private boolean isUserTrial, isScoreDuringTests = true, isTestScored = true;
     private boolean isShowingResults;
@@ -118,7 +120,7 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setTest(Test test) {
         this.test = test;
-        this.test.setStartTestTimeOffset(TrialTimer.getElapsedTime());
+        if (!isUserTrial) this.test.setStartTestTimeOffset(TrialTimer.getElapsedTime());
         setIsUpdateHeaders(true);
         isTestScored = false;
     }
@@ -244,9 +246,11 @@ public class TrialViewModel extends AndroidViewModel {
 
         if (testSubIndex>0) {
             navigateTests(testIndex, testSubIndex-1);
+            if (isScoreDuringTests) isTestScored=true;
         }
         else {
             navigateTests(testIndex-1, -2);
+            if (isScoreDuringTests) isTestScored=true;
         }
         return true;
     }
@@ -294,10 +298,12 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void startRecording(String fileName, int recording_time_ms) {
         recorder.startRecording(fileName, recording_time_ms);
+        recorderBaseTime = SystemClock.elapsedRealtime();
     }
 
     public void stopRecording() {
         recorder.stopRecording();
+        recorderBaseTime = 0;
     }
 
     public void startPlaying(String fileName) {
@@ -306,5 +312,9 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void stopPlaying() {
         recorder.stopPlaying();
+    }
+
+    public long getRecorderBaseTime() {
+        return recorderBaseTime;
     }
 }

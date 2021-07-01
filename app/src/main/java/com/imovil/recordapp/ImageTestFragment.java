@@ -135,7 +135,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
             this.isRecording = true;
         }
         else {
-            recordButton.setBackgroundColor(0x303030);
+            recordButton.setBackgroundColor(Color.rgb(30,30,30));
             recordButton.setText("Pulse para grabar");
             this.isRecording = false;
         }

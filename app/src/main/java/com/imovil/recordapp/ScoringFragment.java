@@ -258,23 +258,17 @@ public class ScoringFragment extends Fragment {
 
         switch (test.getTestType()) {
             case 2:
-                if (test.getScore()==1)
-                    checkBoxList.get(0).setChecked(true);
+                if (test.getScore()==1) checkBoxList.get(0).setChecked(true);
             case 1:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
-                imageView.setBackgroundResource(R.drawable.image_border);
-                imageView.setLayoutParams(layoutParams);
-
-                imageView.setAdjustViewBounds(true);
                 break;
             case 3:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
                 ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
-                imageView.setBackgroundResource(R.drawable.image_border);
-                imageView.setLayoutParams(layoutParams);
-
-                imageView.setAdjustViewBounds(true);
                 break;
         }
+        imageView.setBackgroundResource(R.drawable.image_border);
+        imageView.setLayoutParams(layoutParams);
+        imageView.setAdjustViewBounds(true);
     }
 }
