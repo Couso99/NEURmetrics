@@ -7,7 +7,7 @@
     android:id="@+id/constraintLayout"
     tools:context=".DrawingFragment">
 
-    <com.imovil.recordapp.DrawingArea
+    <com.imovil.NEURmetrics.DrawingArea
         android:id="@+id/drawing_area"
         android:layout_width="wrap_content"
         android:layout_height="0dp"

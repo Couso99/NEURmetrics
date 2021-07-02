@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecordApp</string>
+    <string name="app_name">NEURmetrics</string>
     <string name="finishedButton">Acabado</string>
     <string name="beginTrialButton">Empezar Prueba</string>
     <string name="stopButton">Parar</string>
@@ -60,6 +60,6 @@
 
     <string name="birthdayField">Fecha de nacimiento:</string>
     <string name="setBirthdayButton">Elegir</string>
-    <string name="CreateUserFragmentLabel">Crear usuario</string>
+    <string name="CreateUserFragmentLabel">Crear sujeto</string>
 
 </resources>

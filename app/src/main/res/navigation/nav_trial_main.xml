@@ -6,7 +6,7 @@
     app:startDestination="@id/blankFragment">
     <fragment
         android:id="@+id/scoringFragment"
-        android:name="com.imovil.recordapp.ScoringFragment"
+        android:name="com.imovil.NEURmetrics.ScoringFragment"
         android:label="fragment_scoring"
         tools:layout="@layout/fragment_scoring" >
         <action
@@ -15,26 +15,26 @@
     </fragment>
     <fragment
         android:id="@+id/resultsFragment"
-        android:name="com.imovil.recordapp.ResultsFragment"
+        android:name="com.imovil.NEURmetrics.ResultsFragment"
         android:label="ResultsFragment" />
     <fragment
         android:id="@+id/imageTestFragment"
-        android:name="com.imovil.recordapp.ImageTestFragment"
+        android:name="com.imovil.NEURmetrics.ImageTestFragment"
         android:label="fragment_image_test"
         tools:layout="@layout/fragment_image_test" />
     <fragment
         android:id="@+id/drawingFragment"
-        android:name="com.imovil.recordapp.DrawingFragment"
+        android:name="com.imovil.NEURmetrics.DrawingFragment"
         android:label="fragment_drawing"
         tools:layout="@layout/fragment_drawing" />
     <fragment
         android:id="@+id/tapLettersFragment"
-        android:name="com.imovil.recordapp.TapLettersFragment"
+        android:name="com.imovil.NEURmetrics.TapLettersFragment"
         android:label="fragment_tap_letters"
         tools:layout="@layout/fragment_tap_letters" />
     <fragment
         android:id="@+id/blankFragment"
-        android:name="com.imovil.recordapp.BlankFragment"
+        android:name="com.imovil.NEURmetrics.BlankFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
 </navigation>
