@@ -18,7 +18,7 @@
         android:layout_marginRight="32dp"
         android:gravity="start|left"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/nextButtonScoring"
+        app:layout_constraintBottom_toTopOf="@+id/finishedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -74,14 +74,16 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/nextButtonScoring"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/finishedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
-        android:text="@string/nextButton"
+        android:minWidth="0dp"
+        app:icon="@drawable/ic_baseline_arrow_forward_24"
+        app:iconPadding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:layout_conversion_absoluteHeight="48dp"

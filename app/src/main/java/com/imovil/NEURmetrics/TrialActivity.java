@@ -142,20 +142,11 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     public void nextTest() {
-
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(getTestFragment(model.getTest().getTestType()));
-
-        /*if (!model.isUserTrial()) {
-            try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.action_scoringFragment_to_imageTestFragment);
-            } catch (java.lang.IllegalArgumentException ignored) {}
-        }*/
     }
 
     public void scoreTest() {
-
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.scoringFragment);
-
     }
 
     public void trialResults() {

@@ -15,11 +15,10 @@ public class TestsHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Test test){
-        if (test!=null)
-           binding.text1.setText("ID: " + test.getTestID() +" -  Name: " + test.getName() +" - Score: "+test.getScore()+
-                   ((test.getMaxScore()>=0) ? " /"+test.getMaxScore(): ""));
-        else
-            binding.text1.setText("No hay datos disponibles");
+        if (test!=null) {
+            binding.nameView.setText(test.getName());
+            binding.scoreView.setText(test.getScore()+ ((test.getMaxScore()>=0) ? " /"+test.getMaxScore(): ""));
+        }
     }
 
 }

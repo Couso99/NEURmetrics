@@ -81,7 +81,6 @@ public class ScoringFragment extends Fragment {
             test = (Test) getArguments().getSerializable(ARG_TEST);
             isTrialScored = getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
         }
-
     }
 
     @Override
@@ -115,7 +114,7 @@ public class ScoringFragment extends Fragment {
             }
         });
 
-        nextButton = view.findViewById(R.id.nextButtonScoring);
+        nextButton = view.findViewById(R.id.finishedButton);
         nextButton.setOnClickListener(v -> {
             int activeCheckBoxes=0;
             List<Integer> expandedScore = new ArrayList<>();
@@ -148,7 +147,7 @@ public class ScoringFragment extends Fragment {
             isExpandedScore=true;
 
         if (maxScore>=0) {
-            for (int j = 0; j < maxScore && ((scoreOptions == null) || (j < scoreOptions.size())); j++) {
+            for (int j = 0; (j < maxScore && (scoreOptions == null)) || ((scoreOptions != null)&&(j < scoreOptions.size())); j++) {
                 CheckBox btnTag = new CheckBox(activity);
                 if (isExpandedScore) btnTag.setChecked(expandedScore.get(j) != 0);
                 btnTag.setLayoutParams(new LinearLayout.LayoutParams

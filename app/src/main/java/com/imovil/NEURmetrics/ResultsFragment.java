@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,9 +54,12 @@ public class ResultsFragment extends Fragment {
 
         model = new ViewModelProvider(requireActivity()).get(TrialViewModel.class);
 
-        //if (getArguments() != null) {
-            trial = model.getTrial();//(Trial) getArguments().getSerializable(ARG_TESTS);
-        //}
+
+        if (getArguments() != null) {
+            model.setTrial((Trial) getArguments().getSerializable(ARG_TESTS));
+        }
+
+        trial = model.getTrial();
     }
 
     @Override
@@ -70,6 +74,9 @@ public class ResultsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(testsListAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         testsListAdapter.setTests(trial);
 

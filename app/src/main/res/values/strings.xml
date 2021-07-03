@@ -6,7 +6,7 @@
     <string name="nextButton">Siguiente</string>
     <string name="successScore">Realizado correctamente</string>
     <string name="getTrialsListButton">Realizar prueba</string>
-    <string name="getUsersListButton">Revisar pruebas</string>
+    <string name="getUsersListButton">Revisar prueba</string>
     <string name="title_activity_settings">Ajustes</string>
 
     <!-- Errors  -->
@@ -61,5 +61,6 @@
     <string name="birthdayField">Fecha de nacimiento:</string>
     <string name="setBirthdayButton">Elegir</string>
     <string name="CreateUserFragmentLabel">Crear sujeto</string>
+    <string name="testNameField">Test:</string>
 
 </resources>

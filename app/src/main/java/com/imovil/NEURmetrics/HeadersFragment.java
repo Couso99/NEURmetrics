@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -19,7 +20,6 @@ import android.widget.TextView;
  */
 public class HeadersFragment extends Fragment {
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_TITLE = "title";
     private static final String ARG_H1 = "h1";
     private static final String ARG_H2 = "h2";
@@ -31,7 +31,8 @@ public class HeadersFragment extends Fragment {
     private Activity activity;*/
     private TrialViewModel model;
 
-    TextView titleView, h1View, h2View;
+    private TextView titleView, h1View, h2View;
+    private LinearLayout linearLayout;
 
     public HeadersFragment() {
         // Required empty public constructor
@@ -68,12 +69,23 @@ public class HeadersFragment extends Fragment {
         titleView = view.findViewById(R.id.title);
         h1View = view.findViewById(R.id.h1);
         h2View = view.findViewById(R.id.h2);
+        linearLayout = view.findViewById(R.id.headersLayout);
 
-        Test test = model.getTest();
-        titleView.setText(test.getTitle()!=null ? test.getTitle() : "");
-        h1View.setText(test.getH1()!=null ? test.getH1() : "");
-        h2View.setText(test.getH2()!=null ? test.getH2() : "");
-
+        if(!model.isShowingResults()) {
+            Test test = model.getTest();
+            titleView.setText(test.getTitle() != null ? test.getTitle() : "");
+            h1View.setText(test.getH1() != null ? test.getH1() : "");
+            h2View.setText(test.getH2() != null ? test.getH2() : "");
+            if (h1View.getVisibility()==View.GONE) {
+                h1View.setVisibility(View.VISIBLE);
+                h2View.setVisibility(View.VISIBLE);
+            }
+        }
+        else {
+            titleView.setText("Resultados finales");
+            h1View.setVisibility(View.GONE);
+            h2View.setVisibility(View.GONE);
+        }
         return view;
     }
 
@@ -83,10 +95,21 @@ public class HeadersFragment extends Fragment {
 
         model.getIsUpdateHeaders().observe(requireActivity(), isUpdateHeaders -> {
             if(isUpdateHeaders) {
-                Test test = model.getTest();
-                titleView.setText(test.getTitle()!=null ? test.getTitle() : "");
-                h1View.setText(test.getH1()!=null ? test.getH1() : "");
-                h2View.setText(test.getH2()!=null ? test.getH2() : "");
+                if(model.isShowingResults()) {
+                    titleView.setText("Resultados finales");
+                    h1View.setVisibility(View.GONE);
+                    h2View.setVisibility(View.GONE);
+                }
+                else {
+                    Test test = model.getTest();
+                    titleView.setText(test.getTitle() != null ? test.getTitle() : "");
+                    h1View.setText(test.getH1() != null ? test.getH1() : "");
+                    h2View.setText(test.getH2() != null ? test.getH2() : "");
+                    if (h1View.getVisibility()==View.GONE) {
+                        h1View.setVisibility(View.VISIBLE);
+                        h2View.setVisibility(View.VISIBLE);
+                    }
+                }
                 model.setIsUpdateHeaders(false);
             }
         });

@@ -97,6 +97,10 @@ public class TrialViewModel extends AndroidViewModel {
         this.isLaunchScoring.setValue(isLaunchScoring);
     }
 
+    public boolean isShowingResults() {
+        return isShowingResults;
+    }
+
     public LiveData<Boolean> getIsLaunchNextTest() {
         return isLaunchNextTest;
     }
@@ -111,7 +115,10 @@ public class TrialViewModel extends AndroidViewModel {
 
     public void setIsLaunchTrialResults(boolean isLaunchTrialResults) {
         this.isLaunchTrialResults.setValue(isLaunchTrialResults);
-        if (isLaunchTrialResults) isShowingResults=true;
+        if (isLaunchTrialResults) {
+            isShowingResults=true;
+            setIsUpdateHeaders(true);
+        }
     }
 
     public Test getTest() {
@@ -144,7 +151,8 @@ public class TrialViewModel extends AndroidViewModel {
         List<Test> test_p;
 
         for (Test test : trial.getTests()) {
-            if ((test_p = test.getTests())!= null){
+            if (test.isContainsTests()){
+                test_p = test.getTests();
                 testScore = 0;
                 testMaxScore=0;
 
@@ -160,14 +168,15 @@ public class TrialViewModel extends AndroidViewModel {
             if (test.getMaxScore()>0) totalMaxScore += test.getMaxScore();
         }
 
-        trial.getTrialInfo().setTotalScore(totalScore);
         trial.getTrialInfo().setTotalMaxScore(totalMaxScore);
-        if (isScoreDuringTests)
+        if (isScoreDuringTests){
+            trial.getTrialInfo().setTotalScore(totalScore);
             trial.getTrialInfo().setTrialScored(true);
+        }
     }
 
     public void postTrial() {
-        updateTrialInfo();
+        //updateTrialInfo();
         if(isUserTrial) {repository.updateUserTrial(trial);}
         else {repository.uploadUserTrial(trial);}
     }
@@ -205,6 +214,7 @@ public class TrialViewModel extends AndroidViewModel {
         if (isTestScored || !isScoreDuringTests) {
             if (testSubIndex == -1) {
                 if (testIndex >= trial.getTests().size() - 1) {
+                    updateTrialInfo();
                     setIsLaunchTrialResults(true);
                     return -1;
                 }
@@ -212,6 +222,7 @@ public class TrialViewModel extends AndroidViewModel {
             } else {
                 if (testSubIndex >= trial.getTests().get(testIndex).getTests().size() - 1) {
                     if (testIndex >= trial.getTests().size() - 1) {
+                        updateTrialInfo();
                         setIsLaunchTrialResults(true);
                         return -1;
                     }
