@@ -77,11 +77,11 @@ public class RecorderPlayer {
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-        int period_ms = 500;
+        //int period_ms = 500;
         mediaRecorder.start();
         isRecording.setValue(true);
 
-        if (recording_time_ms != 0) {
+        /*if (recording_time_ms != 0) {
             time_ms = recording_time_ms;
             isTimeSpecified = true;
         }
@@ -90,7 +90,7 @@ public class RecorderPlayer {
             isTimeSpecified = false;
         }
 
-        /*timer.schedule(new TimerTask() {
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 amplitude = mediaRecorder.getMaxAmplitude();

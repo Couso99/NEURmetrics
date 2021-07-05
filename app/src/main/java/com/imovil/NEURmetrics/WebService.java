@@ -28,7 +28,7 @@ public class WebService {//implements RestService{
     Gson gson =  new Gson();
 
     public final static String USER_MADE_BASE_PATH = "user-made"+File.separator;
-    public final static String GENERAL_IMAGE_BASE_PATH = "general"+File.separator+"image"+File.separator;
+    public final static String GENERAL_IMAGE_BASE_PATH = "general"+File.separator+"images"+File.separator;
 
     private RestService downloadService;
 
