@@ -62,5 +62,8 @@
     <string name="setBirthdayButton">Elegir</string>
     <string name="CreateUserFragmentLabel">Crear sujeto</string>
     <string name="testNameField">Test:</string>
+    <string name="ScoringModeLabel">Modo corrección</string>
+    <string name="startRecordingButton">Pulse para grabar</string>
+    <string name="isRecordingButton">Grabando</string>
 
 </resources>

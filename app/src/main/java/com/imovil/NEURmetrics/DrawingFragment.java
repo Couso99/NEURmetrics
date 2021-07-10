@@ -106,13 +106,8 @@ public class DrawingFragment extends Fragment {
                 }
             }
 
-        //String title;
-        //if ((title = test.getTitle()) != null)
-            //commentTextView.setText(title);
-
         outputFilename = test.getName() +'_'+trialInfo.getUserID()+"_"+trialInfo.getStartTime()+ "_draw.jpeg";
         fileName = model.getFilePath(outputFilename);
-        //.getExternalCacheDir().getAbsolutePath();
 
         finishedButton = view.findViewById(R.id.finishedButton);
         finishedButton.setOnClickListener(v -> {
@@ -140,6 +135,4 @@ public class DrawingFragment extends Fragment {
         view.draw(canvas);
         return bitmap;
     }
-
-
 }

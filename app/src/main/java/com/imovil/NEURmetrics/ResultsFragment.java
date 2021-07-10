@@ -93,7 +93,7 @@ public class ResultsFragment extends Fragment {
         TrialInfo trialInfo = trial.getTrialInfo();
 
         trialView = view.findViewById(R.id.trialScoreTextView);
-        trialView.setText("Total score:\t"+ trialInfo.getTotalScore() + " /"+trialInfo.getTotalMaxScore());
+        trialView.setText("Puntuación total:\t"+ trialInfo.getTotalScore() + " /"+trialInfo.getTotalMaxScore());
 
         return view;
     }

@@ -35,8 +35,11 @@ public class UsersListAdapter extends RecyclerView.Adapter <UsersHolder> {
 
     @Override
     public int getItemCount() {
-        if (mUsers!=null)
-            return mUsers.getUsers().size();
+        if (mUsers!=null && mUsers.getUsers() != null) {
+            if (!mUsers.getUsers().isEmpty())
+                return mUsers.getUsers().size();
+            return 0;
+        }
         else
             return 0;
     }

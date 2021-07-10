@@ -43,16 +43,12 @@ public class ScoringFragment extends Fragment {
     ImageView imageView = null;
     RelativeLayout relativeLayout;
 
-    ElegantNumberButton elegantNumberButton = null;
-
     private Test test;
     private int maxScore;
     List<CheckBox> checkBoxList = new ArrayList<>();
     List<Integer> scoreWeights = new ArrayList<>();
 
     EditText commentEdit;
-
-    int elegantNumber;
 
     boolean isFilename=false, isOutputFilename=false;
     boolean isTrialScored = false;
@@ -129,10 +125,6 @@ public class ScoringFragment extends Fragment {
             if (maxScore!=0) test.setScore(activeCheckBoxes);
             else test.setScore(0);
 
-            if (elegantNumberButton != null) {
-                    test.setScore(elegantNumber);
-            }
-
             test.setExpandedScore(expandedScore);
             model.nextTest();
         });
@@ -143,70 +135,51 @@ public class ScoringFragment extends Fragment {
 
         List<Integer> expandedScore;
         boolean isExpandedScore=false;
-        if ((expandedScore = test.getExpandedScore()) != null && isTrialScored)
+        if ((expandedScore = test.getExpandedScore()) != null)
             isExpandedScore=true;
 
-        if (maxScore>=0) {
-            for (int j = 0; (j < maxScore && (scoreOptions == null)) || ((scoreOptions != null)&&(j < scoreOptions.size())); j++) {
-                CheckBox btnTag = new CheckBox(activity);
-                if (isExpandedScore) btnTag.setChecked(expandedScore.get(j) != 0);
-                btnTag.setLayoutParams(new LinearLayout.LayoutParams
-                        (LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT));
-                btnTag.setTextSize(18);
+        // Create checkboxes and check them if needed
+        for (int j = 0; (j < maxScore && (scoreOptions == null)) || ((scoreOptions != null)&&(j < scoreOptions.size())); j++) {
+            CheckBox btnTag = new CheckBox(activity);
+            if (isExpandedScore) btnTag.setChecked(expandedScore.get(j) != 0);
+            btnTag.setLayoutParams(new LinearLayout.LayoutParams
+                    (LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+            btnTag.setTextSize(18);
 
-                if (scoreOptions != null) {
-                    if (scoreOptions.size() > j && (comment = scoreOptions.get(j)) != null)
-                        btnTag.setText(comment);
-                } else {
-                    if (maxScore == 1)
-                        btnTag.setText(R.string.successScore);//"Button " + (j + 1 + (i * 4 )));
-                    else btnTag.setText("");
-                }
-                btnTag.setId(j + 1);
-                checkBoxList.add(btnTag);
-                linearLayout.addView(btnTag);
-            }
-        }
-
-        else if (maxScore==-1) {
             if (scoreOptions != null) {
-                for (int i = 0; i < scoreOptions.size(); i++) {
-                    CheckBox btnTag = new CheckBox(activity);
-                    btnTag.setText(scoreOptions.get(i));
-                    btnTag.setLayoutParams(new LinearLayout.LayoutParams
-                            (LinearLayout.LayoutParams.WRAP_CONTENT,
-                                    LinearLayout.LayoutParams.MATCH_PARENT));
-                    btnTag.setTextSize(18);
-                    checkBoxList.add(btnTag);
-                    linearLayout.addView(btnTag);
-                }
+                if (scoreOptions.size() > j && (comment = scoreOptions.get(j)) != null)
+                    btnTag.setText(comment);
             } else {
-                elegantNumberButton = new ElegantNumberButton(activity);
-                elegantNumberButton.setLayoutParams(new LinearLayout.LayoutParams
-                        (LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT));
-                elegantNumberButton.setOnValueChangeListener((view1, oldValue, newValue) -> elegantNumber = newValue);
-
-                linearLayout.addView(elegantNumberButton);
+                if (maxScore == 1)
+                    btnTag.setText(R.string.successScore);
+                else btnTag.setText("");
             }
+            btnTag.setId(j + 1);
+            checkBoxList.add(btnTag);
+            linearLayout.addView(btnTag);
         }
 
         relativeLayout = view.findViewById(R.id.relativeLayoutScoring);
 
+        // Choose View according to testType
         switch (test.getTestType()) {
-            case 1:
-            case 2:
+            case TrialActivity.TEST_DRAW_OVER_IMAGE:
+            case TrialActivity.TEST_TAP_LETTERS:
                 imageView = new ImageView(activity,null);
                 break;
-            case 3:
+            case TrialActivity.TEST_RECORD_OVER_IMAGE:
+            case TrialActivity.TEST_RECORD_OVER_TEXT:
                 imageView = new PlayableImageView(activity, null);
+                break;
         }
 
         relativeLayout.addView(imageView);
+
         String fname, outputfname;
         boolean isDownloadFile=false, isDownloadOutputFile=false;
 
+        // Check if parameters files are downloaded
         if(test.getParametersNumber()!=0 && test.getParametersType().get(0).equals("filename") && (fname = test.getParameters().get(0)) != null) {
             isFilename = true;
             file = new File(model.getFilePath(fname));
@@ -214,12 +187,14 @@ public class ScoringFragment extends Fragment {
             isDownloadFile = true;
         }
 
+        // Check if outputs files are downloaded
         if(isTrialScored && (outputfname = test.getOutputFilename()) != null) {
             isOutputFilename = true;
             outputFile = new File(model.getFilePath(outputfname));
             if (!outputFile.exists()) isDownloadOutputFile = true;
         }
 
+        // Launch thread to set image when downloaded if not in cache
         if (isDownloadFile || isDownloadOutputFile) {
             Thread thread = new Thread() {
                 @Override
@@ -247,6 +222,7 @@ public class ScoringFragment extends Fragment {
         return view;
     }
 
+    // update View with image, audio...
     private void loadImageView() {
         ViewGroup.LayoutParams layoutParams;
         int orientation = this.getResources().getConfiguration().orientation;
@@ -257,12 +233,12 @@ public class ScoringFragment extends Fragment {
         }
 
         switch (test.getTestType()) {
-            case 2:
+            case TrialActivity.TEST_TAP_LETTERS:
                 if (test.getScore()==1) checkBoxList.get(0).setChecked(true);
-            case 1:
+            case TrialActivity.TEST_DRAW_OVER_IMAGE:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
                 break;
-            case 3:
+            case TrialActivity.TEST_RECORD_OVER_IMAGE:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
                 ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
                 //imageView.resource;
@@ -270,8 +246,16 @@ public class ScoringFragment extends Fragment {
                     relativeLayout.setForeground(getResources().getDrawable(R.drawable.ic_playbutton));
                 }
                 break;
+            case TrialActivity.TEST_RECORD_OVER_TEXT:
+                imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getName() + "_text_parameters_screenshot.jpeg"))));
+                ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    relativeLayout.setForeground(getResources().getDrawable(R.drawable.ic_playbutton));
+                }
+                break;
+
         }
-        imageView.setBackgroundResource(R.drawable.image_border);
+        //imageView.setBackgroundResource(R.drawable.image_border);
         imageView.setLayoutParams(layoutParams);
         imageView.setAdjustViewBounds(true);
     }

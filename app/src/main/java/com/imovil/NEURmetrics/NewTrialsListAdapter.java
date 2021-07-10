@@ -33,8 +33,11 @@ public class NewTrialsListAdapter extends RecyclerView.Adapter <NewTrialsHolder>
 
     @Override
     public int getItemCount() {
-        if (mTrials!=null)
-            return mTrials.getTrials().size();
+        if (mTrials!=null && mTrials.getTrials() != null) {
+            if (!mTrials.getTrials().isEmpty())
+                return mTrials.getTrials().size();
+            return 0;
+        }
         else
             return 0;
     }

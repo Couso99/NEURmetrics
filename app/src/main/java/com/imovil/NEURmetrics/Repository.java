@@ -54,8 +54,8 @@ public class Repository {
         if (webService!=null) {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
             String host = SP.getString("server_ip","localhost");
-            String port = SP.getString("port", "");
-            String url  = ("http://"+host+(port.isEmpty() ? "":(":"+port)));
+            String port = SP.getString("port", "80");
+            String url  = ("http://"+host+port);
             isChanged = ServiceGenerator.setBaseUrl(url);
         }
 
@@ -318,7 +318,9 @@ public class Repository {
                 Gson gson = new Gson();
                 List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
                 }.getType());
-                if (trial_list.size() > 0) {
+                if (trial_list == null) return;
+
+                if (!trial_list.isEmpty() && trial_list.size() > 0) {
                     trial = trial_list.get(0);
                     isTrialDownloaded.setValue(true);
                 }

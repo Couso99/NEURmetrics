@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,8 +18,16 @@ public class TrialActivity extends AppCompatActivity {
     public static final String ARG_TRIAL_INFO = "trialInfo";
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
 
+    public static final int TEST_NEST = 0;
+    public static final int TEST_DRAW_OVER_IMAGE = 1;
+    public static final int TEST_TAP_LETTERS = 2;
+    public static final int TEST_RECORD_OVER_IMAGE = 3;
+    public static final int TEST_RECORD_OVER_TEXT = 4;
+    public static final int TEST_CHECKBOXES = 5;
+
     TrialViewModel model;
     Chronometer chronometer;
+    TextView scoringLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +36,7 @@ public class TrialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trial);
 
         chronometer = findViewById(R.id.recordingChrono);
+        scoringLabel = findViewById(R.id.scoringLabel);
 
         model = new ViewModelProvider(this).get(TrialViewModel.class);
 
@@ -105,32 +115,19 @@ public class TrialActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-    private void initFragmentNavigation() {
-        if (model.isUserTrial()) {
-            try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.scoringFragment);
-            } catch (java.lang.IllegalArgumentException ignored) {}
-        }
-        else  {
-            try {
-                Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(getTestFragment(model.getTest().getTestType()));
-            } catch (java.lang.IllegalArgumentException ignored) {}
-        }
-
-    }
-
     private int getTestFragment(int testType) {
 
         int res = 0;
 
         switch (testType) {//testType) {
-            case 1:
+            case TEST_DRAW_OVER_IMAGE:
                 res = R.id.drawingFragment;
                 break;
-            case 2:
+            case TEST_TAP_LETTERS:
                 res = R.id.tapLettersFragment;
                 break;
-            case 3:
+            case TEST_RECORD_OVER_IMAGE:
+            case TEST_RECORD_OVER_TEXT:
                 res = R.id.imageTestFragment;
                 break;
             default:
@@ -142,14 +139,17 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     public void nextTest() {
+        scoringLabel.setVisibility(View.GONE);
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(getTestFragment(model.getTest().getTestType()));
     }
 
     public void scoreTest() {
+        scoringLabel.setVisibility(View.VISIBLE);
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.scoringFragment);
     }
 
     public void trialResults() {
+        scoringLabel.setVisibility(View.GONE);
         Navigation.findNavController(findViewById(R.id.nav_host_fragment)).navigate(R.id.resultsFragment);
     }
 

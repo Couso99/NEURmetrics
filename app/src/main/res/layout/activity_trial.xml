@@ -44,4 +44,19 @@
 
     </fragment>
 
+    <TextView
+        android:id="@+id/scoringLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@color/black"
+        android:padding="16dp"
+        android:text="@string/ScoringModeLabel"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/headers_host_fragment" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

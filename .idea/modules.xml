@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RecordApp.iml" filepath="$PROJECT_DIR$/.idea/modules/RecordApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RecordApp.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RecordApp.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NEURmetrics.iml" filepath="$PROJECT_DIR$/.idea/modules/NEURmetrics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/NEURmetrics.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/NEURmetrics.app.iml" />
     </modules>
   </component>
 </project>
