@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+title Realizar prueba
+start
+-> Recibir prueba
+como parámetro;
+repeat
+switch (¿tipo de test?)
+case ()
+    :Realizar test respuesta\n   escrita por sujeto;
+case ()
+    :Realizar test grabación\n       sobre imagen;
+case ()
+    :Realizar test grabación\n\tsobre texto;
+case ()
+    :  Realizar test\nreconocer letras;
+case ()
+    :      Realizar test\n     preguntas con\ncasillas de validación;
+endswitch
+    : Corregir test;
+
+backward:Siguiente test;
+repeat while (¿Hay más tests?) is (Sí) not (No)
+
+:Mostrar resultados;
+
+:Enviar prueba;
+
+stop
+
+@enduml
+

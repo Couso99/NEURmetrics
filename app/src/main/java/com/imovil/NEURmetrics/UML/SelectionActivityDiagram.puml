@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+title Seleccionar prueba
+start
+
+repeat :Pantalla de inicio;
+
+backward:Ajustes;
+repeat while
+
+
+
+split
+    :Realizar prueba;
+split again
+    :Revisar prueba;
+end split;
+
+:Seleccionar sujeto;
+:Seleccionar prueba;
+-> Pasar prueba
+seleccionada como
+parámetro;
+stop
+
+@enduml

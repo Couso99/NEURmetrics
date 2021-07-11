@@ -1,0 +1,11 @@
+@startjson
+{
+    "_id":{"$oid":"60a44029abf88719b8fb2986"},
+    "birthday": 319915186,
+    "centre": "Residencia Belvedere",
+    "name": "Javier",
+    "sex": "M",
+    "surname": "Fernández Martínez",
+    "yearsEducation": 10
+}
+@endjson

@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+package NEURmetrics {
+usecase (Selección de prueba) as sp
+usecase (Selección de sujeto) as ss
+usecase (Creación de sujeto) as cs
+usecase (Escribir o dibujar) as ed
+usecase (Puntuar test) as pt
+usecase (Revisar respuestas) as rr
+usecase (Escribir comentario) as ec
+usecase (Grabación de voz) as gv
+usecase (Comenzar a grabar) as cg
+usecase (Parar a grabar) as pg
+usecase (Navegación entre tests) as nt
+}
+
+Médico --> sp
+Médico --> ss
+Médico --> cs
+Médico --> pt
+Médico --> cg
+Médico --> pg
+Médico --> ec
+Médico --> nt
+Médico --> rr
+
+ed <-- Sujeto
+gv <-- Sujeto
+
+
+
+
+@enduml

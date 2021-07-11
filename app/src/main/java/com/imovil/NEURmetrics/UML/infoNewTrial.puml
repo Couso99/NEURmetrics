@@ -1,0 +1,11 @@
+@startjson
+{
+"_id":"",
+  "info": {
+        "trialID": "PRUEBA001",
+        "name": "Prueba Ejemplo",
+        "description": "Evaluación deterioro cognitivo"
+  },
+  "tests":""
+}
+@endjson

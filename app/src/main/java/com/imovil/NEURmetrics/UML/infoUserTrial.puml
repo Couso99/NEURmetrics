@@ -1,0 +1,19 @@
+@startjson
+{
+"_id":"",
+  "info": {
+        "trialID": "PRUEBA001",
+        "name": "Prueba Ejemplo",
+        "description": "Evaluación deterioro cognitivo",
+        "userID": "60a44029abf88719b8fb2986",
+        "score": 4,
+        "maxScore": 7,
+        "startTime": {
+                            "$numberLong": "1625681526929"
+                        },
+        "additional-data": [{ "eeg": "eeg_60a44029abf88719b8fb2986_1625681526929.edf"},
+        {"ecg": "ecg_60a44029abf88719b8fb2986_1625681526929.edf"}]
+  },
+  "tests":""
+}
+@endjson

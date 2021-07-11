@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+
+repeat :Pantalla de inicio;
+
+backward:Ajustes;
+repeat while
+
+split
+    :Realizar prueba;
+split again
+    :Revisar prueba;
+end split;
+
+:Seleccionar sujeto;
+:Seleccionar prueba;
+-> Pasar prueba
+seleccionada como
+parámetro;
+
+repeat
+
+if (¿Realizar o revisar?) then (Realizar)
+:Realizar test;
+else (Revisar)
+endif
+    : Corregir test;
+
+backward:Siguiente test;
+repeat while (¿Hay más tests?) is (Sí) not (No)
+
+:Mostrar resultados;
+
+:Enviar prueba;
+
+stop
+
+@enduml

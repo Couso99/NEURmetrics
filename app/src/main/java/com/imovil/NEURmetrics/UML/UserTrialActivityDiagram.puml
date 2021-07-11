@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+title Revisar prueba
+start
+-> Recibir prueba
+como parámetro;
+repeat
+    :Pantalla de corrección\n\t  del test;
+
+backward:Siguiente test;
+repeat while (¿Hay más tests?) is (Sí) not (No)
+
+:Mostrar resultados;
+
+:   Enviar prueba\ncon modificaciones;
+
+stop
+
+
+@enduml

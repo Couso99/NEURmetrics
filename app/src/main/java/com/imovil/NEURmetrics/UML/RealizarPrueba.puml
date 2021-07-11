@@ -1,0 +1,50 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+'Sujeto <--
+
+Médico -> NEURmetrics: Abrir app
+NEURmetrics -> Médico: Pantalla de inicio
+Médico -> NEURmetrics: Modo realizar prueba
+NEURmetrics -> Médico: Pantalla selección sujeto
+Médico -> NEURmetrics: Seleccionar/crear sujeto
+NEURmetrics -> Médico: Pantalla selección prueba
+Médico -> NEURmetrics: Seleccionar prueba
+
+NEURmetrics -> NEURmetrics: Comenzar realización \nde prueba
+NEURmetrics -> Médico: Pantalla realizar test\nde respuesta hablada\nante imagen de un león
+Médico -> Sujeto: Explicar test
+Médico -> NEURmetrics: Comenzar a grabar
+Médico -> Sujeto: Enseñar tablet
+Sujeto -> NEURmetrics: Identificar animal
+Médico -> NEURmetrics: Parar grabación
+
+Médico -> NEURmetrics: Siguiente pantalla
+NEURmetrics -> Médico: Pantalla de corrección\ndel test realizado
+Médico --> Médico: Observar resultados\ndel test
+Médico --> NEURmetrics: Escribir comentario
+Médico -> NEURmetrics: Asignar puntuación
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> Médico: Pantalla realizar test\nde respuesta escrita:\ncopiar figura geométrica
+Médico -> Sujeto: Explicar test
+Médico -> Sujeto: Dar tablet
+Sujeto -> NEURmetrics: Copiar figura\ngeométrica
+Médico <- Sujeto: Dar tablet
+
+Médico -> NEURmetrics: Siguiente pantalla
+NEURmetrics -> Médico: Pantalla de corrección\ndel test realizado
+Médico --> Médico: Observar resultados\ndel test
+Médico --> NEURmetrics: Escribir comentario
+Médico -> NEURmetrics: Asignar puntuación
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> NEURmetrics: Prueba acabada
+NEURmetrics -> Médico: Pantalla de resultados
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> Médico: Pantalla de inicio
+
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+package NEURmetrics {
+usecase (Selección de prueba) as sp
+usecase (Selección de sujeto) as ss
+usecase (Cambiar puntuación\ntest) as pt
+usecase (Revisar respuestas) as rr
+usecase (Modificar comentarios) as ec
+usecase (Navegación entre tests) as nt
+}
+
+Médico --> sp
+Médico --> ss
+Médico --> pt
+Médico --> ec
+Médico --> nt
+Médico --> rr
+
+
+@enduml

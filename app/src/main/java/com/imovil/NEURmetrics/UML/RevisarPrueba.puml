@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Médico -> NEURmetrics: Abrir app
+NEURmetrics -> Médico: Pantalla de inicio
+Médico -> NEURmetrics: Modo revisar prueba
+NEURmetrics -> Médico: Pantalla selección sujeto
+Médico -> NEURmetrics: Seleccionar sujeto
+NEURmetrics -> Médico: Pantalla selección prueba
+Médico -> NEURmetrics: Seleccionar prueba
+
+NEURmetrics -> NEURmetrics: Comenzar revisión\nde prueba
+NEURmetrics -> Médico: Pantalla de corrección\nde respuesta hablada\nante imagen de un león
+
+Médico --> Médico: Observar resultados\ndel test
+Médico --> NEURmetrics: Modificar comentario
+Médico --> NEURmetrics: Corregir puntuación
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> Médico: Pantalla de corrección\nde respuesta escrita:\ncopiar figura geométrica
+
+Médico --> Médico: Observar resultados\ndel test
+Médico --> NEURmetrics: Modificar comentario
+Médico --> NEURmetrics: Corregir puntuación
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> NEURmetrics: Prueba acabada
+NEURmetrics -> Médico: Pantalla de resultados
+Médico -> NEURmetrics: Siguiente pantalla
+
+NEURmetrics -> Médico: Pantalla de inicio
+
+@enduml

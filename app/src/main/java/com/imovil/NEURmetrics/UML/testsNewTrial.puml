@@ -1,0 +1,74 @@
+@startjson
+{
+    "_id": "",
+    "info": "",
+    "tests": [{
+            "name": "Visuoespacial/Ejecutiva",
+            "maxScore": 4,
+            "testType": 0,
+            "testID": "001",
+            "isContainsTests": true,
+            "tests": [{
+                "title": "Copiar el dibujo del cubo",
+                "h1": "Visuoespacial/Ejecutiva",
+                "name": "copiarCubo",
+                "parametersNumber": 1,
+                "parametersType": ["filename"],
+                "parameters": ["cubo.jpg"],
+                "maxScore": 1,
+                "testType": 1,
+                "testID": "102"
+            }, {
+                "title": "Dibujar un reloj",
+                "h1": "Visuoespacial/Ejecutiva",
+                "h2": "Debe marcar las 11 y 10",
+                "name": "dibujarReloj",
+                "parametersNumber": 1,
+                "parametersType": ["filename"],
+                "parameters": ["blank.jpg"],
+                "maxScore": 3,
+                "scoreOptions": ["Contorno", "Números", "Agujas"],
+                "testType": 1,
+                "testID": "103"
+            }]
+        }, {
+            "name": "Identifiación",
+            "maxScore": 2,
+            "testType": 0,
+            "testID": "002",
+            "isContainsTests": true,
+            "tests": [{
+                "title": "Nombrar el animal",
+                "h1": "Identifiación",
+                "name": "fotoLeon",
+                "parametersNumber": 1,
+                "parametersType": ["filename"],
+                "parameters": ["leon.jpeg"],
+                "maxScore": 1,
+                "testType": 3,
+                "testID": "301"
+            }, {
+                "title": "Nombrar el animal",
+                "h1": "Identifiación",
+                "name": "fotoDromedario",
+                "parametersNumber": 1,
+                "parametersType": ["filename"],
+                "parameters": ["dromedario.jpeg"],
+                "maxScore": 1,
+                "testType": 3,
+                "testID": "303"
+            }]
+        }, {
+            "title": "Nombrar similitud entre...",
+            "h1": "Abstracción",
+            "h2": "p.ej. manzana-naranja=fruta",
+            "name": "Abstracción",
+            "parametersNumber": 1,
+            "parametersType": ["text"],
+            "parameters": ["tren-bicicleta"],
+            "maxScore": 1,
+            "testType": 4,
+            "testID": "401"
+        }]
+}
+@endjson
