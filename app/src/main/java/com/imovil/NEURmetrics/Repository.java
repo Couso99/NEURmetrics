@@ -112,7 +112,7 @@ public class Repository {
                 MultipartBody.Part.createFormData("file", file.getName(), requestFile);
 
         // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
+        String descriptionString = "File uploaded, type:"+mediaType;
         RequestBody description =
                 RequestBody.create(
                   okhttp3.MultipartBody.FORM, descriptionString);
@@ -147,7 +147,7 @@ public class Repository {
         MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
 
         // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
+        String descriptionString = "User-made file uploaded, type: application/json";
         RequestBody description =
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
@@ -181,7 +181,7 @@ public class Repository {
         MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
 
         // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
+        String descriptionString = "User-made file uploaded, type: application/json";
         RequestBody description =
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);

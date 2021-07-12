@@ -20,7 +20,6 @@ public class SharedSelectionViewModel extends AndroidViewModel {
     public SharedSelectionViewModel(@NonNull Application application) {
         super(application);
         repository = new Repository(application.getApplicationContext());
-        Log.d("ViewModel","Inicializado el viewmodelo");
         isTrialDownloaded = repository.isTrialDownloaded();
     }
 

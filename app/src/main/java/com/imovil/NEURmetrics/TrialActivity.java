@@ -117,7 +117,7 @@ public class TrialActivity extends AppCompatActivity {
 
     private int getTestFragment(int testType) {
 
-        int res = 0;
+        int res = TEST_NEST;
 
         switch (testType) {//testType) {
             case TEST_DRAW_OVER_IMAGE:

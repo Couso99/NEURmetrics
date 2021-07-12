@@ -96,13 +96,13 @@ public class WebService {//implements RestService{
                 List<User> users_list = gson.fromJson(response.body(), new TypeToken<List<User>>() {}.getType());
                 Users users = new Users(users_list);
                 usersMutableLiveData.setValue(users);
-                Log.d(TAG, "DESCARGO COSAS"+String.valueOf(users_list));
+                Log.d(TAG, "Users downloaded "+String.valueOf(users_list));
             }
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
-                Log.d(TAG, "DESCARGO COSAs: ERROR"+t.getMessage());
+                Log.d(TAG, "Users NOT downloaded"+t.getMessage());
             }
         });
     }
@@ -120,7 +120,7 @@ public class WebService {//implements RestService{
         MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
 
         // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
+        String descriptionString = "User uploaded, type: application/json";
         RequestBody description =
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
@@ -138,29 +138,24 @@ public class WebService {//implements RestService{
 
     private void updateUserTrials(String userID) {
         Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
-        Log.d(TAG, "DENTRO DE UPDATE");
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 List<Trial> trials_info_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
                 Trials trials_info = new Trials(trials_info_list);
                 userTrialsMutableLiveData.setValue(trials_info);
-                Log.d(TAG, "DESCARGO USERTRIALS"+String.valueOf(trials_info_list));
+                Log.d(TAG, "Trials downloaded: "+String.valueOf(trials_info_list));
             }
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-                Log.d(TAG, "ERROR");
-
-                Log.d(TAG, "DESCARGO COSAs: ERROR"+t.getMessage());
+                Log.d(TAG, "Trials NOT downloaded: "+t.getMessage());
             }
         });
     }
 
     public MutableLiveData<Trials> getUserTrials(String userID) {
-        Log.d(TAG, "USERTRIALS");
         updateUserTrials(userID);
-        Log.d(TAG, "USERTRIALS2");
         return userTrialsMutableLiveData;
     }
 

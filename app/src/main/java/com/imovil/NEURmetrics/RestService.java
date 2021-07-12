@@ -60,6 +60,11 @@ public interface RestService {
             @Path("start_time") long start_time
     );
 
+    @GET("/user-trials/{trialID}")
+    Call<JsonElement> downloadUserTrial(
+            @Path("trialID") String trialID
+    );
+
     @POST("connection/{deviceID}")
     Call<ResponseBody> initialize(
             @Path("deviceID") String deviceID

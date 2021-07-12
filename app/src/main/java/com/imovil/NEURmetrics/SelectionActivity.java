@@ -122,7 +122,7 @@ public class SelectionActivity extends AppCompatActivity implements NavigationIn
     public void onUserCreated(User user) {
         model.uploadNewUser(user);
         onBackPressed();
-        // maybe todo fetch new user ID, then invoke onUserSelected and launch select trial directly
+        // todo fetch new user ID, then invoke onUserSelected and launch select trial directly
     }
 
     @Override

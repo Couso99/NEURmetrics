@@ -77,7 +77,7 @@ public class TapLettersFragment extends Fragment {
         LinearLayout linearLayout = null;
 
         int orientation = this.getResources().getConfiguration().orientation;
-        int letters_per_row = (orientation == Configuration.ORIENTATION_PORTRAIT) ? 5 : 10;
+        int letters_per_row = (orientation == Configuration.ORIENTATION_PORTRAIT) ? 6 : 10;
 
         for (int i=0;i<textArray.size();i++)
         {
