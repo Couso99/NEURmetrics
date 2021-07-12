@@ -1,16 +1,16 @@
 package com.imovil.NEURmetrics;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.LinkedTreeMap;
 
 public class Trial implements Serializable {
 
     @SerializedName("_id")
     @Expose
-    private LinkedTreeMap trialID;
+    private LinkedHashMap<String,String> trialID;
     @SerializedName("info")
     @Expose
     private TrialInfo trialInfo;

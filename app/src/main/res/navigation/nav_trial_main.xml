@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_tap_letters" />
     <fragment
         android:id="@+id/blankFragment"
-        android:name="com.imovil.NEURmetrics.BlankFragment"
+        android:name="com.imovil.NEURmetrics.EmptyFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
 </navigation>

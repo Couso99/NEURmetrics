@@ -96,7 +96,7 @@ public class HeadersFragment extends Fragment {
         model.getIsUpdateHeaders().observe(requireActivity(), isUpdateHeaders -> {
             if(isUpdateHeaders) {
                 if(model.isShowingResults()) {
-                    titleView.setText("Resultados finales");
+                    titleView.setText(R.string.finalScoreHeader);
                     h1View.setVisibility(View.GONE);
                     h2View.setVisibility(View.GONE);
                 }

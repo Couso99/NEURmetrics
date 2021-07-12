@@ -11,8 +11,7 @@ public class SharedSelectionViewModel extends AndroidViewModel {
     private Repository repository;
     private LiveData<Users> users;
     private LiveData<Trials> userTrials, newTrials;
-    private TrialInfo userTrialInfo;
-    private TrialInfo newTrialInfo;
+    private Trial userTrial, newTrial;
     private boolean isUserTrial;
     private String userID;
     private LiveData<Boolean> isTrialDownloaded;
@@ -45,10 +44,10 @@ public class SharedSelectionViewModel extends AndroidViewModel {
 
     public void downloadTrial() {
         if(isUserTrial) {
-            repository.downloadUserTrial(userTrialInfo.getUserID(), userTrialInfo.getStartTime());
+            repository.downloadUserTrial(userTrial.getTrialID());
         }
         else {
-            repository.downloadNewTrial(newTrialInfo.getTrialID());
+            repository.downloadNewTrial(newTrial.getTrialID());
         }
     }
 
@@ -77,11 +76,11 @@ public class SharedSelectionViewModel extends AndroidViewModel {
     }
 
     public void updateUserTrialInfo(int position) {
-        userTrialInfo = userTrials.getValue().getTrials().get(position).getTrialInfo();
+        userTrial = userTrials.getValue().getTrials().get(position);
     }
 
     public void updateNewTrialInfo(int position) {
-        newTrialInfo = newTrials.getValue().getTrials().get(position).getTrialInfo();
+        newTrial = newTrials.getValue().getTrials().get(position);
 
     }
 

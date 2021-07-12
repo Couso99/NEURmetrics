@@ -65,5 +65,6 @@
     <string name="ScoringModeLabel">Modo corrección</string>
     <string name="startRecordingButton">Pulse para grabar</string>
     <string name="isRecordingButton">Grabando</string>
+    <string name="finalScoreHeader">Resultados finales</string>
 
 </resources>

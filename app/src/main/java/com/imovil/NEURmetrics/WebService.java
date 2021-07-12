@@ -74,8 +74,8 @@ public class WebService {//implements RestService{
         return call;
     }
 
-    public Call<JsonElement> downloadUserTrial(String userID, long startTime) {
-        Call<JsonElement> call = downloadService.downloadUserTrial(userID, startTime);
+    public Call<JsonElement> downloadUserTrial(String trialID) {
+        Call<JsonElement> call = downloadService.downloadUserTrial(trialID);
         return call;
     }
 
@@ -204,8 +204,8 @@ public class WebService {//implements RestService{
         return newTrialMutableLiveData;
     }
 
-    public void updateUserTrial(String userID, long startTime) {
-        Call<JsonElement> call = downloadService.downloadUserTrial(userID,startTime);
+    public void updateUserTrial(String trialID) {
+        Call<JsonElement> call = downloadService.downloadUserTrial(trialID);
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -223,8 +223,8 @@ public class WebService {//implements RestService{
         });
     }
 
-    public MutableLiveData<Trial> getUserTrial(String userID, long startTime) {
-        updateUserTrial(userID, startTime);
+    public MutableLiveData<Trial> getUserTrial(String trialID) {
+        updateUserTrial(trialID);
         return userTrialMutableLiveData;
     }
 

@@ -35,7 +35,7 @@ public interface RestService {
             @Path("trialID") String trialID
     );
 
-    @GET("user-trials/{userID}")
+    @GET("users/{userID}")
     Call<JsonElement> downloadTrialsInfoFromUserID(
             @Path("userID") String userID
     );
@@ -52,12 +52,6 @@ public interface RestService {
     Call<ResponseBody> updateUserTrial(
             @Part("description") RequestBody description,
             @Part MultipartBody.Part file
-    );
-
-    @GET("user-trials/{userID}/{start_time}")
-    Call<JsonElement> downloadUserTrial(
-            @Path("userID") String userID,
-            @Path("start_time") long start_time
     );
 
     @GET("/user-trials/{trialID}")

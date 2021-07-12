@@ -288,8 +288,8 @@ public class Repository {
         return newTrials;
     }
 
-    public void downloadUserTrial(String userID, long startTime) {
-        Call<JsonElement> call = webService.downloadUserTrial(userID, startTime);
+    public void downloadUserTrial(String trialID) {
+        Call<JsonElement> call = webService.downloadUserTrial(trialID);
 
         // finally, execute the request
         call.enqueue(new Callback<JsonElement>() {
