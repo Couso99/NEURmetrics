@@ -12,7 +12,7 @@
 
         <EditTextPreference
             android:inputType="phone"
-            app:defaultValue="5000"
+            app:defaultValue="80"
             app:key="port"
             app:title="@string/server_port_title"
             app:useSimpleSummaryProvider="true" />

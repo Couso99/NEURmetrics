@@ -125,7 +125,6 @@ public class SelectUserFragment extends Fragment {
 
                 model.updateUserID(position);
                 ((NavigationInterface)activity).onUserSelected(model.getUserID());
-                //model.downloadTrialsList();
             }
         });
         return view;
@@ -142,7 +141,6 @@ public class SelectUserFragment extends Fragment {
         inflater.inflate(R.menu.menu_user, menu);
         MenuItem search=menu.findItem(R.id.action_search);
 
-        //this 2 lines
         SearchView searchView=(SearchView)search.getActionView();
         search(searchView);
 
@@ -163,9 +161,9 @@ public class SelectUserFragment extends Fragment {
         }
     }
 
+    // Search string in fields name, surname and centre
     private void search(SearchView searchView) {
         if (searchView!=null) {
-
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {

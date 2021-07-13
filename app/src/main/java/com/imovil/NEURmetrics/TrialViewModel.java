@@ -169,8 +169,8 @@ public class TrialViewModel extends AndroidViewModel {
         }
 
         trial.getTrialInfo().setTotalMaxScore(totalMaxScore);
+        trial.getTrialInfo().setTotalScore(totalScore);
         if (isScoreDuringTests){
-            trial.getTrialInfo().setTotalScore(totalScore);
             trial.getTrialInfo().setTrialScored(true);
         }
     }

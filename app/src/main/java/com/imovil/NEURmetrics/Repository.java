@@ -55,7 +55,7 @@ public class Repository {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
             String host = SP.getString("server_ip","localhost");
             String port = SP.getString("port", "80");
-            String url  = ("http://"+host+port);
+            String url  = ("http://"+host+":"+port);
             isChanged = ServiceGenerator.setBaseUrl(url);
         }
 

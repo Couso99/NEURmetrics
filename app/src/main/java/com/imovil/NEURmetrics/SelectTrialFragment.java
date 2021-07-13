@@ -23,13 +23,13 @@ public class SelectTrialFragment extends Fragment {
     public static final String ARG_IS_USER_TRIAL = "isUserTrial";
     public static final String ARG_USER_ID = "userID";
 
-    Activity activity;
+    private Activity activity;
+    private SharedSelectionViewModel model;
 
-    SharedSelectionViewModel model;
+    // Base type for using inheritance to go userTrial or newTrial
+    private RecyclerView.Adapter trialsListAdapter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    RecyclerView.Adapter trialsListAdapter;
-
     private RecyclerView recyclerView;
 
     public static SelectUserFragment newInstance(boolean isUserTrial, String userID) {
@@ -56,19 +56,18 @@ public class SelectTrialFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (model.isUserTrial()) {
+        if (model.isUserTrial()) { // Update user trials list
             model.getUserTrials().observe(requireActivity(), trials -> {
                 ((UserTrialsListAdapter)trialsListAdapter).setTrials(trials);
                 swipeRefreshLayout.setRefreshing(false);
             });
         }
-        else {
+        else { // Update new trials list
             model.getNewTrials().observe(requireActivity(), trials -> {
                 ((NewTrialsListAdapter)trialsListAdapter).setTrials(trials);
                 swipeRefreshLayout.setRefreshing(false);
             });
         }
-
     }
 
     @Override
@@ -82,62 +81,14 @@ public class SelectTrialFragment extends Fragment {
 
         activity = getActivity();
 
+        // Select between UsersTrialListAdapter y NewTrialListAdapter and set onItemClickListener
         if (model.isUserTrial()) {
             trialsListAdapter = new UserTrialsListAdapter();
-            ((UserTrialsListAdapter)trialsListAdapter).setOnItemClickListener(new UserTrialsListAdapter.ClickListener() {
-                @Override
-                public void onItemClick(int position, View v) {
-                    Log.d(TAG, "onItemClick, pos: "+position);
-
-                    v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
-
-                    Thread thread = new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                sleep(200);
-                                activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    thread.start();
-
-                    model.updateUserTrialInfo(position);
-                    ((NavigationInterface)activity).onTrialSelected();
-                }
-            });
+            ((UserTrialsListAdapter)trialsListAdapter).setOnItemClickListener(this::onTrialClicked);
         }
-
         else {
             trialsListAdapter = new NewTrialsListAdapter();
-            ((NewTrialsListAdapter)trialsListAdapter).setOnItemClickListener(new NewTrialsListAdapter.ClickListener() {
-                @Override
-                public void onItemClick(int position, View v) {
-
-                    Log.d(TAG, "onItemClick, pos: "+position);
-                    v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
-
-                    Thread thread = new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                sleep(200);
-                                activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    thread.start();
-
-                    model.updateNewTrialInfo(position);
-                    ((NavigationInterface)activity).onTrialSelected();
-                }
-            });
+            ((NewTrialsListAdapter)trialsListAdapter).setOnItemClickListener(this::onTrialClicked);
         }
 
         swipeRefreshLayout = view.findViewById(R.id.swipetorefresh);
@@ -156,5 +107,29 @@ public class SelectTrialFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         return view;
+    }
+
+    private void onTrialClicked(int position, View v) {
+        Log.d(TAG, "onItemClick, pos: "+position);
+        v.setBackgroundColor(getResources().getColor(R.color.colorItemSelected));
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(200);
+                    activity.runOnUiThread(() -> v.setBackgroundColor(Color.WHITE));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+
+        if (model.isUserTrial()) model.updateUserTrialInfo(position);
+        else model.updateNewTrialInfo(position);
+
+        ((NavigationInterface)activity).onTrialSelected();
     }
 }
