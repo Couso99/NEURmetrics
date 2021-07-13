@@ -19,9 +19,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:theme,android:icon">
         <activity
-            android:name="com.imovil.NEURmetrics.TrialActivity"
+            android:name="com.imovil.NEURmetrics.ui.trialActivity.TrialActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name="com.imovil.NEURmetrics.SelectionActivity">
+        <activity android:name="com.imovil.NEURmetrics.ui.selectionActivity.SelectionActivity">
 
             <!-- android:label="@string/title_activity_select_user"> -->
             <intent-filter>
