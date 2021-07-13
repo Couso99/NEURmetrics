@@ -2,6 +2,7 @@ package com.imovil.NEURmetrics.remoteDataSource;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
@@ -36,40 +37,41 @@ public class WebService {//implements RestService{
 
     private RestService downloadService;
 
+    private MutableLiveData<Boolean> isDataUploaded = new MutableLiveData<>();
     private MutableLiveData<Users> usersMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<Trials> userTrialsMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<Trials> newTrialsMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<Trial> userTrialMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<Trial> newTrialMutableLiveData = new MutableLiveData<>();
 
     public WebService() {
         downloadService = ServiceGenerator.createService(RestService.class);
     }
 
-    public Call<ResponseBody> downloadFile(String server_file_path) {
-        Call<ResponseBody> call = downloadService.downloadFile(server_file_path);
+    public void initialize(String deviceID) {
+        downloadService.initialize(deviceID).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {}
 
-        return call;
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
+        });
     }
 
-    public void initialize(String deviceID) {
-        Call<ResponseBody> call = downloadService.initialize(deviceID);
-
-        call.enqueue(new Callback<ResponseBody>() {
+    public void uploadFile(String file_type, RequestBody description, MultipartBody.Part body) {
+        downloadService.uploadFile(file_type, description, body).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                Log.v("Upload", "success");
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.e("Upload error:", t.getMessage());
             }
         });
     }
 
-    public Call<ResponseBody> uploadFile(String file_type, RequestBody description, MultipartBody.Part body) {
-        Call<ResponseBody> call = downloadService.uploadFile(file_type, description, body);
+    public Call<ResponseBody> downloadFile(String server_file_path) {
+        Call<ResponseBody> call = downloadService.downloadFile(server_file_path);
         return call;
     }
 
@@ -83,14 +85,34 @@ public class WebService {//implements RestService{
         return call;
     }
 
-    public Call<ResponseBody> updateUserTrial(RequestBody description, MultipartBody.Part body) {
-        Call<ResponseBody> call = downloadService.updateUserTrial(description, body);
-        return call;
+    public void updateUserTrial(RequestBody description, MultipartBody.Part body) {
+        downloadService.updateUserTrial(description, body).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+                isDataUploaded.setValue(true);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
     }
 
-    public Call<ResponseBody> uploadUserTrial(RequestBody description, MultipartBody.Part body) {
-        Call<ResponseBody> call = downloadService.uploadUserTrial(description, body);
-        return call;
+    public void uploadUserTrial(RequestBody description, MultipartBody.Part body) {
+        downloadService.uploadUserTrial(description, body).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+                isDataUploaded.setValue(true);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
     }
 
     private void updateUsers() {
@@ -105,7 +127,6 @@ public class WebService {//implements RestService{
 
             @Override
             public void onFailure(Call<JsonElement> call, Throwable t) {
-
                 Log.d(TAG, "Users NOT downloaded"+t.getMessage());
             }
         });
@@ -118,20 +139,15 @@ public class WebService {//implements RestService{
 
     public void uploadNewUser(User user) {
         JsonElement jsonElement = gson.toJsonTree(user,User.class);
-
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(jsonElement));
-
         MultipartBody.Part body = MultipartBody.Part.createFormData("file","json_file", requestBody);
 
-        // add another part within the multipart request
         String descriptionString = "User uploaded, type: application/json";
         RequestBody description =
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
 
-        Call<ResponseBody> call = downloadService.uploadNewUser(description, body);
-
-        call.enqueue(new Callback<ResponseBody>() {
+        downloadService.uploadNewUser(description, body).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {}
 
@@ -141,8 +157,7 @@ public class WebService {//implements RestService{
     }
 
     private void updateUserTrials(String userID) {
-        Call<JsonElement> call = downloadService.downloadTrialsInfoFromUserID(userID);
-        call.enqueue(new Callback<JsonElement>() {
+        downloadService.downloadTrialsInfoFromUserID(userID).enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 List<Trial> trials_info_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
@@ -184,52 +199,12 @@ public class WebService {//implements RestService{
         return newTrialsMutableLiveData;
     }
 
-    public void updateNewTrial(String trialID) {
-        Call<JsonElement> call = downloadService.downloadTrialFromTrialID(trialID);
-        call.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                if (response.isSuccessful()) {
-                    List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
-                    }.getType());
-                    if (trial_list.size() > 0) {
-                        Trial trial = trial_list.get(0);
-                        newTrialMutableLiveData.setValue(trial);
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {}
-        });
+    public LiveData<Boolean> getIsDataUploaded() {
+        return isDataUploaded;
     }
 
-    public MutableLiveData<Trial> getNewTrial(String trialID) {
-        updateNewTrial(trialID);
-        return newTrialMutableLiveData;
-    }
-
-    public void updateUserTrial(String trialID) {
-        Call<JsonElement> call = downloadService.downloadUserTrial(trialID);
-        call.enqueue(new Callback<JsonElement>() {
-            @Override
-            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                if (response.isSuccessful()) {
-                    List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
-                    }.getType());
-                    if (trial_list.size() > 0) {
-                        Trial trial = trial_list.get(0);
-                        userTrialMutableLiveData.setValue(trial);
-                    }
-                }
-            }
-            @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {}
-        });
-    }
-
-    public MutableLiveData<Trial> getUserTrial(String trialID) {
-        updateUserTrial(trialID);
-        return userTrialMutableLiveData;
+    public void setIsDataUploaded(boolean isDataUploaded) {
+        this.isDataUploaded.setValue(isDataUploaded);
     }
 
     public boolean isReachable(String host) {

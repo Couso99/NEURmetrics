@@ -93,6 +93,10 @@ public class TrialViewModel extends AndroidViewModel {
         return isDataUploaded;
     }
 
+    public void setIsDataUploaded(boolean isDataUploaded) {
+        repository.setIsDataUploaded(isDataUploaded);
+    }
+
     public LiveData<Boolean> getIsLaunchScoring() {
         return isLaunchScoring;
     }

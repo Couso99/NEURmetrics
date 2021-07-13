@@ -42,11 +42,10 @@ public class Repository {
     private Context context;
 
     private LiveData<Users> users;
-    private LiveData<Trials> userTrials;
-    private LiveData<Trials> newTrials;
+    private LiveData<Trials> userTrials, newTrials;
     private static Trial trial;
     private MutableLiveData<Boolean> isTrialDownloaded = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isDataUploaded = new MutableLiveData<>();
+    private LiveData<Boolean> isDataUploaded = new MutableLiveData<>();
 
     public Repository(Context context) {
         this.context = context;
@@ -65,7 +64,9 @@ public class Repository {
             isChanged = ServiceGenerator.setBaseUrl(url);
         }
 
-        if (webService==null || isChanged) webService = new WebService();
+        if (webService==null || isChanged) {
+            webService = new WebService();
+        }
     }
 
     public String getFilePath(String fname) {
@@ -123,22 +124,7 @@ public class Repository {
                 RequestBody.create(
                   okhttp3.MultipartBody.FORM, descriptionString);
 
-        Call<ResponseBody> call = webService.uploadFile(server_file_path, description, body);
-
-        // finally, execute the request
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v("Upload", "success");
-                if (server_file_path=="json")
-                    isDataUploaded.setValue(true);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
-            }
-        });
+        webService.uploadFile(server_file_path, description, body);
     }
 
     public void updateUserTrial(Trial trial) {
@@ -158,21 +144,7 @@ public class Repository {
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
 
-        Call<ResponseBody> call = webService.updateUserTrial(description, body);
-
-        // finally, execute the request
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v("Upload", "success");
-                isDataUploaded.setValue(true);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
-            }
-        });
+        webService.updateUserTrial(description, body);
     }
 
     public void uploadUserTrial(Trial trial) {
@@ -192,21 +164,7 @@ public class Repository {
                 RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
 
-        Call<ResponseBody> call = webService.uploadUserTrial(description, body);
-
-        // finally, execute the request
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.v("Upload", "success");
-                isDataUploaded.setValue(true);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
-            }
-        });
+        webService.uploadUserTrial(description, body);
     }
 
     private void enqueueWriteResponseBody(Call<ResponseBody> call, String fileName) {
@@ -297,13 +255,11 @@ public class Repository {
     public void downloadUserTrial(String trialID) {
         Call<JsonElement> call = webService.downloadUserTrial(trialID);
 
-        // finally, execute the request
         call.enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 Gson gson = new Gson();
-                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
-                }.getType());
+                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
                 if (trial_list.size() > 0) {
                     trial = trial_list.get(0);
                     isTrialDownloaded.setValue(true);
@@ -322,20 +278,15 @@ public class Repository {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 Gson gson = new Gson();
-                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {
-                }.getType());
-                if (trial_list == null) return;
-
-                if (!trial_list.isEmpty() && trial_list.size() > 0) {
+                List<Trial> trial_list = gson.fromJson(response.body(), new TypeToken<List<Trial>>() {}.getType());
+                if (trial_list != null && !trial_list.isEmpty() && trial_list.size() > 0) {
                     trial = trial_list.get(0);
                     isTrialDownloaded.setValue(true);
                 }
             }
 
             @Override
-            public void onFailure(Call<JsonElement> call, Throwable t) {
-
-            }
+            public void onFailure(Call<JsonElement> call, Throwable t) {}
         });
     }
 
@@ -361,13 +312,13 @@ public class Repository {
         return webService.isReachable(host);
     }
 
-
     public LiveData<Boolean> isDataUploaded() {
+        isDataUploaded = webService.getIsDataUploaded();
         return isDataUploaded;
     }
 
-    public void setIsDataUploaded(MutableLiveData<Boolean> isDataUploaded) {
-        this.isDataUploaded = isDataUploaded;
+    public void setIsDataUploaded(boolean isDataUploaded) {
+        webService.setIsDataUploaded(isDataUploaded);
     }
 
     public void uploadNewUser(User user) {

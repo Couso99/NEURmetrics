@@ -93,7 +93,10 @@ public class ResultsFragment extends Fragment {
         });
 
         model.getIsDataUploaded().observe(requireActivity(), isDataUploaded -> {
-            if (isDataUploaded) activity.finish();
+            if (isDataUploaded) {
+                model.setIsDataUploaded(false);
+                activity.finish();
+            }
         });
 
         TrialInfo trialInfo = trial.getTrialInfo();
