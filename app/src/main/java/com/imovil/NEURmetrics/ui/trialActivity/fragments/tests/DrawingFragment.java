@@ -24,6 +24,8 @@ import com.imovil.NEURmetrics.viewmodels.TrialViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawingFragment extends Fragment {
     Activity activity;
@@ -128,7 +130,15 @@ public class DrawingFragment extends Fragment {
                 e.printStackTrace();
             }
             model.uploadFile(fileName, "image/*");
-            test.setOutputFilename(outputFilename);
+
+            List<String> outputs = new ArrayList<>();
+            List<String> outputsType = new ArrayList<>();
+            outputs.add(outputFilename);
+            outputsType.add("filename");
+
+            test.setOutputs(outputs);
+            test.setOutputsType(outputsType);
+            test.setOutputsNumber(outputs.size());
             model.nextTest();
         });
 

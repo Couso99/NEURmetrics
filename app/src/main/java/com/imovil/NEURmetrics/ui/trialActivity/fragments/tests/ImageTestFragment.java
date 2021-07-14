@@ -25,6 +25,8 @@ import com.imovil.NEURmetrics.viewmodels.TrialViewModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageTestFragment extends Fragment implements View.OnClickListener {
     Activity activity;
@@ -36,7 +38,6 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
     private Button recordButton, nextButton;
     private ImageView imageView;
     private TextView textView;
-    private int recording_time_ms = 0;
 
     private static String fileName = null, outputFilename;
     private boolean isRecording = false;
@@ -64,6 +65,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
         if (getArguments() != null) {
             trialInfo = (TrialInfo) getArguments().getSerializable(TrialActivity.ARG_TRIAL_INFO);
             test = (Test) getArguments().getSerializable(TrialActivity.ARG_TEST);
+            if (test!=null) model.setTest(test);
         }
     }
 
@@ -87,7 +89,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
 
         int parametersSize = test.getParametersNumber();
 
-        String fname=null, text=null;
+        String fname=null, text=null, maxLines=null;
 
         for (int i=0; i<parametersSize; i++) {
             switch (test.getParametersType().get(i)) {
@@ -96,6 +98,9 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
                     break;
                 case "text":
                     text = test.getParameters().get(i);
+                    break;
+                case "maxLines":
+                    maxLines = test.getParameters().get(i);
                     break;
             }
         }
@@ -108,7 +113,7 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
 
             case TrialActivity.TEST_RECORD_OVER_TEXT:
                 imageView.setVisibility(View.GONE);
-                loadText(text);
+                loadText(text, maxLines);
                 break;
         }
 
@@ -166,8 +171,9 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private void loadText(String text) {
+    private void loadText(String text, String maxLines) {
         textView.setText(text);
+        if (maxLines!=null) textView.setMaxLines(Integer.parseInt(maxLines));
 
         Thread thread = new Thread() {
             @Override
@@ -194,7 +200,6 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         };
 
@@ -205,7 +210,14 @@ public class ImageTestFragment extends Fragment implements View.OnClickListener 
     public void onIsRecordingChanged(boolean isRecording) {
         if (isRecording) {
             recordButton.setBackgroundColor(Color.RED);
-            test.setOutputFilename(outputFilename);
+            List<String> outputs = new ArrayList<>();
+            List<String> outputsType = new ArrayList<>();
+            outputs.add(outputFilename);
+            outputsType.add("filename");
+
+            test.setOutputs(outputs);
+            test.setOutputsType(outputsType);
+            test.setOutputsNumber(outputs.size());
             recordButton.setText(R.string.isRecordingButton);
             this.isRecording = true;
         }

@@ -38,10 +38,12 @@ public class TapLettersFragment extends Fragment {
 
     private Test test;
     private TrialInfo trialInfo;
-    private List<String> textArray;
+    private List<String> textArray = new ArrayList<>();
     private String fileName, outputFilename;
     private Button finishedButton;
     private List<TextView> tappableTextViews = new ArrayList<>();
+    private String target;
+    private int maxErrors;
 
     public TapLettersFragment() {
 
@@ -78,13 +80,28 @@ public class TapLettersFragment extends Fragment {
 
         trialInfo = model.getTrial().getTrialInfo();
         test = model.getTest();
-        textArray = test.getParameters();
+        int parametersSize = test.getParametersNumber();
+
+        textArray.clear();
+        for (int i=0; i<parametersSize; i++) {
+            switch (test.getParametersType().get(i)) {
+                case "char":
+                    textArray.add(test.getParameters().get(i));
+                    break;
+                case "target":
+                    target = test.getParameters().get(i);
+                    break;
+                case "maxErrors":
+                    maxErrors = Integer.parseInt(test.getParameters().get(i));
+                    break;
+            }
+        }
 
         LinearLayout linearLayoutVertical = view.findViewById(R.id.linearLayoutTapLetters);
         LinearLayout linearLayout = null;
 
         int orientation = this.getResources().getConfiguration().orientation;
-        int letters_per_row = (orientation == Configuration.ORIENTATION_PORTRAIT) ? 6 : 10;
+        int letters_per_row = (orientation == Configuration.ORIENTATION_PORTRAIT) ? 8 : 10;
 
         for (int i=0;i<textArray.size();i++)
         {
@@ -111,9 +128,9 @@ public class TapLettersFragment extends Fragment {
         finishedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int errors = calculateErrors("A");
+                int errors = calculateErrors(target);
                 int score = 0;
-                if (errors<2)
+                if (errors <= maxErrors)
                     score = 1;
 
                 Bitmap imagen = screenShot(linearLayoutVertical);
@@ -128,7 +145,15 @@ public class TapLettersFragment extends Fragment {
                 model.uploadFile(fileName, "image/*");
 
                 test.setScore(score);
-                test.setOutputFilename(outputFilename);
+
+                List<String> outputs = new ArrayList<>();
+                List<String> outputsType = new ArrayList<>();
+                outputs.add(outputFilename);
+                outputsType.add("filename");
+
+                test.setOutputs(outputs);
+                test.setOutputsType(outputsType);
+                test.setOutputsNumber(outputs.size());
                 model.nextTest();
             }
         });

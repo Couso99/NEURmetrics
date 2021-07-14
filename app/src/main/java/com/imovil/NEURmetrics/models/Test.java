@@ -59,9 +59,15 @@ public class Test implements Serializable {
     @SerializedName("scoreWeights")
     @Expose
     private List<Integer> scoreWeights=null;
-    @SerializedName("outputFilename")
+    @SerializedName("outputsNumber")
     @Expose
-    private String outputFilename;
+    private int outputsNumber;
+    @SerializedName("outputsType")
+    @Expose
+    private List<String> outputsType=null;
+    @SerializedName("outputs")
+    @Expose
+    private List<String> outputs=null;
     @SerializedName("startTestTimeOffset")
     @Expose
     private long startTestTimeOffset;
@@ -205,12 +211,28 @@ public class Test implements Serializable {
         this.scoreWeights = scoreWeights;
     }
 
-    public String getOutputFilename() {
-        return outputFilename;
+    public int getOutputsNumber() {
+        return outputsNumber;
     }
 
-    public void setOutputFilename(String outputFilename) {
-        this.outputFilename = outputFilename;
+    public void setOutputsNumber(int outputsNumber) {
+        this.outputsNumber = outputsNumber;
+    }
+
+    public List<String> getOutputsType() {
+        return outputsType;
+    }
+
+    public void setOutputsType(List<String> outputsType) {
+        this.outputsType = outputsType;
+    }
+
+    public List<String> getOutputs() {
+        return outputs;
+    }
+
+    public void setOutputs(List<String> outputs) {
+        this.outputs = outputs;
     }
 
     public long getStartTestTimeOffset() {

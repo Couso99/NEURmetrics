@@ -287,8 +287,11 @@ public class TrialViewModel extends AndroidViewModel {
                         repository.downloadFile(parameters.get(0));
             }
             if (isTrialScored)
-                if (test.getOutputFilename() != null)
-                    repository.downloadUserMadeFile(test.getOutputFilename());
+                for (int i=0; i<test.getOutputsNumber();i++) {
+                    if (test.getOutputsType().get(i)=="filename") {
+                        repository.downloadUserMadeFile(test.getOutputs().get(i));
+                    }
+                }
             if (test.isContainsTests())
                 for (Test child_test: test.getTests()) {
                     if (child_test.getParametersNumber() != 0) {
@@ -301,8 +304,11 @@ public class TrialViewModel extends AndroidViewModel {
                     }
 
                     if (isTrialScored)
-                        if (child_test.getOutputFilename() != null)
-                            repository.downloadUserMadeFile(child_test.getOutputFilename());
+                        for (int i=0; i<child_test.getOutputsNumber();i++) {
+                            if (child_test.getOutputsType().get(i)=="filename") {
+                                repository.downloadUserMadeFile(child_test.getOutputs().get(i));
+                            }
+                        }
                 }
         }
     }

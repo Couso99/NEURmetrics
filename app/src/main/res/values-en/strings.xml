@@ -38,4 +38,12 @@
     <string name="next">Next</string>
     <string name="previous">Back</string>
     <string name="trialIdField">Realization date:</string>
+    <string name="birthdayField">Birthday:</string>
+    <string name="setBirthdayButton">Choose</string>
+    <string name="CreateUserFragmentLabel">Create user</string>
+    <string name="testNameField">Test:</string>
+    <string name="ScoringModeLabel">Scoring mode</string>
+    <string name="startRecordingButton">Press to record</string>
+    <string name="isRecordingButton">Recording</string>
+    <string name="finalScoreHeader">Final score</string>
 </resources>

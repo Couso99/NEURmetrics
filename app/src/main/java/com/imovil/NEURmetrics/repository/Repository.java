@@ -253,9 +253,7 @@ public class Repository {
     }
 
     public void downloadUserTrial(String trialID) {
-        Call<JsonElement> call = webService.downloadUserTrial(trialID);
-
-        call.enqueue(new Callback<JsonElement>() {
+        webService.downloadUserTrial(trialID).enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 Gson gson = new Gson();
@@ -272,9 +270,7 @@ public class Repository {
     }
 
     public void downloadNewTrial(String trialID) {
-        Call<JsonElement> call = webService.downloadTrialFromTrialID(trialID);
-
-        call.enqueue(new Callback<JsonElement>() {
+        webService.downloadTrialFromTrialID(trialID).enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
                 Gson gson = new Gson();
