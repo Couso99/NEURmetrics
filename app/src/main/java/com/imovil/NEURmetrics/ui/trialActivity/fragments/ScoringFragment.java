@@ -57,6 +57,7 @@ public class ScoringFragment extends Fragment {
     boolean isFilename=false, isOutputFilename=false;
     boolean isTrialScored = false;
     boolean isScoreWeights = false;
+    String outputfname;
 
     public ScoringFragment() {
         // Required empty public constructor
@@ -79,6 +80,7 @@ public class ScoringFragment extends Fragment {
 
         if (getArguments() != null) {
             test = (Test) getArguments().getSerializable(ARG_TEST);
+            if (test!=null) model.setTest(test);
             isTrialScored = getArguments().getBoolean(ARG_IS_TRIAL_SCORED);
         }
     }
@@ -143,23 +145,16 @@ public class ScoringFragment extends Fragment {
             isExpandedScore=true;
 
         // Create checkboxes and check them if needed
-        for (int j = 0; (j < maxScore && (scoreOptions == null)) || ((scoreOptions != null)&&(j < scoreOptions.size())); j++) {
+        checkBoxList.clear();
+        for (int i=0; i< (isExpandedScore ? expandedScore.size() : (scoreOptions==null ? maxScore : scoreOptions.size()));i++) {
             CheckBox btnTag = new CheckBox(activity);
-            if (isExpandedScore) btnTag.setChecked(expandedScore.get(j) != 0);
+            if (isExpandedScore) btnTag.setChecked(expandedScore.get(i) != 0);
             btnTag.setLayoutParams(new LinearLayout.LayoutParams
                     (LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.MATCH_PARENT));
             btnTag.setTextSize(18);
-
-            if (scoreOptions != null) {
-                if (scoreOptions.size() > j && (comment = scoreOptions.get(j)) != null)
-                    btnTag.setText(comment);
-            } else {
-                if (maxScore == 1)
-                    btnTag.setText(R.string.successScore);
-                else btnTag.setText("");
-            }
-            btnTag.setId(j + 1);
+            if (scoreOptions != null) btnTag.setText(scoreOptions.get(i));
+            else btnTag.setText(R.string.successScore);
             checkBoxList.add(btnTag);
             linearLayout.addView(btnTag);
         }
@@ -170,6 +165,7 @@ public class ScoringFragment extends Fragment {
         switch (test.getTestType()) {
             case TrialActivity.TEST_DRAW_OVER_IMAGE:
             case TrialActivity.TEST_TAP_LETTERS:
+            case TrialActivity.TEST_CHECKBOXES:
                 imageView = new ImageView(activity,null);
                 break;
             case TrialActivity.TEST_RECORD_OVER_IMAGE:
@@ -180,22 +176,28 @@ public class ScoringFragment extends Fragment {
 
         relativeLayout.addView(imageView);
 
-        String fname, outputfname;
         boolean isDownloadFile=false, isDownloadOutputFile=false;
 
         // Check if parameters files are downloaded
-        if(test.getParametersNumber()!=0 && test.getParametersType().get(0).equals("filename") && (fname = test.getParameters().get(0)) != null) {
-            isFilename = true;
-            file = new File(model.getFilePath(fname));
-            if (!file.exists())
-            isDownloadFile = true;
+        for (int i=0; i<test.getParametersNumber();i++) {
+            if (test.getParametersType().get(i) == "filename") {
+                isFilename = true;
+                file = new File(model.getFilePath(test.getParameters().get(i)));
+                if (!file.exists())
+                    isDownloadFile = true;
+            }
         }
 
         // Check if outputs files are downloaded
-        if(isTrialScored && (outputfname = test.getOutputFilename()) != null) {
-            isOutputFilename = true;
-            outputFile = new File(model.getFilePath(outputfname));
-            if (!outputFile.exists()) isDownloadOutputFile = true;
+        for (int i=0; i<test.getOutputsNumber();i++) {
+            if (test.getOutputsType().get(i).equals("filename")) {
+                isOutputFilename = true;
+                outputFile = new File(model.getFilePath(test.getOutputs().get(i)));
+                outputfname = test.getOutputs().get(i);
+                if (isTrialScored) {
+                    if (!outputFile.exists()) isDownloadOutputFile = true;
+                }
+            }
         }
 
         // Launch thread to set image when downloaded if not in cache
@@ -240,11 +242,12 @@ public class ScoringFragment extends Fragment {
             case TrialActivity.TEST_TAP_LETTERS:
                 if (test.getScore()==1) checkBoxList.get(0).setChecked(true);
             case TrialActivity.TEST_DRAW_OVER_IMAGE:
-                imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getOutputFilename()))));
+            case TrialActivity.TEST_CHECKBOXES:
+                imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(outputfname))));
                 break;
             case TrialActivity.TEST_RECORD_OVER_IMAGE:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getParameters().get(0)))));
-                ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
+                ((PlayableImageView)imageView).setAudio(outputfname);
                 //imageView.resource;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     relativeLayout.setForeground(getResources().getDrawable(R.drawable.ic_playbutton));
@@ -252,7 +255,7 @@ public class ScoringFragment extends Fragment {
                 break;
             case TrialActivity.TEST_RECORD_OVER_TEXT:
                 imageView.setImageURI(Uri.fromFile(new File(model.getFilePath(test.getName() + "_text_parameters_screenshot.jpeg"))));
-                ((PlayableImageView)imageView).setAudio(test.getOutputFilename());
+                ((PlayableImageView)imageView).setAudio(outputfname);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     relativeLayout.setForeground(getResources().getDrawable(R.drawable.ic_playbutton));
                 }

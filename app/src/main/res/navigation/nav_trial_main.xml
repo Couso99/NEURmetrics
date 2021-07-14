@@ -37,4 +37,9 @@
         android:name="com.imovil.NEURmetrics.ui.trialActivity.fragments.EmptyFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_blank" />
+    <fragment
+        android:id="@+id/checkboxesFragment"
+        android:name="com.imovil.NEURmetrics.ui.trialActivity.fragments.tests.CheckboxesFragment"
+        android:label="fragment_checkboxes"
+        tools:layout="@layout/fragment_checkboxes" />
 </navigation>

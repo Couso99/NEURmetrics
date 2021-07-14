@@ -135,8 +135,8 @@ public class TrialActivity extends AppCompatActivity {
             case TEST_RECORD_OVER_TEXT:
                 res = R.id.imageTestFragment;
                 break;
-            default:
-                res = R.id.imageTestFragment;
+            case TEST_CHECKBOXES:
+                res = R.id.checkboxesFragment;
                 break;
         }
 
